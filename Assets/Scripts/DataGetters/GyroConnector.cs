@@ -5,9 +5,9 @@ using System.Net.Sockets;
 using System;
 using UnityEngine;
 
-public class GyroConnector  
+public class GyroConnector 
 {
-    public UdpClient receiver;
+    UdpClient receiver;
     
     public float mAngle=0;
     public float mAngularVelocity=0;
@@ -33,12 +33,6 @@ public class GyroConnector
         intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
         Debug.Log("woo:3"+intent);
         activity.Call<AndroidJavaObject>("startService",intent);
-
-
-
-		receiver.BeginReceive(new AsyncCallback(ReceiveCallback),receiver);
-
-
 #endif
 	}
     
@@ -61,9 +55,9 @@ public class GyroConnector
     }
 	
     // java is big endian, sorry
-    static byte[] conversionBuf4={0,0,0,0};
-    static byte[] conversionBuf8={0,0,0,0,0,0,0,0};
-    static float getBigEndianFloat(byte[]input,int offset)
+    byte[] conversionBuf4={0,0,0,0};
+    byte[] conversionBuf8={0,0,0,0,0,0,0,0};
+    float getBigEndianFloat(byte[]input,int offset)
     {
         if(BitConverter.IsLittleEndian)
         {
@@ -75,7 +69,7 @@ public class GyroConnector
             return BitConverter.ToSingle(input,offset);
         }
     }
-	static int getBigEndianInt32(byte[]input,int offset)
+    int getBigEndianInt32(byte[]input,int offset)
     {
         if(BitConverter.IsLittleEndian)
         {
@@ -88,7 +82,7 @@ public class GyroConnector
         }
         
     }
-	static long getBigEndianInt64(byte[]input,int offset)
+    long getBigEndianInt64(byte[]input,int offset)
     {
         if(BitConverter.IsLittleEndian)
         {
@@ -101,40 +95,13 @@ public class GyroConnector
         }
     }
     
-	static IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-
-
-	public static void ReceiveCallback(IAsyncResult ar)
-	{
-		GyroConnector pThis = (GyroConnector)ar.AsyncState;
-		UdpClient u = ((GyroConnector)(ar.AsyncState)).receiver;
-
-		Byte[] receiveBytes = u.EndReceive(ar, ref RemoteIpEndPoint);
-
-		if(receiveBytes.Length>=28)
-		{
-			pThis.mAngle=getBigEndianFloat(receiveBytes,0);
-			pThis.mAngularVelocity=getBigEndianFloat(receiveBytes,4);
-			pThis.mMagDirection=getBigEndianFloat(receiveBytes,8);
-			pThis.mRemoteBatteryLevel=getBigEndianFloat(receiveBytes,12);
-			pThis.mTimestamp=getBigEndianInt64(receiveBytes,16);               
-			pThis.mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
-		}            
-
-
-		u.BeginReceive (new AsyncCallback (ReceiveCallback), ar.AsyncState);
-	}
-
 	public void readData() 
     {
-		receiver.BeginReceive (new AsyncCallback(ReceiveCallback),this);
-/*		const int FRAME_DELAY = 2;
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-		while(receiver.Available>=28)
-//		for(int c=0;c<5 && receiver!=null && receiver.Available>=28;c++)
+		while(receiver!=null && receiver.Available>=28)
         {
             Byte[] receiveBytes = receiver.Receive(ref RemoteIpEndPoint);
-            if(receiveBytes.Length>=28)
+            if(receiveBytes.Length==28)
             {
                 mAngle=getBigEndianFloat(receiveBytes,0);
                 mAngularVelocity=getBigEndianFloat(receiveBytes,4);
@@ -143,7 +110,7 @@ public class GyroConnector
                 mTimestamp=getBigEndianInt64(receiveBytes,16);               
                 mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
             }            
-        }*/
+        }
         // get angle and other things
         // print it here
         // TODO: check mag direction code
