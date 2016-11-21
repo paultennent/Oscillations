@@ -5,7 +5,7 @@ using UnityEngine;
 public class AmplifySwing : AbstractGameEffects {
 
 
-	public float swingMultiplyFactor = 1.5f;
+	public float swingMultiplyFactor = 2.0f;
 
 	private float G;
 
