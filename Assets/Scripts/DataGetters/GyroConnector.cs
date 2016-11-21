@@ -219,7 +219,7 @@ public class GyroConnector
             }
             if(mBufferCount<2)
             {
-                // dropping frames, up latency slightly
+                // risk of dropping frames, up latency slightly
                 unityDelay+=0.001f;
             }
             if(mBufferCount==10)
@@ -229,6 +229,8 @@ public class GyroConnector
             }
         }else
         {
+            // actual drop frame, up latency slightly
+            unityDelay+=0.001f;
             Debug.Log("Dropped frame");
         }
 //        Debug.Log("Buf size:"+mBufferCount);
