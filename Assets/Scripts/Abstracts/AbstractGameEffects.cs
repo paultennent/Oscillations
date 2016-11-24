@@ -20,8 +20,12 @@ public class AbstractGameEffects : MonoBehaviour {
 	public float climaxRatio = 0f;
 	protected float offsetTime;
 
+	public int maxSessions = 1;
+
 	protected float highAngle;
 	protected float lowAngle;
+
+	protected bool supressEffects;
 
 
 	// Use this for initialization
@@ -42,14 +46,23 @@ public class AbstractGameEffects : MonoBehaviour {
 		sessionTime = sessionManager.getSessionTime ();
 		inSession = sessionManager.isInSession ();
 
+		if (supressEffects && !inSession) {
+			supressEffects = false;
+		}
+
+
 		if (inSession) {
-			int gameNumber=(int)(sessionTime/climaxTime);
-			offsetTime=sessionTime-(gameNumber*climaxTime);
-			if((gameNumber&1)==1)
-			{
-				offsetTime=climaxTime-offsetTime;
+			int gameNumber = (int)(sessionTime / climaxTime);
+
+			if (gameNumber > maxSessions && maxSessions > 0) {
+				supressEffects = true;
 			}
-			climaxRatio=offsetTime/climaxTime;
+
+			offsetTime = sessionTime - (gameNumber * climaxTime);
+			if ((gameNumber & 1) == 1) {
+				offsetTime = climaxTime - offsetTime;
+			}
+			climaxRatio = offsetTime / climaxTime;
 
 			if (swingAngle > highAngle) {
 				highAngle = swingAngle;
@@ -63,8 +76,17 @@ public class AbstractGameEffects : MonoBehaviour {
 			if (swingAngle > 0) {
 				lowAngle = 0;
 			}
-
+				
+		} else {
+			if (supressEffects) {
+				supressEffects = false;
+			}
 		}
+
+		if (inSession && supressEffects) {
+			inSession = false;
+		}
+
 	}
 
 

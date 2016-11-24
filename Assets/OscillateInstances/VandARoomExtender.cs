@@ -26,6 +26,10 @@ public class VandARoomExtender : AbstractGameEffects {
 	private float legMoveMin = 0f;
 	private float legMoveMax = 20f;
 
+	private bool toReset = false;
+	public float resetTime = 2f;
+	private bool resetting = false;
+
 	private float scale;
 
 
@@ -51,9 +55,13 @@ public class VandARoomExtender : AbstractGameEffects {
 		base.Update ();
 		if (inSession) {
 			ratio = climaxRatio;
+			toReset = true;
 			setRoomVals ();
 		} else {
-			zeroRoomVals ();
+			//zeroRoomVals ();
+			if (toReset && !resetting) {
+				StartCoroutine (smoothZeroRoomVals ());
+			}
 		}
 //		if(Input.GetKey(KeyCode.UpArrow)){
 //			up ();
@@ -74,6 +82,26 @@ public class VandARoomExtender : AbstractGameEffects {
 		extenders.transform.position = new Vector3 (extenders.transform.position.x, extenderMovementMin, extenders.transform.position.z);
 		legs.transform.localScale = new Vector3 (legs.transform.localScale.x, legScaleMin, legs.transform.localScale.z);
 		legs.transform.position = new Vector3 (legs.transform.position.x, legMoveMin, legs.transform.position.z);
+	}
+
+	private IEnumerator smoothZeroRoomVals(){
+		float startRatio = ratio;
+		resetting = true;
+		float timer = resetTime;
+		while (timer > 0f) {
+			if (inSession) {
+				zeroRoomVals ();
+				resetting = false;
+				yield break;
+			}
+			timer = timer - (Time.deltaTime * resetTime);
+			ratio = (timer / resetTime) * startRatio;
+			setRoomVals ();
+			yield return null;
+		}
+		zeroRoomVals ();
+		toReset = false;
+		resetting = false;
 	}
 
 	private void setRoomVals(){

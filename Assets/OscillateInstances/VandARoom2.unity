@@ -699,7 +699,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 214724101}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbbd02e10cf15434e88444e24abe62e2, type: 3}
   m_Name: 
@@ -2744,6 +2744,7 @@ MonoBehaviour:
   sessionLength: 120
   climaxTime: 60
   climaxRatio: 0
+  maxSessions: 1
   roomBase:
   - {fileID: 476637487}
   - {fileID: 1685601765}
@@ -2751,6 +2752,7 @@ MonoBehaviour:
   - {fileID: 283471926}
   extenders: {fileID: 1839041740}
   legs: {fileID: 657230408}
+  resetTime: 2
 --- !u!4 &732674627
 Transform:
   m_ObjectHideFlags: 0
@@ -2778,6 +2780,7 @@ MonoBehaviour:
   sessionLength: 120
   climaxTime: 60
   climaxRatio: 0
+  maxSessions: 1
   swingMultiplyFactor: 2.75
   maxAngle: 360
 --- !u!114 &732674629
@@ -2918,6 +2921,7 @@ MonoBehaviour:
   sessionLength: 120
   climaxTime: 60
   climaxRatio: 0
+  maxSessions: 1
   spots:
   - {fileID: 1025074566}
   - {fileID: 1369829459}

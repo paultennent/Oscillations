@@ -7,6 +7,7 @@ public class SessionManager : MonoBehaviour {
 	public float triggerAngle=10f;
 
 	private bool inGame=false;
+
 	private double gameStartTime=0;
 
 	private double lastForwardSwing=0;
