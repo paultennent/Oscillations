@@ -10,11 +10,15 @@ public class SessionLighting : AbstractGameEffects {
 	public float targetIntensity = 3f;
 	public float spotTargetIntensity = 50f;
 
+	public float spotStartIntensity = 0.5f;
+
 	public float duration = 3f;
 
 	public ReflectionProbe rp;
+	public float rpInterval = 0.25f;
 
 	bool debug = false;
+	public bool skipSpots = true;
 
 	// Use this for initialization
 	void Start () {
@@ -22,8 +26,10 @@ public class SessionLighting : AbstractGameEffects {
 		foreach (Light l in lights) {
 			l.intensity = 0f;
 		}
-		foreach (Light l in spots) {
-			l.intensity = 0f;
+		if (!skipSpots) {
+			foreach (Light l in spots) {
+				l.intensity = spotStartIntensity;
+			}
 		}
 		//rp.RenderProbe ();
 
@@ -50,6 +56,7 @@ public class SessionLighting : AbstractGameEffects {
 					lightsOn = false;
 				}
 			}
+				
 		} else {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				if (!lightsOn) {
@@ -60,6 +67,13 @@ public class SessionLighting : AbstractGameEffects {
 					lightsOn = false;
 				}
 			}
+			if (Input.GetKeyDown (KeyCode.Escape)) {
+				Application.Quit ();
+				#if UNITY_EDITOR
+				UnityEditor.EditorApplication.isPlaying = false;
+				#endif
+
+			}
 
 		}
 
@@ -68,16 +82,24 @@ public class SessionLighting : AbstractGameEffects {
 	private IEnumerator letThereBeLight(){
 		//rp.refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;
 		float intensity = 0f;
-		float spotIntensity = 0f;
+		float spotIntensity = spotStartIntensity;
+		float rpcounter = 0;
 		while (intensity < targetIntensity) {
 			intensity = Mathf.Min(intensity + (Time.deltaTime * (targetIntensity/duration)),targetIntensity);
 			foreach (Light l in lights) {
 				l.intensity = intensity;
 			}
-			spotIntensity = Mathf.Min(spotIntensity + (Time.deltaTime * (spotTargetIntensity/duration)),spotTargetIntensity);
-			foreach (Light l in spots) {
-				l.intensity = spotIntensity;
+			if (!skipSpots) {
+				spotIntensity = Mathf.Min (spotIntensity + (Time.deltaTime * (spotTargetIntensity / duration)), spotTargetIntensity);
+				foreach (Light l in spots) {
+					l.intensity = spotIntensity;
+				}
 			}
+//			rpcounter += Time.deltaTime;
+//			if (rpcounter > rpInterval) {
+//				rp.RenderProbe ();
+//				rpcounter = 0;
+//			}
 			yield return null;
 		}
 		//rp.refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.ViaScripting;
@@ -88,16 +110,23 @@ public class SessionLighting : AbstractGameEffects {
 		//rp.refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.EveryFrame;
 		float intensity = targetIntensity;
 		float spotIntensity = spotTargetIntensity;
+		float rpcounter = 0;
 		while (intensity > 0f) {
 			intensity = Mathf.Max(intensity - (Time.deltaTime * (targetIntensity/duration)),0f);
 			foreach (Light l in lights) {
 				l.intensity = intensity;
 			}
-
-			spotIntensity = Mathf.Max(spotIntensity - (Time.deltaTime * (spotTargetIntensity/duration)),0f);
-			foreach (Light l in spots) {
-				l.intensity = spotIntensity;
+			if (!skipSpots) {
+				spotIntensity = Mathf.Max (spotIntensity - (Time.deltaTime * (spotTargetIntensity / duration)), spotStartIntensity);
+				foreach (Light l in spots) {
+					l.intensity = spotIntensity;
+				}
 			}
+//			rpcounter += Time.deltaTime;
+//			if (rpcounter > rpInterval) {
+//				rp.RenderProbe ();
+//				rpcounter = 0;
+//			}
 			yield return null;
 		}
 		//rp.refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.ViaScripting;

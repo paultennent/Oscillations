@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: b16ca0fcd80448448b4ee0a0eba66efe
-timeCreated: 1479420425
+timeCreated: 1479986016
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -348,10 +348,6 @@ SubstanceImporter:
       material: {instanceID: 0}
       baseUID: 3243701291
     - shaderProp:
-        name: _Occlusion
-      material: {instanceID: 0}
-      baseUID: 3243329407
-    - shaderProp:
         name: _Metallic
       material: {instanceID: 0}
       baseUID: 3243357750
@@ -363,6 +359,10 @@ SubstanceImporter:
         name: _DetailOcclusion
       material: {instanceID: 0}
       baseUID: 3253697284
+    - shaderProp:
+        name: _Occlusion
+      material: {instanceID: 0}
+      baseUID: 3243329407
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
@@ -515,7 +515,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 5, y: 5}
+      scale: {x: 5, y: 2}
       generateMipmaps: 1
       generateAllOutputs: 1
       animationUpdateRate: 0
@@ -526,7 +526,7 @@ SubstanceImporter:
           name: _BumpMap
         second:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 5}
+          scale: {x: 5, y: 2}
           offset: {x: 0, y: 0}
       - first:
           name: _DetailAlbedoMap
@@ -556,19 +556,19 @@ SubstanceImporter:
           name: _MainTex
         second:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 5}
+          scale: {x: 5, y: 2}
           offset: {x: 0, y: 0}
       - first:
           name: _Metallic
         second:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 5}
+          scale: {x: 5, y: 2}
           offset: {x: 0, y: 0}
       - first:
           name: _Occlusion
         second:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 5}
+          scale: {x: 5, y: 2}
           offset: {x: 0, y: 0}
       floats:
       - first:
@@ -707,10 +707,6 @@ SubstanceImporter:
       material: {instanceID: 0}
       baseUID: 3243701291
     - shaderProp:
-        name: _Occlusion
-      material: {instanceID: 0}
-      baseUID: 3243329407
-    - shaderProp:
         name: _Metallic
       material: {instanceID: 0}
       baseUID: 3243357750
@@ -722,6 +718,10 @@ SubstanceImporter:
         name: _DetailOcclusion
       material: {instanceID: 0}
       baseUID: 3253697284
+    - shaderProp:
+        name: _Occlusion
+      material: {instanceID: 0}
+      baseUID: 3243329407
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
