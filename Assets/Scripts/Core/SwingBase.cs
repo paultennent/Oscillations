@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
+using UnityEngine.VR;
 
 public class SwingBase : MonoBehaviour {
 
@@ -12,6 +13,9 @@ public class SwingBase : MonoBehaviour {
 
 	private Transform swingPivot;
 	private Transform swingSeat;
+	private Transform viewPoint;
+
+	private Transform headset;
 
 	private float lastSwingAngle;
 	private float swingAngle;
@@ -50,12 +54,19 @@ public class SwingBase : MonoBehaviour {
 		sessionManager = GameObject.FindGameObjectWithTag ("Controller").GetComponent<SessionManager> ();
 		swingSeat = GameObject.FindGameObjectWithTag ("Swing").transform;
 		swingPivot = GameObject.FindGameObjectWithTag ("SwingPivot").transform;
+		headset = GameObject.Find("camPositioner").transform;
+		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		//swingData.dumpVals ();
+
+//		Quaternion q=InputTracking.GetLocalRotation (VRNode.CenterEye); 
+		Vector3 p=InputTracking.GetLocalPosition(VRNode.CenterEye);
+		headset.localPosition = -p;
+//		headset.localRotation = q;
 
 		float[] Gxyz = swingData.getHeadingsNow ();
 		//float [] Gaccel = swingData.getAccNow();
@@ -76,6 +87,7 @@ public class SwingBase : MonoBehaviour {
 
 		if (applySwingTransform) {
 			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 0);
+			viewPoint.localEulerAngles = new Vector3 (-swingAngle, 0, 0);
 		}
 
 		//sessionManager.onAngle (time, swingAngle, errorFilter, Gxyz [0]);

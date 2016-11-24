@@ -22,15 +22,19 @@ public class AmplifySwing : AbstractGameEffects {
 	void Update () {
 		base.Update ();
 		if (inSession) {
-			swingMultiply=Mathf.Min(1+(offsetTime/G)*(offsetTime/G),1+swingMultiplyFactor);
-			applySwingAngle ();
+			swingMultiply = Mathf.Min (1 + (offsetTime / G) * (offsetTime / G), 1 + swingMultiplyFactor);
+
+		} else {
+			swingMultiply = 1f;
 		}
+		applySwingAngle ();
 	}
 
 	private void applySwingAngle(){
 		float newAngle = swingAngle * swingMultiply;
 		newAngle = Mathf.Clamp (newAngle, -maxAngle, maxAngle);
 		swingPivot.localEulerAngles = new Vector3 (newAngle, 0, 0);
+		viewPoint.localEulerAngles = new Vector3 (-swingAngle, 0, 0);
 		swingBase.setAltAngle (-newAngle);
 	}
 }

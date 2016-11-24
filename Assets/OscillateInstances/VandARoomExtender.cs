@@ -26,10 +26,24 @@ public class VandARoomExtender : AbstractGameEffects {
 	private float legMoveMin = 0f;
 	private float legMoveMax = 20f;
 
+	private float scale;
+
 
 	// Use this for initialization
 	void Start () {
 		base.Start ();
+		scale = GameObject.Find ("Gallery").transform.localScale.y;
+
+		wallDropMin *= scale;
+		wallDropMax *= scale;
+		extendScaleMin *= scale;
+		extendScaleMax *= scale;
+		extenderMovementMin *= scale;
+		extenderMovementMax *= scale;
+		legScaleMin *= scale;
+		legScaleMax *= scale;
+		legMoveMin *= scale;
+		legMoveMax *= scale;
 	}
 	
 	// Update is called once per frame

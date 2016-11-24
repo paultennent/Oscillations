@@ -44,6 +44,11 @@ public class MagicReader : AbstractDataReader {
 		return sameDataCount;
 	}
 
+	void OnApplicationPause(bool paused){
+
+		gc.pause (paused);
+	}
+
 	// Use this for initialization
 	void Start () {
 		gc = new GyroConnector ();
