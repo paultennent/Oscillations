@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbstractGameEffects : MonoBehaviour {
 
@@ -20,8 +21,16 @@ public class AbstractGameEffects : MonoBehaviour {
 	public float climaxRatio = 0f;
 	protected float offsetTime;
 
+	public int maxSessions = 1;
+
 	protected float highAngle;
 	protected float lowAngle;
+
+	protected bool supressEffects;
+
+	//public bool faded;
+	//public bool fading = false;
+	//public Canvas killer;
 
 
 	// Use this for initialization
@@ -33,7 +42,6 @@ public class AbstractGameEffects : MonoBehaviour {
 		swingPivot = GameObject.FindGameObjectWithTag ("SwingPivot").transform;
 		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
 
-
 	}
 	
 	// Update is called once per frame
@@ -42,14 +50,27 @@ public class AbstractGameEffects : MonoBehaviour {
 		sessionTime = sessionManager.getSessionTime ();
 		inSession = sessionManager.isInSession ();
 
+		if (supressEffects && !inSession) {
+			supressEffects = false;
+		}
+		//if(faded & !fading & !inSession){
+		//	faded = false;
+		//	killer.enabled = false;
+		//}
+
+
 		if (inSession) {
-			int gameNumber=(int)(sessionTime/climaxTime);
-			offsetTime=sessionTime-(gameNumber*climaxTime);
-			if((gameNumber&1)==1)
-			{
-				offsetTime=climaxTime-offsetTime;
+			int gameNumber = (int)(sessionTime / climaxTime);
+
+			if (gameNumber > maxSessions && maxSessions > 0) {
+				supressEffects = true;
 			}
-			climaxRatio=offsetTime/climaxTime;
+
+			offsetTime = sessionTime - (gameNumber * climaxTime);
+			if ((gameNumber & 1) == 1) {
+				offsetTime = climaxTime - offsetTime;
+			}
+			climaxRatio = offsetTime / climaxTime;
 
 			if (swingAngle > highAngle) {
 				highAngle = swingAngle;
@@ -63,9 +84,29 @@ public class AbstractGameEffects : MonoBehaviour {
 			if (swingAngle > 0) {
 				lowAngle = 0;
 			}
-
+				
+		} else {
+			if (supressEffects) {
+				supressEffects = false;
+			}
 		}
+
+		if (inSession && supressEffects) {
+			inSession = false;
+			//if(!faded){
+			//	StartCoroutine(fader());
+			//}
+		}
+
 	}
+
+//	private IEnumerator fader(){
+//		fading = true;
+//		yield return new WaitForSeconds(2f);
+//		killer.enabled = true;
+//		fading = false;
+//		faded = true;
+//	}
 
 
 }

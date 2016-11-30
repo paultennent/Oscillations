@@ -33,30 +33,48 @@ public class GyroConnector
 	public void init () 
     {
 
-        receiver=new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
-        receiver.Bind(new IPEndPoint(IPAddress.Any,2424));
+		doConnection ();
+	}
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        AndroidJavaClass activityClass;
-        AndroidJavaObject activity, intent;
-                   
-        activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-        Debug.Log("woo:1"+activity);
-        intent = new AndroidJavaObject("android.content.Intent");
-        Debug.Log("woo:2"+intent);
-        intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
-        Debug.Log("woo:3"+intent);
-        activity.Call<AndroidJavaObject>("startService",intent);
-#else
-        timeLastPoll=Time.time;
-#endif
+	public void doConnection()
+	{
+		if (receiver == null) {
+			receiver = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			receiver.Bind (new IPEndPoint (IPAddress.Any, 2424));
 
+			#if UNITY_ANDROID && !UNITY_EDITOR
+			AndroidJavaClass activityClass;
+			AndroidJavaObject activity, intent;
 
+			activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+			activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
+			Debug.Log("woo:1"+activity);
+			intent = new AndroidJavaObject("android.content.Intent");
+			Debug.Log("woo:2"+intent);
+			intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
+			Debug.Log("woo:3"+intent);
+			activity.Call<AndroidJavaObject>("startService",intent);
+			#else
+			timeLastPoll = Time.time;
+			#endif
+		}
+	}
+
+	public void pause(bool bPause)
+	{
+		if (bPause) {
+			stop ();
+		} else {
+			doConnection ();
+		}
 	}
     
     public void stop()
     {
+		if (receiver != null) {
+			receiver.Close ();
+			receiver = null;
+		}
 #if UNITY_ANDROID && !UNITY_EDITOR
         AndroidJavaClass activityClass;
         AndroidJavaObject activity, intent;
@@ -138,6 +156,9 @@ public class GyroConnector
     
 	public void readData() 
     {
+		if (receiver == null) {
+			return;
+		}
 #if UNITY_ANDROID && !UNITY_EDITOR
 #else
     //   if we're running in editor, need to poll server to get messages
@@ -231,7 +252,7 @@ public class GyroConnector
         {
             // actual drop frame, up latency slightly
             unityDelay+=0.001f;
-            Debug.Log("Dropped frame");
+            //Debug.Log("Dropped frame");
         }
 //        Debug.Log("Buf size:"+mBufferCount);
 	}
