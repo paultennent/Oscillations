@@ -1,27 +1,29 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR 
+#define REMOTE_SERVER
+#endif
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System;
 using UnityEngine;
+using UnityEngine.VR;
 
 
 
 public class GyroConnector  
 {
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-    const int PACKET_SIZE=28;
-#else
-    const int PACKET_SIZE=24;
+    const int MIN_PACKET_SIZE=24;
+#if REMOTE_SERVER
+    const int MAX_PACKET_SIZE=24;
     float timeLastPoll=0;
-    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("10.154.161.18"),2323);
-
-
+    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("10.154.163.192"),2323);
+#else
+    const int MAX_PACKET_SIZE=32;
 #endif
 
     public Socket receiver;
-    byte[] receiveBytes=new byte[PACKET_SIZE];
+    byte[] receiveBytes=new byte[MAX_PACKET_SIZE];
     
     public float mAngle=0;
     public float mAngularVelocity=0;
@@ -29,6 +31,13 @@ public class GyroConnector
     public float mRemoteBatteryLevel=0;
     public float mLocalBatteryLevel=0;
     public long mTimestamp=0L;
+    public int mConnectionState=0;
+    
+    public string dbgTxt="";
+    
+    public Quaternion mForwardsDirection=Quaternion.identity;
+    
+    public SwingTracker mTracker=new SwingTracker();
 
 	public void init () 
     {
@@ -60,6 +69,7 @@ public class GyroConnector
 		}
 	}
 
+
 	public void pause(bool bPause)
 	{
 		if (bPause) {
@@ -67,7 +77,7 @@ public class GyroConnector
 		} else {
 			doConnection ();
 		}
-	}
+	}    
     
     public void stop()
     {
@@ -88,8 +98,7 @@ public class GyroConnector
         Debug.Log("woo:3"+intent);
         activity.Call<AndroidJavaObject>("stopService",intent);
 #endif
-    }
-	
+    }	
     // java is big endian, these are some conversion helpers
     
     byte[] conversionBuf4={0,0,0,0};
@@ -153,33 +162,68 @@ public class GyroConnector
     float firstUnityTime=0;
     
     float unityDelay=0.0f;
+    float accelHistoryTime=0f;
+
+    private Quaternion getCurrentDirection()
+    {
+        if(VRDevice.isPresent)
+        {
+            return InputTracking.GetLocalRotation(VRNode.Head);
+//            return Quaternion.Inverse(InputTracking.GetLocalRotation(VRNode.Head));
+        }
+        // for cardboard VR
+/*        if(GvrViewer.Instance!=null)
+        {
+            return GvrViewer.Instance.HeadPose.Orientation;
+//            return Quaternion.Inverse(GvrViewer.Instance.HeadPose.Orientation);
+        }*/
+        return Quaternion.identity;
+        if(mForwardsDirection==Quaternion.identity)
+        {
+                mForwardsDirection=Quaternion.Euler(0,0,360-Input.compass.magneticHeading);
+/*                Quaternion attitude=Input.gyro.attitude;                
+            if(attitude.x!=0 || attitude.y!=0 || attitude.z!=0 || attitude.w!=0)
+            {
+                // get it from gyro once gyro has something worth having
+                // don't care about the up/down-ness of it
+                mForwardsDirection=Quaternion.Euler(0,0,attitude.eulerAngles.z);
+            }*/
+        }
+
+        
+        Quaternion currentDirection=Quaternion.identity;
+        Quaternion currentTilt=Quaternion.identity;
+        // get current head direction (i.e. z direction of phone)
+        Quaternion attitude=Input.gyro.attitude;
+        currentTilt=attitude;
+        currentDirection=Quaternion.Euler(0,0,(360-Input.compass.magneticHeading)-attitude.eulerAngles.z);
+        return currentTilt*currentDirection*mForwardsDirection;
+
+    
+    }
     
 	public void readData() 
     {
-		if (receiver == null) {
-			return;
-		}
-#if UNITY_ANDROID && !UNITY_EDITOR
-#else
+    #if REMOTE_SERVER
     //   if we're running in editor, need to poll server to get messages
         if(Time.time-timeLastPoll>0.5)
         {
             byte[] launchPacket={1,2,3,4};
             receiver.SendTo(launchPacket,serverEndPoint);
-//            Debug.Log("Polling gyro");
+            Debug.Log("Polling gyro");
             timeLastPoll=Time.time;
         }
-#endif
+    #endif
 
 
         int count=0;
         // receive everything 
         // send it out as fast as possible with zero missing frames
         
-    	while(receiver.Available>=PACKET_SIZE)
+    	while(receiver.Available>=MIN_PACKET_SIZE)
         {
             int len=receiver.ReceiveFrom(receiveBytes,ref remoteIpEndPoint);
-            if(receiveBytes.Length>=PACKET_SIZE)
+            if(len>=MIN_PACKET_SIZE)
             {
                 float angle=getBigEndianFloat(receiveBytes,0);
                 long timestamp=getBigEndianInt64(receiveBytes,16);
@@ -206,11 +250,18 @@ public class GyroConnector
                 mAngularVelocity=getBigEndianFloat(receiveBytes,4);
                 mMagDirection=getBigEndianFloat(receiveBytes,8);
                 mRemoteBatteryLevel=getBigEndianFloat(receiveBytes,12);
-        #if UNITY_ANDROID && !UNITY_EDITOR
-                mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
-        #endif
+                if(len>=28)
+                {
+                    mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
+                }
+                if(len>=32)
+                {
+                    mConnectionState=getBigEndianInt32(receiveBytes,28);
+                }
             }            
         }
+        
+        bool hasAngle=true;
         
         if(mBufferCount>0)
         {
@@ -250,11 +301,33 @@ public class GyroConnector
             }
         }else
         {
+            hasAngle=false;
             // actual drop frame, up latency slightly
             unityDelay+=0.001f;
             //Debug.Log("Dropped frame");
         }
-//        Debug.Log("Buf size:"+mBufferCount);
+        
+        float outAngle=mAngle;
+
+        // force to use accel code (ignore gyro)
+        //hasAngle=false;
+        
+        Quaternion directionCorrection=getCurrentDirection();
+        Vector3 rotatedAccel=Vector3.zero;
+        Vector3 origAccel=Vector3.zero;
+        foreach (AccelerationEvent accEvent in Input.accelerationEvents) 
+        {
+            float mag=Mathf.Sqrt(accEvent.acceleration.x*accEvent.acceleration.x+accEvent.acceleration.y*accEvent.acceleration.y+accEvent.acceleration.z*accEvent.acceleration.z);
+            origAccel=new Vector3(accEvent.acceleration.x,accEvent.acceleration.y,-accEvent.acceleration.z);
+            rotatedAccel=directionCorrection*origAccel;
+            accelHistoryTime+=accEvent.deltaTime;
+            outAngle=mTracker.OnAccelerometerMagnitude(mag,accelHistoryTime,hasAngle,mAngle,rotatedAccel.z);
+        }
+        dbgTxt=mTracker.dbgTxt;
+        if(!hasAngle)
+        {
+            mAngle=outAngle;
+        }
 	}
 
 
