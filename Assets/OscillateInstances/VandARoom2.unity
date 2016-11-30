@@ -2746,9 +2746,6 @@ MonoBehaviour:
   climaxTime: 45
   climaxRatio: 0
   maxSessions: 1
-  faded: 0
-  fading: 0
-  killer: {fileID: 1321086842}
   roomBase:
   - {fileID: 476637487}
   - {fileID: 1685601765}
@@ -2785,9 +2782,6 @@ MonoBehaviour:
   climaxTime: 45
   climaxRatio: 0
   maxSessions: 1
-  faded: 0
-  fading: 0
-  killer: {fileID: 1321086842}
   swingMultiplyFactor: 2.75
   maxAngle: 360
 --- !u!114 &732674629
@@ -2929,9 +2923,6 @@ MonoBehaviour:
   climaxTime: 45
   climaxRatio: 0
   maxSessions: 1
-  faded: 0
-  fading: 0
-  killer: {fileID: 1321086842}
   spots:
   - {fileID: 1025074566}
   - {fileID: 1369829459}

@@ -28,9 +28,9 @@ public class AbstractGameEffects : MonoBehaviour {
 
 	protected bool supressEffects;
 
-	public bool faded;
-	public bool fading = false;
-	public Canvas killer;
+	//public bool faded;
+	//public bool fading = false;
+	//public Canvas killer;
 
 
 	// Use this for initialization
@@ -53,10 +53,10 @@ public class AbstractGameEffects : MonoBehaviour {
 		if (supressEffects && !inSession) {
 			supressEffects = false;
 		}
-		if(faded & !fading & !inSession){
-			faded = false;
-			killer.enabled = false;
-		}
+		//if(faded & !fading & !inSession){
+		//	faded = false;
+		//	killer.enabled = false;
+		//}
 
 
 		if (inSession) {
@@ -93,20 +93,20 @@ public class AbstractGameEffects : MonoBehaviour {
 
 		if (inSession && supressEffects) {
 			inSession = false;
-			if(!faded){
-				StartCoroutine(fader());
-			}
+			//if(!faded){
+			//	StartCoroutine(fader());
+			//}
 		}
 
 	}
 
-	private IEnumerator fader(){
-		fading = true;
-		yield return new WaitForSeconds(2f);
-		killer.enabled = true;
-		fading = false;
-		faded = true;
-	}
+//	private IEnumerator fader(){
+//		fading = true;
+//		yield return new WaitForSeconds(2f);
+//		killer.enabled = true;
+//		fading = false;
+//		faded = true;
+//	}
 
 
 }
