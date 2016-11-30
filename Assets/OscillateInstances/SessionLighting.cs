@@ -100,6 +100,7 @@ public class SessionLighting : AbstractGameEffects {
 //				rp.RenderProbe ();
 //				rpcounter = 0;
 //			}
+
 			yield return null;
 		}
 		//rp.refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.ViaScripting;

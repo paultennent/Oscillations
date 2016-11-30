@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbstractGameEffects : MonoBehaviour {
 
@@ -27,6 +28,10 @@ public class AbstractGameEffects : MonoBehaviour {
 
 	protected bool supressEffects;
 
+	public bool faded;
+	public bool fading = false;
+	public Canvas killer;
+
 
 	// Use this for initialization
 	public void Start () {
@@ -36,7 +41,6 @@ public class AbstractGameEffects : MonoBehaviour {
 		swingSeat = GameObject.FindGameObjectWithTag ("Swing").transform;
 		swingPivot = GameObject.FindGameObjectWithTag ("SwingPivot").transform;
 		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
-
 
 	}
 	
@@ -48,6 +52,10 @@ public class AbstractGameEffects : MonoBehaviour {
 
 		if (supressEffects && !inSession) {
 			supressEffects = false;
+		}
+		if(faded & !fading & !inSession){
+			faded = false;
+			killer.enabled = false;
 		}
 
 
@@ -85,8 +93,19 @@ public class AbstractGameEffects : MonoBehaviour {
 
 		if (inSession && supressEffects) {
 			inSession = false;
+			if(!faded){
+				StartCoroutine(fader());
+			}
 		}
 
+	}
+
+	private IEnumerator fader(){
+		fading = true;
+		yield return new WaitForSeconds(2f);
+		killer.enabled = true;
+		fading = false;
+		faded = true;
 	}
 
 

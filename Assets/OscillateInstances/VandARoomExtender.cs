@@ -44,8 +44,8 @@ public class VandARoomExtender : AbstractGameEffects {
 		extendScaleMax *= scale;
 		extenderMovementMin *= scale;
 		extenderMovementMax *= scale;
-		legScaleMin *= scale;
-		legScaleMax *= scale;
+		//legScaleMin *= //scale / 2f;
+		//legScaleMax *= //scale / 2f;
 		legMoveMin *= scale;
 		legMoveMax *= scale;
 	}
