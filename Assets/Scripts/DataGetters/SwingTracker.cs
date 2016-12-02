@@ -142,7 +142,7 @@ public class SwingTracker
         }
     }
 
-    AndroidJavaObject tg=new AndroidJavaObject("android.media.ToneGenerator",5,0x64);
+//    AndroidJavaObject tg=new AndroidJavaObject("android.media.ToneGenerator",5,0x64);
 //        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, ToneGenerator.MAX_VOLUME );
 //            tg.Call<bool>("startTone",41);
 
@@ -268,11 +268,10 @@ public class SwingTracker
                 float TIME_CONSTANT=0.323333333f;
                 float moveErrorCoefficient=dt/(TIME_CONSTANT+dt); 
                 moveErrorAccumulator=Mathf.Abs(bestPos)*moveErrorCoefficient+moveErrorAccumulator*(1f-moveErrorCoefficient);
-                float win1ms=((float)(WINDOW_SIZE))/20f;
+                float win1ms=((float)(WINDOW_SHIFT))/20f;
                 float probFromMoveErrors=Mathf.Max(0,(win1ms-moveErrorAccumulator)/win1ms);
                 float probFromBestError=Mathf.Min(Mathf.Max(1-(currentErrors[WINDOW_SHIFT]-.2f),0),1);
                 float probFromRangeDifference=Mathf.Min(1,Mathf.Max(0,currentErrors[0]/currentErrors[bestPos+WINDOW_SHIFT]-1.5f));
-//                swingProbability=probFromMoveErrors;
                 swingProbability=probFromBestError*probFromMoveErrors*probFromRangeDifference;
 
                 logCount++;
@@ -336,8 +335,7 @@ public class SwingTracker
         }
         if(negativeZ>0.1 && positiveZ<-.1 && swingProbability>0.2f)
         {
-            outPhase+=Mathf.PI*2f;
-//            tg.Call<bool>("startTone",41);
+//            outPhase+=Mathf.PI*2f;
         }
         
         // calculate angle from accelerometer data
@@ -359,7 +357,7 @@ public class SwingTracker
         outAngle=calculatedCurAngle;
         dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2}",calculatedMaxAngle*(180.0f/Mathf.PI),calculatedCurAngle,swingStep);
 
-        if(hasGyro)
+  /*      if(hasGyro)
         {
             outAngle=gyroAngle;
             if(swingProbability>0.8f)
@@ -378,7 +376,7 @@ public class SwingTracker
         }else
         {
             outAngle = calculatedCurAngle;
-        }
+        }*/
         angleHistory[lastMagHistoryPos]=calculatedMaxAngle;
         //
         

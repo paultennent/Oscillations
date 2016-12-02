@@ -38,6 +38,7 @@ public class GyroConnector
     public Quaternion mForwardsDirection=Quaternion.identity;
     
     public SwingTracker mTracker=new SwingTracker();
+    private AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
 
 	public void init () 
     {
@@ -51,7 +52,7 @@ public class GyroConnector
 			receiver = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			receiver.Bind (new IPEndPoint (IPAddress.Any, 2424));
 
-			#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR
 			AndroidJavaClass activityClass;
 			AndroidJavaObject activity, intent;
 
@@ -63,9 +64,9 @@ public class GyroConnector
 			intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
 			Debug.Log("woo:3"+intent);
 			activity.Call<AndroidJavaObject>("startService",intent);
-			#else
+#else
 			timeLastPoll = Time.time;
-			#endif
+#endif
 		}
 	}
 
@@ -96,7 +97,7 @@ public class GyroConnector
         Debug.Log("woo:2"+intent);
         intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
         Debug.Log("woo:3"+intent);
-        activity.Call<AndroidJavaObject>("stopService",intent);
+        activity.Call<AndroidJavaObject>("stopService",intent); 
 #endif
     }	
     // java is big endian, these are some conversion helpers
@@ -162,46 +163,7 @@ public class GyroConnector
     float firstUnityTime=0;
     
     float unityDelay=0.0f;
-    float accelHistoryTime=0f;
 
-    private Quaternion getCurrentDirection()
-    {
-        if(VRDevice.isPresent)
-        {
-            return InputTracking.GetLocalRotation(VRNode.Head);
-//            return Quaternion.Inverse(InputTracking.GetLocalRotation(VRNode.Head));
-        }
-        // for cardboard VR
-/*        if(GvrViewer.Instance!=null)
-        {
-            return GvrViewer.Instance.HeadPose.Orientation;
-//            return Quaternion.Inverse(GvrViewer.Instance.HeadPose.Orientation);
-        }*/
-        return Quaternion.identity;
-        if(mForwardsDirection==Quaternion.identity)
-        {
-                mForwardsDirection=Quaternion.Euler(0,0,360-Input.compass.magneticHeading);
-/*                Quaternion attitude=Input.gyro.attitude;                
-            if(attitude.x!=0 || attitude.y!=0 || attitude.z!=0 || attitude.w!=0)
-            {
-                // get it from gyro once gyro has something worth having
-                // don't care about the up/down-ness of it
-                mForwardsDirection=Quaternion.Euler(0,0,attitude.eulerAngles.z);
-            }*/
-        }
-
-        
-        Quaternion currentDirection=Quaternion.identity;
-        Quaternion currentTilt=Quaternion.identity;
-        // get current head direction (i.e. z direction of phone)
-        Quaternion attitude=Input.gyro.attitude;
-        currentTilt=attitude;
-        currentDirection=Quaternion.Euler(0,0,(360-Input.compass.magneticHeading)-attitude.eulerAngles.z);
-        return currentTilt*currentDirection*mForwardsDirection;
-
-    
-    }
-    
 	public void readData() 
     {
     #if REMOTE_SERVER
@@ -214,7 +176,6 @@ public class GyroConnector
             timeLastPoll=Time.time;
         }
     #endif
-
 
         int count=0;
         // receive everything 
@@ -310,18 +271,13 @@ public class GyroConnector
         float outAngle=mAngle;
 
         // force to use accel code (ignore gyro)
-        //hasAngle=false;
+        hasAngle=false;
         
-        Quaternion directionCorrection=getCurrentDirection();
-        Vector3 rotatedAccel=Vector3.zero;
-        Vector3 origAccel=Vector3.zero;
-        foreach (AccelerationEvent accEvent in Input.accelerationEvents) 
+        mAccelerometer.onFrame(Time.time);
+        float mag,fwdAccel,accelTime;
+        while(mAccelerometer.getAcceleration(out mag,out fwdAccel,out accelTime))
         {
-            float mag=Mathf.Sqrt(accEvent.acceleration.x*accEvent.acceleration.x+accEvent.acceleration.y*accEvent.acceleration.y+accEvent.acceleration.z*accEvent.acceleration.z);
-            origAccel=new Vector3(accEvent.acceleration.x,accEvent.acceleration.y,-accEvent.acceleration.z);
-            rotatedAccel=directionCorrection*origAccel;
-            accelHistoryTime+=accEvent.deltaTime;
-            outAngle=mTracker.OnAccelerometerMagnitude(mag,accelHistoryTime,hasAngle,mAngle,rotatedAccel.z);
+            outAngle=mTracker.OnAccelerometerMagnitude(mag,accelTime,hasAngle,mAngle,fwdAccel);
         }
         dbgTxt=mTracker.dbgTxt;
         if(!hasAngle)
