@@ -172,7 +172,7 @@ public class GyroConnector
         {
             byte[] launchPacket={1,2,3,4};
             receiver.SendTo(launchPacket,serverEndPoint);
-            Debug.Log("Polling gyro");
+            //Debug.Log("Polling gyro");
             timeLastPoll=Time.time;
         }
     #endif

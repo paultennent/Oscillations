@@ -137,6 +137,11 @@ public class SwingTracker
                 retVal[0]=-1;
                 retVal[1]=1;
                 return retVal;
+            case 6:
+                retVal=new float[2];
+                retVal[0]=-180;
+                retVal[1]=180;
+                return retVal;
             default:
                 return null;
         }
@@ -377,7 +382,7 @@ public class SwingTracker
         {
             outAngle = calculatedCurAngle;
         }*/
-        angleHistory[lastMagHistoryPos]=calculatedMaxAngle;
+        angleHistory[lastMagHistoryPos]=calculatedCurAngle;
         //
         
         return outAngle;

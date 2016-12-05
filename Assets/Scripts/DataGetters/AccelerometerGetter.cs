@@ -64,7 +64,7 @@ public class AccelerometerGetter
             // any initial startup (e.g. we need to grab a head direction or a dt or something)
             firstTime=false;
 #if ACCEL_LOGFILE
-            replayCSV=Resources.Load("ReplayData/bigswingers2") as TextAsset;
+                replayCSV=Resources.Load("ReplayData/bigswingers2") as TextAsset;
             Debug.Log(replayCSV);
             if(replayCSV!=null)
             {
