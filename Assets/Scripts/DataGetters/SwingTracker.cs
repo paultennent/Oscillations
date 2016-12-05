@@ -329,7 +329,7 @@ public class SwingTracker
                 comparePos=WINDOW_SIZE-1;
             }
             
-            if(Mathf.Sin((comparePhase-0.5f*Mathf.PI)*0.5f)>0)
+            if(Mathf.Sin((comparePhase-0.5f*Mathf.PI)*0.5f)<0)
             {
                 positiveZ+=zHistory[comparePos];
             }else
@@ -340,7 +340,7 @@ public class SwingTracker
         }
         if(negativeZ>0.1 && positiveZ<-.1 && swingProbability>0.2f)
         {
-//            outPhase+=Mathf.PI*2f;
+            outPhase+=Mathf.PI*2f;
         }
         
         // calculate angle from accelerometer data

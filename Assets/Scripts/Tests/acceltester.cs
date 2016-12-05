@@ -18,23 +18,11 @@ public class acceltester : MonoBehaviour {
         SHOW_GRAPHS,
     };
     
-    Mode mode=Mode.SHOW_GRAPHS;
-
     Text debugText;
     Text debugText2;
-    
-    StreamWriter logWriter;
-    
-    float replayTime=0;
-	int replayPos=0;
-    float accelHistoryTime=0;
-    float [] accelReplayData;
-    float [] accelReplayTimes;
-
 
     void FindDebugGraphs()
     {
-        
         int count=0;
         while(count<10)
         {
@@ -53,13 +41,13 @@ public class acceltester : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-        Input.gyro.enabled=true;
         debugText=GameObject.Find("debugtext").GetComponent<Text>();	
         debugText2=GameObject.Find("debugtext2").GetComponent<Text>();	
         //debugText.text=Application.persistentDataPath;
         FindDebugGraphs();
         m_Gyro=new GyroConnector();
         m_Gyro.init();
+        m_Gyro.mAccelerometer.startLog(Application.persistentDataPath+"/swing-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".csv");
         replayCSV=null;
 	}
     
@@ -69,69 +57,26 @@ public class acceltester : MonoBehaviour {
     }
 
     
-    float[]angleHistory=new float[512];
-    int angleHistoryPos=0;
-    
 	// Update is called once per frame
-	void Update () {
-//            AndroidJavaObject tg=new AndroidJavaObject("android.media.ToneGenerator",5,0x64);
-//        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, ToneGenerator.MAX_VOLUME );
-//            tg.Call<bool>("startTone",41);
-
-        if(accelReplayTimes!=null)
-        {
-            replayTime+=Time.deltaTime;
-            while(replayPos<(accelReplayTimes.Length-1) && accelReplayTimes[replayPos]<replayTime )
-            {
-                replayPos++;
-                if(replayPos<accelReplayData.Length && replayPos<accelReplayTimes.Length)
-                {
-                    float mag=(float)accelReplayData[replayPos];
-                    float time=(float)accelReplayTimes[replayPos];
-//                    m_Tracker.OnAccelerometerMagnitude(mag,time);
-                }
-            }
-        }else
-        {
-            m_Gyro.readData();
-#if UNITY_ANDROID && !UNITY_EDITOR
-/*            foreach (AccelerationEvent accEvent in Input.accelerationEvents) 
-            {
-                float mag=Mathf.Sqrt(accEvent.acceleration.x*accEvent.acceleration.x+accEvent.acceleration.y*accEvent.acceleration.y+accEvent.acceleration.z*accEvent.acceleration.z);            
-                accelHistoryTime+=accEvent.deltaTime;
-                m_Tracker.OnAccelerometerMagnitude(mag,accelHistoryTime);
-                if(logWriter!=null)
-                {
-                    logWriter.Write(accelHistoryTime+","+mag+","+m_Gyro.mAngle+"\n");
-                }
-            }*/
-#endif            
-        }
+	void Update () 
+    {
+        m_Gyro.readData();
 
         
-        if(logWriter!=null)
+        for(int c=0;c<debugGraphs.Length;c++)
         {
-            logWriter.Flush();
-        }
-        switch(mode)
-        {
-            case Mode.SHOW_GRAPHS:
-            
-                for(int c=0;c<debugGraphs.Length;c++)
+            float[] points=m_Gyro.mTracker.GetDebugGraph(c);
+            if(points!=null)
+            {
+                float[] fixedRange=m_Gyro.mTracker.GetDebugGraphRange(c);
+                if(fixedRange!=null)
                 {
-                    float[] points=m_Gyro.mTracker.GetDebugGraph(c);
-                    if(points!=null)
-                    {
-                        float[] fixedRange=m_Gyro.mTracker.GetDebugGraphRange(c);
-                        if(fixedRange!=null)
-                        {
-                            debugGraphs[c].FixRange(fixedRange);
-                        }                        
-                        debugGraphs[c].SetPoints(points);
-                    }
-                }
-                break;
+                    debugGraphs[c].FixRange(fixedRange);
+                }                        
+                debugGraphs[c].SetPoints(points);
+            }
         }
+
         debugText2.text=m_Gyro.dbgTxt;
         debugText.text="p:"+m_Gyro.mTracker.swingProbability+":"+m_Gyro.mAngle;
         GameObject angler=GameObject.Find("angler");

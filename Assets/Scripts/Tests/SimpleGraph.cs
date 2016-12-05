@@ -53,6 +53,8 @@ public class SimpleGraph : MaskableGraphic
                 mLabel.transform.parent=transform.parent;
                 Text text=mLabel.AddComponent<Text>();
                 text.text = title;
+                text.fontSize=20;
+                text.alignment=TextAnchor.LowerLeft;
 
                 Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
                 text.font = ArialFont;
@@ -63,7 +65,7 @@ public class SimpleGraph : MaskableGraphic
                 RectTransform tThem=mLabel.GetComponent<RectTransform>();
                 if(index!=-1)
                 {
-                    tThem.anchorMin=new Vector2(0.1f*(index-1),0);
+                    tThem.anchorMin=new Vector2(0.1f*(index),0);
                     tThem.anchorMax=new Vector2(1,.1f);
                 }else
                 {

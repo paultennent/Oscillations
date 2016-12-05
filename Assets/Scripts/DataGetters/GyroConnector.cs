@@ -38,7 +38,7 @@ public class GyroConnector
     public Quaternion mForwardsDirection=Quaternion.identity;
     
     public SwingTracker mTracker=new SwingTracker();
-    private AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
+    public AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
 
 	public void init () 
     {

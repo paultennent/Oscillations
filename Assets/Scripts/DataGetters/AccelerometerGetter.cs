@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.VR;
 
 using System;
+using System.IO;
 
 
 public class AccelerometerGetter
@@ -15,16 +16,47 @@ public class AccelerometerGetter
     private Quaternion directionCorrection;
 
     public TextAsset replayCSV;
-
+    
+    StreamWriter mLogWriter;
+ 
+    class ReplayItem
+    {
+        public ReplayItem()
+        {
+            fwdAccel=0;
+            magAccel=0;
+            time=0;
+            gyro=0;
+            hasGyro=false;
+        }
+        
+        public string getCSVLine()
+        {
+            return time+","+magAccel+","+fwdAccel+","+gyro+","+hasGyro+"\n";
+        }
+        
+        public string getCSVTitle()
+        {
+            return "time,mag,fwd,gyro,hasGyro";
+        }
+        
+        public float fwdAccel;
+        public float magAccel;
+        public float time;
+        public float gyro;
+        public bool hasGyro;
+    };
+    
+    
 #if ACCEL_LOGFILE
     float replayTime=0;
 	int replayPos=0;
-    float [] accelReplayData;
-    float [] accelReplayTimes;
+    ReplayItem [] mReplayItems;
 #else
     float accelHistoryTime=0f;
-
+    ReplayItem mLogItem=new ReplayItem();
 #endif
+
     
     public Quaternion getCurrentDirection()
     {
@@ -64,29 +96,55 @@ public class AccelerometerGetter
             // any initial startup (e.g. we need to grab a head direction or a dt or something)
             firstTime=false;
 #if ACCEL_LOGFILE
-                replayCSV=Resources.Load("ReplayData/bigswingers2") as TextAsset;
-            Debug.Log(replayCSV);
+            replayCSV=Resources.Load("ReplayData/bigswingers2") as TextAsset;
             if(replayCSV!=null)
             {
                 string csvText=replayCSV.text;
                 string []lines=csvText.Split('\n');
-                Debug.Log(lines[0]);
-                accelReplayTimes=new float[lines.Length];
-                accelReplayData=new float[lines.Length];
-                float curTime=0;
-                float curMag=0;
-                for(int c=0;c<lines.Length;c++)
+                mReplayItems=new ReplayItem[lines.Length-1];
+                string []headings=lines[0].Split(',');
+                
+                int timeIndex=Array.IndexOf(headings,"time");
+                int fwdIndex=Array.IndexOf(headings,"fwd");
+                int magIndex=Array.IndexOf(headings,"mag");
+                int gyroIndex=Array.IndexOf(headings,"gyro");
+                int hasGyroIndex=Array.IndexOf(headings,"hasGyro");
+                
+                for(int c=1;c<lines.Length;c++)
                 {
-                    string[] values=lines[c].Split(',');
-                    if(values.Length>=2)
+                    string[]values=lines[c].Split(',');
+                    ReplayItem ri=new ReplayItem();
+                    try
                     {
-                        curTime=float.Parse(values[0]);
-                        curMag=float.Parse(values[1]);
+                        if(timeIndex!=-1)
+                        {
+                            ri.time=float.Parse(values[timeIndex]);
+                        }
+                        if(fwdIndex!=-1)
+                        {
+                            ri.fwdAccel=float.Parse(values[fwdIndex]);
+                        }
+                        if(magIndex!=-1)
+                        {
+                            ri.magAccel=float.Parse(values[magIndex]);
+                        }
+                        if(gyroIndex!=-1)
+                        {
+                            ri.gyro=float.Parse(values[gyroIndex]);
+                        }
+                        if(hasGyroIndex!=-1)
+                        {
+                            ri.hasGyro=(int.Parse(values[hasGyroIndex])==1);
+                        }
+                    }catch(IndexOutOfRangeException e)
+                    {
+                    }catch(FormatException e)
+                    {
                     }
-                    accelReplayTimes[c]=curTime;
-                    accelReplayData[c]=curMag;
+                    
+                    mReplayItems[c-1]=ri;
                 }
-                replayTime=(float)accelReplayTimes[0];
+                replayTime=mReplayItems[0].time;
             }
 #endif            
         }
@@ -96,20 +154,24 @@ public class AccelerometerGetter
         replayTime+=Time.deltaTime;
 #else
         directionCorrection=getCurrentDirection();        
+        if(mLogWriter!=null)
+        {
+            mLogWriter.Flush();
+        }    
 #endif
     }
     // returns true if there are any acceleration events left
     public bool getAcceleration(out float mag,out float forwardAccel, out float timestamp)
     {
 #if ACCEL_LOGFILE
-        if(replayPos<(accelReplayTimes.Length-1) && accelReplayTimes[replayPos]<replayTime )
+        if(replayPos<(mReplayItems.Length-1) && mReplayItems[replayPos].time<replayTime )
         {
             replayPos++;
-            if(replayPos<accelReplayData.Length && replayPos<accelReplayTimes.Length)
+            if(replayPos<mReplayItems.Length)
             {
-                mag=(float)accelReplayData[replayPos];
-                timestamp=(float)accelReplayTimes[replayPos];
-                forwardAccel=0;
+                mag=mReplayItems[replayPos].magAccel;
+                timestamp=mReplayItems[replayPos].time;
+                forwardAccel=mReplayItems[replayPos].fwdAccel;
                 return true;
             }
         }
@@ -118,7 +180,9 @@ public class AccelerometerGetter
         timestamp=0;
         return false;
 #else
-    if(accelPos<Input.accelerationEvents.Length)
+        Vector3 rotatedAccel;
+        Vector3 origAccel;
+        if(accelPos<Input.accelerationEvents.Length)
         {
             AccelerationEvent accEvent=Input.accelerationEvents[accelPos];
             origAccel=new Vector3(accEvent.acceleration.x,accEvent.acceleration.y,-accEvent.acceleration.z);
@@ -128,6 +192,15 @@ public class AccelerometerGetter
             mag=Mathf.Sqrt(accEvent.acceleration.x*accEvent.acceleration.x+accEvent.acceleration.y*accEvent.acceleration.y+accEvent.acceleration.z*accEvent.acceleration.z);
             timestamp=accelHistoryTime;
             forwardAccel=rotatedAccel.z;
+
+            if(mLogWriter!=null)
+            {
+                mLogItem.fwdAccel=forwardAccel;
+                mLogItem.magAccel=mag;
+                mLogItem.time=accelHistoryTime;
+                mLogWriter.Write(mLogItem.getCSVLine());
+            }
+
             
             accelPos++;
             return true;
@@ -140,6 +213,58 @@ public class AccelerometerGetter
         }                
 #endif        
     }
+
+    public bool fromLogFile()
+    {
+#if ACCEL_LOGFILE
+        return true;
+#else        
+        return false;
+#endif
+    }
+    
+    public bool isWritingLogFile()
+    {
+#if ACCEL_LOGFILE
+        return false;
+#else
+        if(mLogWriter!=null)
+        {
+            return true;
+        }
+        return false;
+#endif
+    }
+    
+    public void setLogExtraData(float gyro,bool hasGyro)
+    {
+#if !ACCEL_LOGFILE
+        mLogItem.gyro=gyro;
+        mLogItem.hasGyro=hasGyro;
+#endif        
+    }
+    
+    public void startLog(string name)
+    {
+        mLogWriter=new StreamWriter(name);
+    }
+    
+    public bool getLogExtraData(out float gyro,out bool hasGyro)
+    {
+#if ACCEL_LOGFILE
+        if(replayPos<mReplayItems.Length)
+        {
+            gyro=mReplayItems[replayPos].gyro;
+            hasGyro=mReplayItems[replayPos].hasGyro;
+        }
+        gyro=0;
+        hasGyro=false;
+        return false;
+#endif        
+        gyro=0;
+        hasGyro=false;
+        return false;
+    }
     
     public void resetForward()
     {
@@ -150,3 +275,4 @@ public class AccelerometerGetter
     
     
 };
+
