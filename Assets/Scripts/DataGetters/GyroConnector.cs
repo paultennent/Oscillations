@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR 
 #define REMOTE_SERVER
 #endif
+//#define LOG_ACCEL
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -42,6 +43,9 @@ public class GyroConnector
 
 	public void init () 
     {
+#if UNITY_ANDROID && !UNITY_EDITOR && LOG_ACCEL
+        mAccelerometer.startLog(Application.persistentDataPath+"/swing-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".csv");
+#endif
 
 		doConnection ();
 	}
@@ -270,20 +274,22 @@ public class GyroConnector
         
         float outAngle=mAngle;
 
-        // force to use accel code (ignore gyro)
-        hasAngle=false;
         
         mAccelerometer.onFrame(Time.time);
+        if(mAccelerometer.isWritingLogFile())
+        {
+            mAccelerometer.setLogExtraData(mAngle,hasAngle);
+        }else if(mAccelerometer.fromLogFile())
+        {
+            mAccelerometer.getLogExtraData(out mAngle,out hasAngle);
+        }
         float mag,fwdAccel,accelTime;
         while(mAccelerometer.getAcceleration(out mag,out fwdAccel,out accelTime))
         {
             outAngle=mTracker.OnAccelerometerMagnitude(mag,accelTime,hasAngle,mAngle,fwdAccel);
         }
         dbgTxt=mTracker.dbgTxt;
-        if(!hasAngle)
-        {
-            mAngle=outAngle;
-        }
+        mAngle=outAngle;
 	}
 
 

@@ -124,10 +124,10 @@ RectTransform:
   - {fileID: 251389946}
   - {fileID: 509692753}
   - {fileID: 86362095}
-  - {fileID: 1269177299}
   - {fileID: 1710380545}
   - {fileID: 1184397022}
   - {fileID: 968957360}
+  - {fileID: 1269177299}
   m_Father: {fileID: 633908818}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -217,7 +217,7 @@ RectTransform:
   m_GameObject: {fileID: 86362094}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
   m_RootOrder: 4
@@ -278,7 +278,7 @@ RectTransform:
   m_GameObject: {fileID: 251389945}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
   m_RootOrder: 2
@@ -402,7 +402,7 @@ RectTransform:
   m_GameObject: {fileID: 509692752}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
   m_RootOrder: 3
@@ -634,10 +634,10 @@ RectTransform:
   m_GameObject: {fileID: 968957359}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -695,10 +695,10 @@ RectTransform:
   m_GameObject: {fileID: 1184397021}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -730,7 +730,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  title: fwdAccel
+  title: gyroSin
 --- !u!1 &1269177298
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,10 +756,10 @@ RectTransform:
   m_GameObject: {fileID: 1269177298}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
-  m_RootOrder: 5
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -791,7 +791,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  title: Error
+  title: Gyro angle
 --- !u!1 &1710380544
 GameObject:
   m_ObjectHideFlags: 0
@@ -817,10 +817,10 @@ RectTransform:
   m_GameObject: {fileID: 1710380544}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 564, y: 267.5, z: 0}
+  m_LocalScale: {x: 631.3433, y: 300, z: 0}
   m_Children: []
   m_Father: {fileID: 8335773}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

@@ -37,7 +37,7 @@ public class AccelerometerGetter
         
         public string getCSVTitle()
         {
-            return "time,mag,fwd,gyro,hasGyro";
+            return "time,mag,fwd,gyro,hasGyro\n";
         }
         
         public float fwdAccel;
@@ -71,7 +71,7 @@ public class AccelerometerGetter
             return GvrViewer.Instance.HeadPose.Orientation;
 //            return Quaternion.Inverse(GvrViewer.Instance.HeadPose.Orientation);
         }*/
-        return Quaternion.identity;
+        return Quaternion.Euler(90,0,0);
 /*        if(mForwardsDirection==Quaternion.identity)
         {
                 mForwardsDirection=Quaternion.Euler(0,0,360-Input.compass.magneticHeading);
@@ -96,7 +96,12 @@ public class AccelerometerGetter
             // any initial startup (e.g. we need to grab a head direction or a dt or something)
             firstTime=false;
 #if ACCEL_LOGFILE
-            replayCSV=Resources.Load("ReplayData/bigswingers2") as TextAsset;
+
+//            replayCSV=Resources.Load("ReplayData/swing-gyroonoff") as TextAsset;
+//            replayCSV=Resources.Load("ReplayData/swing-yesgyro") as TextAsset;
+            replayCSV=Resources.Load("ReplayData/gyrotest") as TextAsset;
+//            replayCSV=Resources.Load("ReplayData/swing-20161205-153113") as TextAsset;
+//            replayCSV=Resources.Load("ReplayData/bigswingers2") as TextAsset;
             if(replayCSV!=null)
             {
                 string csvText=replayCSV.text;
@@ -134,7 +139,10 @@ public class AccelerometerGetter
                         }
                         if(hasGyroIndex!=-1)
                         {
-                            ri.hasGyro=(int.Parse(values[hasGyroIndex])==1);
+                            if(String.Compare(values[hasGyroIndex],"True")==0 || String.Compare(values[hasGyroIndex],"1")==0)
+                            {
+                                ri.hasGyro=true;
+                            }
                         }
                     }catch(IndexOutOfRangeException e)
                     {
@@ -193,6 +201,7 @@ public class AccelerometerGetter
             timestamp=accelHistoryTime;
             forwardAccel=rotatedAccel.z;
 
+#if !ACCEL_LOGFILE            
             if(mLogWriter!=null)
             {
                 mLogItem.fwdAccel=forwardAccel;
@@ -200,6 +209,7 @@ public class AccelerometerGetter
                 mLogItem.time=accelHistoryTime;
                 mLogWriter.Write(mLogItem.getCSVLine());
             }
+#endif
 
             
             accelPos++;
@@ -246,24 +256,30 @@ public class AccelerometerGetter
     
     public void startLog(string name)
     {
+#if !ACCEL_LOGFILE
         mLogWriter=new StreamWriter(name);
+        mLogWriter.Write(mLogItem.getCSVTitle());
+#endif        
     }
     
     public bool getLogExtraData(out float gyro,out bool hasGyro)
     {
 #if ACCEL_LOGFILE
+        
         if(replayPos<mReplayItems.Length)
         {
             gyro=mReplayItems[replayPos].gyro;
             hasGyro=mReplayItems[replayPos].hasGyro;
+            return true;
         }
         gyro=0;
         hasGyro=false;
         return false;
-#endif        
+#else        
         gyro=0;
         hasGyro=false;
         return false;
+#endif
     }
     
     public void resetForward()
