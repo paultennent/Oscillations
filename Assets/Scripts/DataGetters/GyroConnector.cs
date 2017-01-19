@@ -1,27 +1,30 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR 
+#define REMOTE_SERVER
+#endif
+//#define LOG_ACCEL
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System;
 using UnityEngine;
+using UnityEngine.VR;
 
 
 
 public class GyroConnector  
 {
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-    const int PACKET_SIZE=28;
-#else
-    const int PACKET_SIZE=24;
+    const int MIN_PACKET_SIZE=24;
+#if REMOTE_SERVER
+    const int MAX_PACKET_SIZE=24;
     float timeLastPoll=0;
-    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("10.154.161.18"),2323);
-
-
+    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("10.154.163.192"),2323);
+#else
+    const int MAX_PACKET_SIZE=32;
 #endif
 
     public Socket receiver;
-    byte[] receiveBytes=new byte[PACKET_SIZE];
+    byte[] receiveBytes=new byte[MAX_PACKET_SIZE];
     
     public float mAngle=0;
     public float mAngularVelocity=0;
@@ -29,9 +32,20 @@ public class GyroConnector
     public float mRemoteBatteryLevel=0;
     public float mLocalBatteryLevel=0;
     public long mTimestamp=0L;
+    public int mConnectionState=0;
+    
+    public string dbgTxt="";
+    
+    public Quaternion mForwardsDirection=Quaternion.identity;
+    
+    public SwingTracker mTracker=new SwingTracker();
+    public AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
 
 	public void init () 
     {
+#if UNITY_ANDROID && !UNITY_EDITOR && LOG_ACCEL
+        mAccelerometer.startLog(Application.persistentDataPath+"/swing-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".csv");
+#endif
 
 		doConnection ();
 	}
@@ -42,7 +56,7 @@ public class GyroConnector
 			receiver = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			receiver.Bind (new IPEndPoint (IPAddress.Any, 2424));
 
-			#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR
 			AndroidJavaClass activityClass;
 			AndroidJavaObject activity, intent;
 
@@ -54,11 +68,12 @@ public class GyroConnector
 			intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
 			Debug.Log("woo:3"+intent);
 			activity.Call<AndroidJavaObject>("startService",intent);
-			#else
+#else
 			timeLastPoll = Time.time;
-			#endif
+#endif
 		}
 	}
+
 
 	public void pause(bool bPause)
 	{
@@ -67,7 +82,7 @@ public class GyroConnector
 		} else {
 			doConnection ();
 		}
-	}
+	}    
     
     public void stop()
     {
@@ -86,10 +101,9 @@ public class GyroConnector
         Debug.Log("woo:2"+intent);
         intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
         Debug.Log("woo:3"+intent);
-        activity.Call<AndroidJavaObject>("stopService",intent);
+        activity.Call<AndroidJavaObject>("stopService",intent); 
 #endif
-    }
-	
+    }	
     // java is big endian, these are some conversion helpers
     
     byte[] conversionBuf4={0,0,0,0};
@@ -153,33 +167,28 @@ public class GyroConnector
     float firstUnityTime=0;
     
     float unityDelay=0.0f;
-    
+
 	public void readData() 
     {
-		if (receiver == null) {
-			return;
-		}
-#if UNITY_ANDROID && !UNITY_EDITOR
-#else
+    #if REMOTE_SERVER
     //   if we're running in editor, need to poll server to get messages
         if(Time.time-timeLastPoll>0.5)
         {
             byte[] launchPacket={1,2,3,4};
             receiver.SendTo(launchPacket,serverEndPoint);
-//            Debug.Log("Polling gyro");
+            //Debug.Log("Polling gyro");
             timeLastPoll=Time.time;
         }
-#endif
-
+    #endif
 
         int count=0;
         // receive everything 
         // send it out as fast as possible with zero missing frames
         
-    	while(receiver.Available>=PACKET_SIZE)
+    	while(receiver.Available>=MIN_PACKET_SIZE)
         {
             int len=receiver.ReceiveFrom(receiveBytes,ref remoteIpEndPoint);
-            if(receiveBytes.Length>=PACKET_SIZE)
+            if(len>=MIN_PACKET_SIZE)
             {
                 float angle=getBigEndianFloat(receiveBytes,0);
                 long timestamp=getBigEndianInt64(receiveBytes,16);
@@ -206,11 +215,18 @@ public class GyroConnector
                 mAngularVelocity=getBigEndianFloat(receiveBytes,4);
                 mMagDirection=getBigEndianFloat(receiveBytes,8);
                 mRemoteBatteryLevel=getBigEndianFloat(receiveBytes,12);
-        #if UNITY_ANDROID && !UNITY_EDITOR
-                mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
-        #endif
+                if(len>=28)
+                {
+                    mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
+                }
+                if(len>=32)
+                {
+                    mConnectionState=getBigEndianInt32(receiveBytes,28);
+                }
             }            
         }
+        
+        bool hasAngle=true;
         
         if(mBufferCount>0)
         {
@@ -250,11 +266,30 @@ public class GyroConnector
             }
         }else
         {
+            hasAngle=false;
             // actual drop frame, up latency slightly
             unityDelay+=0.001f;
             //Debug.Log("Dropped frame");
         }
-//        Debug.Log("Buf size:"+mBufferCount);
+        
+        float outAngle=mAngle;
+
+        
+        mAccelerometer.onFrame(Time.time);
+        if(mAccelerometer.isWritingLogFile())
+        {
+            mAccelerometer.setLogExtraData(mAngle,hasAngle);
+        }else if(mAccelerometer.fromLogFile())
+        {
+            mAccelerometer.getLogExtraData(out mAngle,out hasAngle);
+        }
+        float mag,fwdAccel,accelTime;
+        while(mAccelerometer.getAcceleration(out mag,out fwdAccel,out accelTime))
+        {
+            outAngle=mTracker.OnAccelerometerMagnitude(mag,accelTime,hasAngle,mAngle,fwdAccel);
+        }
+        dbgTxt=mTracker.dbgTxt;
+        mAngle=outAngle;
 	}
 
 
