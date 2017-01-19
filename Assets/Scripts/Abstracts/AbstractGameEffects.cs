@@ -18,6 +18,7 @@ public class AbstractGameEffects : MonoBehaviour {
 
 	public float sessionLength = 60f;
 	public float climaxTime = 30.0f;
+	public bool dontcycle = false;
 	public float climaxRatio = 0f;
 	protected float offsetTime;
 
@@ -70,8 +71,17 @@ public class AbstractGameEffects : MonoBehaviour {
 			if ((gameNumber & 1) == 1) {
 				offsetTime = climaxTime - offsetTime;
 			}
-			climaxRatio = offsetTime / climaxTime;
 
+			if (!dontcycle) {
+				climaxRatio = offsetTime / climaxTime;
+			} else {
+				if (sessionTime <= climaxTime) {
+					climaxRatio = offsetTime / climaxTime;
+				} else {
+					climaxRatio = 1f;
+				}
+			}
+				
 			if (swingAngle > highAngle) {
 				highAngle = swingAngle;
 			}
