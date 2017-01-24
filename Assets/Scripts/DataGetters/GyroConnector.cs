@@ -25,7 +25,9 @@ public class GyroConnector
 
     public Socket receiver;
     byte[] receiveBytes=new byte[MAX_PACKET_SIZE];
-    
+  
+    public bool useAccelerometer=false;
+  
     public float mAngle=0;
     public float mAngularVelocity=0;
     public float mMagDirection=0;
@@ -272,24 +274,26 @@ public class GyroConnector
             //Debug.Log("Dropped frame");
         }
         
-        float outAngle=mAngle;
-
-        
-        mAccelerometer.onFrame(Time.time);
-        if(mAccelerometer.isWritingLogFile())
+        if(useAccelerometer)
         {
-            mAccelerometer.setLogExtraData(mAngle,hasAngle);
-        }else if(mAccelerometer.fromLogFile())
-        {
-            mAccelerometer.getLogExtraData(out mAngle,out hasAngle);
+            float outAngle=mAngle;
+            
+            mAccelerometer.onFrame(Time.time);
+            if(mAccelerometer.isWritingLogFile())
+            {
+                mAccelerometer.setLogExtraData(mAngle,hasAngle);
+            }else if(mAccelerometer.fromLogFile())
+            {
+                mAccelerometer.getLogExtraData(out mAngle,out hasAngle);
+            }
+            float mag,fwdAccel,accelTime;
+            while(mAccelerometer.getAcceleration(out mag,out fwdAccel,out accelTime))
+            {
+                outAngle=mTracker.OnAccelerometerMagnitude(mag,accelTime,hasAngle,mAngle,fwdAccel);
+            }
+            dbgTxt=mTracker.dbgTxt;
+            mAngle=outAngle;
         }
-        float mag,fwdAccel,accelTime;
-        while(mAccelerometer.getAcceleration(out mag,out fwdAccel,out accelTime))
-        {
-            outAngle=mTracker.OnAccelerometerMagnitude(mag,accelTime,hasAngle,mAngle,fwdAccel);
-        }
-        dbgTxt=mTracker.dbgTxt;
-        mAngle=outAngle;
 	}
 
 

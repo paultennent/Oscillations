@@ -16,6 +16,8 @@ public class MagicReader : AbstractDataReader {
 	private int sameDataCount = 0;
 	private float lastAng = 0;
 
+    public bool useAccelerometer=false;
+    
 	public float getAngle(){
 		return mAngle;
 	}
@@ -59,7 +61,7 @@ public class MagicReader : AbstractDataReader {
 	
 	// Update is called once per frame
 	void Update () {
-
+        gc.useAccelerometer=useAccelerometer;
 		lastAng = mAngle;
 		gc.readData ();
 

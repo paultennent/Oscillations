@@ -32,6 +32,12 @@ public class VandARoomExtender : AbstractGameEffects {
 
 	private float scale;
 
+    // brendan's vertigo effect
+    public bool vertigoEffect=true;
+    private float lastMax=0f;
+    private float curMax=0f;
+    private bool lastLessZero=false;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -106,23 +112,47 @@ public class VandARoomExtender : AbstractGameEffects {
 
 	private void setRoomVals(){
 		//drop walls first
-		float basePos = -mapFloat (ratio, 0f, 1f, wallDropMin, wallDropMax);
+        float vertigoMult=1;        
+        if(vertigoEffect)
+        {
+            bool lessZero = (swingAngle<0);
+            if(lastLessZero!=lessZero && curMax>5)
+            {
+                lastMax=curMax;
+                curMax=0;
+            }
+            lastLessZero=lessZero;
+            curMax=Mathf.Max(Mathf.Abs(swingAngle),curMax);
+            if(lastMax>5)
+            {
+                float mult=Mathf.Abs(swingAngle)/lastMax;
+                vertigoMult=Mathf.Min(mult,1f);
+                vertigoMult=1.0f-0.99f*Mathf.Cos(vertigoMult*0.5f* Mathf.PI);
+            }else
+            {
+                vertigoMult=0;
+            }
+        }
+        float newRatio=ratio*vertigoMult;
+		float basePos = -mapFloat (newRatio, 0f, 1f, wallDropMin, wallDropMax);
+        
+        
 		foreach (GameObject go in roomBase) {
 			go.transform.position = new Vector3 (go.transform.position.x, basePos, go.transform.position.z);
 		}
 
 		//now extend extenders
-		float extrnderScale = mapFloat (ratio, 0f, 1f, extendScaleMin, extendScaleMax);
+		float extrnderScale = mapFloat (newRatio, 0f, 1f, extendScaleMin, extendScaleMax);
 		extenders.transform.localScale = new Vector3 (extenders.transform.localScale.x, extrnderScale, extenders.transform.localScale.z);
 
-		float extenderPos = -mapFloat (ratio, 0f, 1f, extenderMovementMin, extenderMovementMax);
+		float extenderPos = -mapFloat (newRatio, 0f, 1f, extenderMovementMin, extenderMovementMax);
 		extenders.transform.position = new Vector3 (extenders.transform.position.x, extenderPos, extenders.transform.position.z);
 
 		//now extend legs
-		float legextrnderScale = mapFloat (ratio, 0f, 1f, legScaleMin, legScaleMax);
+		float legextrnderScale = mapFloat (newRatio, 0f, 1f, legScaleMin, legScaleMax);
 		legs.transform.localScale = new Vector3 (legs.transform.localScale.x, legextrnderScale, legs.transform.localScale.z);
 
-		float legextenderPos = -mapFloat (ratio, 0f, 1f, legMoveMin, legMoveMax);
+		float legextenderPos = -mapFloat (newRatio  , 0f, 1f, legMoveMin, legMoveMax);
 		legs.transform.position = new Vector3 (legs.transform.position.x, legextenderPos, legs.transform.position.z);
 			
 	}

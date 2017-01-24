@@ -20,6 +20,7 @@ public class AbstractGameEffects : MonoBehaviour {
 	public float climaxTime = 30.0f;
 	public bool dontcycle = false;
 	public float climaxRatio = 0f;
+    public float pauseEndTime= 10.0f;
 	protected float offsetTime;
 
 	public int maxSessions = 1;
@@ -61,16 +62,26 @@ public class AbstractGameEffects : MonoBehaviour {
 
 
 		if (inSession) {
-			int gameNumber = (int)(sessionTime / climaxTime);
+            float totalGameTime=climaxTime*2.0f+pauseEndTime;
+			int gameNumber = (int)(sessionTime / totalGameTime);
 
 			if (gameNumber > maxSessions && maxSessions > 0) {
 				supressEffects = true;
 			}
 
-			offsetTime = sessionTime - (gameNumber * climaxTime);
-			if ((gameNumber & 1) == 1) {
-				offsetTime = climaxTime - offsetTime;
-			}
+			offsetTime = sessionTime - (gameNumber * totalGameTime);
+            if(offsetTime>climaxTime)                
+            {
+                if(offsetTime<climaxTime*2.0f)
+                {
+                    // going back down
+                    offsetTime=climaxTime*2.0f-offsetTime;
+                }else
+                {
+                    // pause at end
+                    offsetTime=0;
+                }
+            }
 
 			if (!dontcycle) {
 				climaxRatio = offsetTime / climaxTime;

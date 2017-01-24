@@ -2744,7 +2744,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sessionLength: 90
   climaxTime: 45
+  dontcycle: 0
   climaxRatio: 0
+  pauseEndTime: 10
   maxSessions: 0
   roomBase:
   - {fileID: 476637487}
@@ -2754,6 +2756,7 @@ MonoBehaviour:
   extenders: {fileID: 1839041740}
   legs: {fileID: 657230408}
   resetTime: 2
+  vertigoEffect: 0
 --- !u!4 &732674627
 Transform:
   m_ObjectHideFlags: 0
@@ -2780,7 +2783,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sessionLength: 90
   climaxTime: 45
+  dontcycle: 0
   climaxRatio: 0
+  pauseEndTime: 10
   maxSessions: 0
   swingMultiplyFactor: 2.75
   maxAngle: 360
@@ -2797,6 +2802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lowPassfilter: 0
   smoothFactor: 0.015
+  useAccelerometer: 1
 --- !u!114 &732674630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2921,7 +2927,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sessionLength: 90
   climaxTime: 45
+  dontcycle: 0
   climaxRatio: 0
+  pauseEndTime: 10
   maxSessions: 0
   spots:
   - {fileID: 1025074566}
