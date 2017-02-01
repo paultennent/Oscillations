@@ -23,6 +23,8 @@ public class GyroConnector
     const int MAX_PACKET_SIZE=32;
 #endif
 
+    float timeLastPacket=0;
+
     public Socket receiver;
     byte[] receiveBytes=new byte[MAX_PACKET_SIZE];
   
@@ -73,6 +75,7 @@ public class GyroConnector
 #else
 			timeLastPoll = Time.time;
 #endif
+            timeLastPacket = Time.time;
 		}
 	}
 
@@ -192,6 +195,7 @@ public class GyroConnector
             int len=receiver.ReceiveFrom(receiveBytes,ref remoteIpEndPoint);
             if(len>=MIN_PACKET_SIZE)
             {
+                timeLastPacket=Time.time;
                 float angle=getBigEndianFloat(receiveBytes,0);
                 long timestamp=getBigEndianInt64(receiveBytes,16);
                 if(firstTime)
@@ -225,8 +229,13 @@ public class GyroConnector
                 {
                     mConnectionState=getBigEndianInt32(receiveBytes,28);
                 }
-            }            
+            }
         }
+        if(Time.time-timeLastPacket>1f)
+        {
+            mConnectionState=0;
+        }
+
         
         bool hasAngle=true;
         

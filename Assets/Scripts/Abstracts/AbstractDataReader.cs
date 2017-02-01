@@ -7,6 +7,12 @@ public class AbstractDataReader : MonoBehaviour {
 	protected volatile float[] gyroNow = {0f,0f,0f};
 	protected volatile float[] magNow = {0f,0f,0f};
 	protected volatile double[] headingNow = { 0, 0, 0 }; //degrees
+    
+    public const int CONNECTION_FULL=0;
+    public const int CONNECTION_PARTIAL=1;
+    public const int CONNECTION_NONE=2;
+    
+    protected int connectionState=CONNECTION_FULL;
 
 	public bool lowPassfilter;
 	public float smoothFactor = 0.015f;
@@ -14,6 +20,11 @@ public class AbstractDataReader : MonoBehaviour {
 	public float[] getAccNow(){
 		return accNow;
 	}
+    
+    public int getConnectionState()
+    {
+        return connectionState;
+    }
 	
 	public float[] getHeadingsNow(){
 		//return gyroNow;
