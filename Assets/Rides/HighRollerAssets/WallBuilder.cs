@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallBuilder : MonoBehaviour {
+public class WallBuilder : AbstractGameEffects {
 
 	public GameObject wallprefab;
 	private GameObject focusPoint;
@@ -22,6 +22,8 @@ public class WallBuilder : MonoBehaviour {
 
 	public Material[] materials;
 	private int curMat = 1;
+    private int matSwitchcounter = 0;
+    public int colourBlockSize = 1;
 
 
 	private LinkedList<GameObject[]> walls;
@@ -30,9 +32,11 @@ public class WallBuilder : MonoBehaviour {
 	private CamMoverTest cmt;
 
 	private float timeCounter = 0;
+    private bool wallsexist = false;
 
 	// Use this for initialization
 	void Start () {
+        base.Start();
 
 		cmt = GetComponent<CamMoverTest> ();
 
@@ -49,11 +53,22 @@ public class WallBuilder : MonoBehaviour {
 		drawPoint.transform.position = pivot.transform.position;
 
 		floorwidth = floorPrefab.transform.localScale.x;
-		initWalls ();
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        base.Update();
+
+        if (inSession)
+        {
+            if (!wallsexist)
+            {
+                initWalls();
+            }
+        }
+        else { return; }
+
 		timeCounter += Time.deltaTime;
 		if (timeCounter > 60f) {
 			timeCounter = 0f;
@@ -230,6 +245,7 @@ public class WallBuilder : MonoBehaviour {
 			int mat = getNextMat ();
 			AddWallPair (true, 2f, 2f, mat, mat, 0, 0, 0);
 		}
+        wallsexist = true;
 	}
 
 	private void removeWalls(bool first){
@@ -260,10 +276,17 @@ public class WallBuilder : MonoBehaviour {
 	}
 
 	private int getNextMat(){
-		curMat++;
-		if (curMat > 3) {
-			curMat = 1;
-		}
+        matSwitchcounter++;
+        if (matSwitchcounter >= colourBlockSize)
+        {
+            matSwitchcounter = 0;
+            curMat++;
+            if (curMat > 3)
+            {
+                curMat = 1;
+            }
+        }
+
 		return curMat;
 	}
 

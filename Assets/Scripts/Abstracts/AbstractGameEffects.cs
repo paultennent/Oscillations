@@ -31,6 +31,8 @@ public class AbstractGameEffects : MonoBehaviour {
 	protected float lowAngle;
 
 	protected bool suppressEffects;
+
+    public float pauseStartTime = 0f;
     
 
 	//public bool faded;
@@ -51,7 +53,13 @@ public class AbstractGameEffects : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void Update () {
-		swingAngle = swingBase.getSwingAngle ();
+
+        if (Time.time < pauseStartTime)
+        {
+            return;
+        }
+
+        swingAngle = swingBase.getSwingAngle ();
 		sessionTime = sessionManager.getSessionTime ();
 		inSession = sessionManager.isInSession ();
 
@@ -130,37 +138,37 @@ public class AbstractGameEffects : MonoBehaviour {
 		}
 
         // set status flashlight
-        switch(swingData.getConnectionState())
-        {
-            case AbstractDataReader.CONNECTION_PARTIAL:
-                statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ONE);
-                break;
-            case AbstractDataReader.CONNECTION_NONE:
-                statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ALL);            
-                break;
-            default:
-                // connected ok
-                {
-                    print("connected");
-                    if(inSession)
-                    {
-                        if(timeLeftInGame<=0)
-                        {
-                            statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHED);
-                        }else if(timeLeftInGame<10)
-                        {
-                            statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHING);
-                        }else
-                        {
-                            statusFlasher.setFlashPattern(statusFlasher.FLASH_RUNNING);
-                        }
-                    }else
-                    {
-                        statusFlasher.setFlashPattern(null);
-                    }                        
-                }
-                break;
-        }
+        //switch(swingData.getConnectionState())
+        //{
+        //    case AbstractDataReader.CONNECTION_PARTIAL:
+        //        statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ONE);
+        //        break;
+        //    case AbstractDataReader.CONNECTION_NONE:
+        //        statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ALL);            
+        //        break;
+        //    default:
+        //        // connected ok
+        //        {
+        //            print("connected");
+        //            if(inSession)
+        //            {
+        //                if(timeLeftInGame<=0)
+        //                {
+        //                    statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHED);
+        //                }else if(timeLeftInGame<10)
+        //                {
+        //                    statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHING);
+        //                }else
+        //                {
+        //                    statusFlasher.setFlashPattern(statusFlasher.FLASH_RUNNING);
+        //                }
+        //            }else
+        //            {
+        //                statusFlasher.setFlashPattern(null);
+        //            }                        
+        //        }
+        //        break;
+        //}
 
 	}
 
