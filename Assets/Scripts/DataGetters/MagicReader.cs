@@ -74,6 +74,19 @@ public class MagicReader : AbstractDataReader {
 		mRemoteBatteryLevel = gc.mRemoteBatteryLevel;
 		mTimestamp = gc.mTimestamp;
 
+        switch(gc.mConnectionState&3)
+        {
+            case 3:
+                connectionState=CONNECTION_FULL;
+                break;
+            case 0:
+                connectionState=CONNECTION_NONE;
+                break;
+            default:
+                connectionState=CONNECTION_PARTIAL;
+                break;
+        };
+        
 		if (lastAng == mAngle) {
 			sameDataCount += 1;
 		} else {

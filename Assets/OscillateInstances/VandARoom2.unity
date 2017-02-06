@@ -2724,6 +2724,7 @@ GameObject:
   - component: {fileID: 732674631}
   - component: {fileID: 732674632}
   - component: {fileID: 732674633}
+  - component: {fileID: 732674634}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -2786,7 +2787,7 @@ MonoBehaviour:
   dontcycle: 0
   climaxRatio: 0
   pauseEndTime: 10
-  maxSessions: 0
+  maxSessions: 1
   swingMultiplyFactor: 2.75
   maxAngle: 360
 --- !u!114 &732674629
@@ -2951,6 +2952,22 @@ MonoBehaviour:
   rp: {fileID: 1155189290}
   rpInterval: 0.25
   skipSpots: 0
+--- !u!114 &732674634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 732674625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dae7eab612db74a840795b9f1cfb8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FLASH_RUNNING: 0000
+  FLASH_DISCONNECT_ONE: 110011001100
+  FLASH_DISCONNECT_ALL: 1
+  FLASH_FINISHING: 1000000000
+  FLASH_FINISHED: 1010100000
 --- !u!1 &760502951
 GameObject:
   m_ObjectHideFlags: 0
