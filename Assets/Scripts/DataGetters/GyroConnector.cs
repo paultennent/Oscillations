@@ -180,7 +180,12 @@ public class GyroConnector
         if(Time.time-timeLastPoll>0.5)
         {
             byte[] launchPacket={1,2,3,4};
-            receiver.SendTo(launchPacket,serverEndPoint);
+			try
+			{
+	            receiver.SendTo(launchPacket,serverEndPoint);
+			}catch(SocketException e)
+			{
+			}
             //Debug.Log("Polling gyro");
             timeLastPoll=Time.time;
         }

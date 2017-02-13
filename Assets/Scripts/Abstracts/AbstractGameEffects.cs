@@ -208,7 +208,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 break;
         }
         swingAngVel=swingAngle-lastAngle;
-        print("phase:"+swingPhase+",quadrant:"+swingQuadrant+",angVel:"+swingAngVel);
+        //print("phase:"+swingPhase+",quadrant:"+swingQuadrant+",angVel:"+swingAngVel);
         
         // set status flashlight
         //switch(swingData.getConnectionState())

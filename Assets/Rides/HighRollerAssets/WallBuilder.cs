@@ -32,7 +32,7 @@ public class WallBuilder : AbstractGameEffects {
 	private CamMoverTest cmt;
 
 	private float timeCounter = 0;
-    private bool wallsexist = false;
+    private bool wallsExist = false;
 
 	// Use this for initialization
 	void Start () {
@@ -60,14 +60,15 @@ public class WallBuilder : AbstractGameEffects {
 	void Update () {
         base.Update();
 
-        if (inSession)
+        if (true || inSession)
         {
-            if (!wallsexist)
+            if (!wallsExist)
             {
                 initWalls();
             }
         }
         else { return; }
+
 
 		timeCounter += Time.deltaTime;
 		if (timeCounter > 60f) {
@@ -108,7 +109,8 @@ public class WallBuilder : AbstractGameEffects {
 		//left wall
 		float xpos = drawPoint.transform.position.x - leftwidth;
 		float ypos = (drawPoint.transform.position.y + wallprefab.transform.localScale.y / 2) - floorDepth;
-		float zpos = drawPoint.transform.position.z + wallprefab.transform.localScale.z / (wallprefab.transform.localScale.z / 2f);
+//		float zpos = drawPoint.transform.position.z + wallprefab.transform.localScale.z / (wallprefab.transform.localScale.z / 2f);
+		float zpos = drawPoint.transform.position.z;
 		if(!forward){
 			zpos = drawPoint.transform.position.z - wallprefab.transform.localScale.z / (wallprefab.transform.localScale.z / 2f);
 		}
@@ -143,7 +145,8 @@ public class WallBuilder : AbstractGameEffects {
 		//right wall
 		xpos = drawPoint.transform.position.x + rightwidth;
 		ypos = (drawPoint.transform.position.y + wallprefab.transform.localScale.y / 2) - floorDepth;
-		zpos = drawPoint.transform.position.z + wallprefab.transform.localScale.z / (wallprefab.transform.localScale.z / 2f);
+//		zpos = drawPoint.transform.position.z;
+//		zpos = drawPoint.transform.position.z + wallprefab.transform.localScale.z / (wallprefab.transform.localScale.z / 2f);
 		if(!forward){
 				zpos = drawPoint.transform.position.z - wallprefab.transform.localScale.z / (wallprefab.transform.localScale.z / 2f);
 		}
@@ -179,10 +182,10 @@ public class WallBuilder : AbstractGameEffects {
 		//floor
 		xpos = drawPoint.transform.position.x + ((rightwidth-leftwidth)/2f);
 		ypos = drawPoint.transform.position.y - floorDepth;
-		zpos = drawPoint.transform.position.z + (floorPrefab.transform.localScale.z) ;
-		if(!forward){
-			zpos = drawPoint.transform.position.z - (floorPrefab.transform.localScale.z/2f) ;
-		}
+//		zpos = drawPoint.transform.position.z + (floorPrefab.transform.localScale.z) ;
+//		if(!forward){
+//			zpos = drawPoint.transform.position.z - (floorPrefab.transform.localScale.z/2f)/ (floorPrefab.transform.localScale.z / 2f) ;
+//		}
 		GameObject floor1 = GameObject.Instantiate(floorPrefab, new Vector3(xpos,ypos,zpos), Quaternion.identity) as GameObject;
 		floor1.name = "f1 " + zpos;
 		floor1.transform.parent = wallparent.transform;
@@ -215,7 +218,7 @@ public class WallBuilder : AbstractGameEffects {
 	private void addMoreWalls(bool forward){
 		if (forward) {
 			//add in the necessary amount of walls forward
-			float start = (walls.Last.Value)[0].transform.position.z;// + (wallprefab.transform.localScale.z);
+			float start = (walls.Last.Value)[0].transform.position.z + (wallprefab.transform.localScale.z);
 			for (float i = start; i <= focusPoint.transform.position.z; i += wallprefab.transform.localScale.z) {
 				drawPoint.transform.position = new Vector3 (0, 0, i);
 				int mat = getNextMat ();
@@ -225,7 +228,7 @@ public class WallBuilder : AbstractGameEffects {
 
 		} else {
 			//add in the necessarty amount of walls backward
-			float start = (walls.First.Value)[0].transform.position.z;// - (wallprefab.transform.localScale.z);
+			float start = (walls.First.Value)[0].transform.position.z- (wallprefab.transform.localScale.z);
 
 			for (float i = start; i >= rearfocusPoint.transform.position.z; i -= wallprefab.transform.localScale.z) {
 				drawPoint.transform.position = new Vector3 (0, 0, i);
@@ -245,7 +248,7 @@ public class WallBuilder : AbstractGameEffects {
 			int mat = getNextMat ();
 			AddWallPair (true, 2f, 2f, mat, mat, 0, 0, 0);
 		}
-        wallsexist = true;
+        wallsExist = true;
 	}
 
 	private void removeWalls(bool first){

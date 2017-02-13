@@ -878,9 +878,7 @@ GameObject:
   - component: {fileID: 1021388840}
   - component: {fileID: 1021388839}
   - component: {fileID: 1021388838}
-  - component: {fileID: 1021388843}
   - component: {fileID: 1021388844}
-  - component: {fileID: 1021388845}
   - component: {fileID: 1021388846}
   m_Layer: 0
   m_Name: Main Camera
@@ -957,45 +955,13 @@ Transform:
   m_Father: {fileID: 913160787}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1021388843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1021388837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97e9b95cf609d96409b6c40519432957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  filterType: 0
-  preview: 0
-  previewScale: {x: 1, y: 1, z: 1}
-  movementScale: 0
-  rotationScale: 1
-  maxVelocity: 8
-  minVelocity: 0.1
-  velocityScale: 0.375
-  softZDistance: 0.005
-  velocityDownsample: 1
-  excludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  shader: {fileID: 4800000, guid: 85a88efa8c871af4a9d17c64791b6f4f, type: 3}
-  dx11MotionBlurShader: {fileID: 4800000, guid: f1b13d7a80660504a858ea24cfa418c6,
-    type: 3}
-  replacementClear: {fileID: 4800000, guid: 7699c5fbfa27745a1abe111ab7bf9785, type: 3}
-  noiseTexture: {fileID: 2800000, guid: 31f5a8611c4ed1245b18456206e798dc, type: 3}
-  jitter: 0.05
-  showVelocity: 0
-  showVelocityScale: 1
 --- !u!114 &1021388844
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1021388837}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
   m_Name: 
@@ -1009,42 +975,13 @@ MonoBehaviour:
   edgesOnly: 0
   edgesOnlyBgColor: {r: 1, g: 1, b: 1, a: 1}
   edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
---- !u!114 &1021388845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1021388837}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd70d448b18cfbc46af26466f752332c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeFocus: 0
-  focalLength: 1
-  focalSize: 0.05
-  aperture: 0.5
-  focalTransform: {fileID: 0}
-  maxBlurSize: 2
-  highResolution: 0
-  blurType: 0
-  blurSampleCount: 2
-  nearBlur: 0
-  foregroundOverlap: 1
-  dofHdrShader: {fileID: 4800000, guid: acd613035ff3e455e8abf23fdc8c8c24, type: 3}
-  dx11BokehShader: {fileID: 4800000, guid: d8e82664aa8686642a424c88ab10164a, type: 3}
-  dx11BokehThreshold: 0.5
-  dx11SpawnHeuristic: 0.0875
-  dx11BokehTexture: {fileID: 2800000, guid: a4cdca73d61814d33ac1587f6c163bca, type: 3}
-  dx11BokehScale: 1.2
-  dx11BokehIntensity: 2.5
 --- !u!114 &1021388846
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1021388837}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76b5ec6153a1d55438228df10fe66844, type: 3}
   m_Name: 
@@ -1534,10 +1471,7 @@ GameObject:
   - component: {fileID: 1670035077}
   - component: {fileID: 1670035078}
   - component: {fileID: 1670035080}
-  - component: {fileID: 1670035079}
   - component: {fileID: 1670035081}
-  - component: {fileID: 1670035082}
-  - component: {fileID: 1670035083}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -1606,7 +1540,7 @@ MonoBehaviour:
   climaxRatio: 0
   pauseEndTime: 0
   maxSessions: 0
-  pauseStartTime: 5
+  pauseStartTime: 0
   pivot: {fileID: 1959593108}
   speed: 1
   manual: 0
@@ -1624,27 +1558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lowPassfilter: 0
   smoothFactor: 0.015
-  useAccelerometer: 1
---- !u!114 &1670035079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48f502d24c1f40b9b73ca8bb4875e58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sessionLength: 60
-  climaxTime: 10
-  dontcycle: 1
-  climaxRatio: 0
-  pauseEndTime: 0
-  maxSessions: 0
-  pauseStartTime: 0
-  cage: {fileID: 768310624}
-  cagePivot: {fileID: 1889614922}
+  useAccelerometer: 0
 --- !u!114 &1670035080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1676,49 +1590,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerAngle: 10
---- !u!114 &1670035082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcd500db54c4640c3b74b683da46490e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sessionLength: 60
-  climaxTime: 10
-  dontcycle: 1
-  climaxRatio: 0
-  pauseEndTime: 0
-  maxSessions: 0
-  pauseStartTime: 0
-  cage: {fileID: 768310623}
-  targetScale: {x: 0.15, y: 0.15, z: 0.15}
---- !u!114 &1670035083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6d1f775ed1854d67bcbbc1a58062abd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sessionLength: 60
-  climaxTime: 30
-  dontcycle: 0
-  climaxRatio: 0
-  pauseEndTime: 0
-  maxSessions: 0
-  pauseStartTime: 15
-  lineMaterial: {fileID: 2100000, guid: b6b260fde18d64c32ad45e1a9e8fba44, type: 2}
-  gapDistance: 2
-  lineCount: 5
-  lineWidth: 0.01
-  lineparent: {fileID: 1825226516}
 --- !u!1 &1825226516
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,13 +1726,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1889614921}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 768310624}
-  m_Father: {fileID: 1959593109}
-  m_RootOrder: 2
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1959593108
 GameObject:
@@ -1890,7 +1761,6 @@ Transform:
   m_Children:
   - {fileID: 168761941}
   - {fileID: 1576519256}
-  - {fileID: 1889614922}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

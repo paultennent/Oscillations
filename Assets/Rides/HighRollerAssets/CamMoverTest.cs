@@ -10,6 +10,9 @@ public class CamMoverTest : AbstractGameEffects {
     public bool manual = false;
     public Transform wheel;
 
+	private float angVelscaler = 3f;
+	private float dragConstant = 0.3f;
+
 	// Use this for initialization
 	void Start () {
         base.Start();
@@ -20,43 +23,28 @@ public class CamMoverTest : AbstractGameEffects {
     {
         base.Update();
 
+		//angVelscaler = angVelscaler * (1 + climaxRatio);
+
         if (!inSession) {
             wheel.GetComponent<Renderer>().enabled = false;
             return; }
 
         wheel.GetComponent<Renderer>().enabled = true;
-        if (!manual)
-        {
-            speed = 1 + 100 * climaxRatio; //(100 * Mathf.Abs(Mathf.Sin(Time.time / 100)));
-            pivot.transform.Translate(Vector3.forward * Time.deltaTime * speed);
-            wheel.RotateAround(pivot.transform.position, Vector3.left, Time.deltaTime * speed);
-        }
 
-        else {
+		speed = speed + (getAccelerationNow () * Time.deltaTime);
 
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
-                speed = speed + (1 * Time.deltaTime);
-                pivot.transform.Translate(Vector3.forward * Time.deltaTime * speed);
-            }
-
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                speed = speed + (1 * Time.deltaTime);
-                pivot.transform.Translate(Vector3.back * Time.deltaTime * speed);
-            }
-
-            if (Input.GetKeyUp(KeyCode.UpArrow))
-            {
-                speed = 1;
-                pivot.transform.Translate(Vector3.forward * Time.deltaTime * speed);
-            }
-
-            if (Input.GetKeyUp(KeyCode.DownArrow))
-            {
-                speed = 1;
-                pivot.transform.Translate(Vector3.back * Time.deltaTime * speed);
-            }
-        }
+        pivot.transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        wheel.RotateAround(pivot.transform.position, Vector3.left, Time.deltaTime * speed);
+        
     }
+
+	private float getAccelerationNow(){
+		float totalAcc = 0;
+		if (swingQuadrant == 3) {
+			//print ("impelling");
+			totalAcc = -swingAngVel * angVelscaler;
+		}
+		totalAcc -= (speed * speed) * dragConstant;
+		return totalAcc;
+	}
 }

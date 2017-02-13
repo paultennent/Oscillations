@@ -482,7 +482,8 @@ public class SwingTracker
             calculatedMaxAngle=thisMaxAngle*maxAngleCoefficient + calculatedMaxAngle*(1f-maxAngleCoefficient);
             calculatedCurAngle=calculatedMaxAngle *Mathf.Sin((outPhase-0.5f*Mathf.PI)/2f);
             calculatedCurAngle*=(180.0f/Mathf.PI);
-            dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2}",calculatedMaxAngle*(180.0f/Mathf.PI),calculatedCurAngle,swingStep);
+			dbgTxt = "";
+            //dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2}",calculatedMaxAngle*(180.0f/Mathf.PI),calculatedCurAngle,swingStep);
 //            dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2}",calculatedMaxAngle*(180.0f/Mathf.PI),calculatedCurAngle,swingStep);
 
             

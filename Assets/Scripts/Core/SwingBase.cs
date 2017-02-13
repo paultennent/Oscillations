@@ -56,6 +56,11 @@ public class SwingBase : MonoBehaviour {
 		swingPivot = GameObject.FindGameObjectWithTag ("SwingPivot").transform;
 		headset = GameObject.Find("camPositioner").transform;
 		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
+
+		#if !UNITY_EDITOR
+			sineWave = false;
+		#endif
+
 	}
 	
 	// Update is called once per frame
