@@ -43,7 +43,7 @@ public class JellyfishCamMover : AbstractGameEffects  {
         float skirtAngle = Mathf.Abs(Mathf.Min(swingAngle,45f)/45f)*0.5f;
 //        float skirtAngle = (swingAmplitude
 //        float skirtAngle=(swingAngVel*swingAngVel)*0.0001f;
-        print("curheight:"+curHeight+",curVel"+yVelocity+",curUpforce:"+calculateUpforce()+",av:"+swingAngVel+",sa"+skirtAngle);
+        //print("curheight:"+curHeight+",curVel"+yVelocity+",curUpforce:"+calculateUpforce()+",av:"+swingAngVel+",sa"+skirtAngle);
         skirtObj.radius1=10*Mathf.Sin(skirtAngle)+5*Mathf.Cos(skirtAngle);
         skirtObj.height=-1 * Mathf.Sin(skirtAngle)-5*Mathf.Cos(skirtAngle);
 	}
