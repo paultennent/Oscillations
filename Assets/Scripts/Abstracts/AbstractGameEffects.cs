@@ -64,7 +64,6 @@ public class AbstractGameEffects : MonoBehaviour {
         {
             return;
         }
-
         swingAngle = swingBase.getSwingAngle ();
 		sessionTime = sessionManager.getSessionTime ();
 		inSession = sessionManager.isInSession ();
@@ -129,6 +128,7 @@ public class AbstractGameEffects : MonoBehaviour {
 			//	StartCoroutine(fader());
 			//}
 		}
+        
 
         if (swingAngle > highAngle) {
             highAngle = swingAngle;
@@ -207,7 +207,14 @@ public class AbstractGameEffects : MonoBehaviour {
                 }                
                 break;
         }
-        swingAngVel=swingAngle-lastAngle;
+        if(Time.deltaTime>0)
+        {
+            swingAngVel=(swingAngle-lastAngle)/Time.deltaTime;
+        }else
+        {
+            swingAngVel=0f;
+        }
+        lastAngle=swingAngle;
         //print("phase:"+swingPhase+",quadrant:"+swingQuadrant+",angVel:"+swingAngVel);
         
         // set status flashlight
