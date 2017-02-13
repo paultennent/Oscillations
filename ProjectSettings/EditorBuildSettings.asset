@@ -9,5 +9,7 @@ EditorBuildSettings:
     path: Assets/SwingBase.unity
   - enabled: 0
     path: Assets/OscillateInstances/VandARoom2.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/HighRoller.unity
+  - enabled: 1
+    path: Assets/Rides/Jellyfish.unity
