@@ -39,6 +39,7 @@ public class AIJelly : MonoBehaviour  {
 		initialPosition = new Vector3 (Random.Range (transform.position.x-spawnRange, transform.position.x+spawnRange), Random.Range (transform.position.y-spawnRange, transform.position.y+spawnRange), Random.Range (transform.position.z-spawnRange, transform.position.z+spawnRange));
 
 		skirtObj=skirt.GetComponent<Skirt>();
+		transform.parent = GameObject.Find ("JellySpawner").transform;
 	}
 
 	// Update is called once per frame

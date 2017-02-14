@@ -57,9 +57,9 @@ public class SwingBase : MonoBehaviour {
 		headset = GameObject.Find("camPositioner").transform;
 		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
 
-		//#if !UNITY_EDITOR
-		//	sineWave = false;
-		//#endif
+		#if !UNITY_EDITOR
+			sineWave = false;
+		#endif
 
 	}
 	
