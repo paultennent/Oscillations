@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FishSpawner : MonoBehaviour {
+public class JellySpawner : MonoBehaviour {
 
-	public int fishCount = 10;
-	public GameObject[] fish;
+	public GameObject jellyPrefab;
+	public int count;
 
 	// Use this for initialization
 	void Start () {
-		for (int i = 0; i < fishCount; i++) {
-			Instantiate(fish[Random.Range(0,fish.Length)]);
+		for (int i = 0; i < count; i++) {
+			Instantiate (jellyPrefab);
 		}
 	}
 	

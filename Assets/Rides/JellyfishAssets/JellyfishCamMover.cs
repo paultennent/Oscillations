@@ -18,6 +18,8 @@ public class JellyfishCamMover : AbstractGameEffects  {
     
     public bool launch=false;
 
+	public bool infiniteFall = true;
+
     private Skirt skirtObj;
     
 	// Use this for initialization
@@ -34,7 +36,7 @@ public class JellyfishCamMover : AbstractGameEffects  {
 
         yVelocity+=upforce*Time.deltaTime;
         curHeight=curHeight+yVelocity*Time.deltaTime;
-        if(curHeight<0)
+		if(curHeight<0 & !infiniteFall)
         {
             curHeight=0;
             yVelocity=0;
