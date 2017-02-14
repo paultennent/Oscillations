@@ -21,8 +21,8 @@ public class FishSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		for (int i = 0; i < myFish.Length; i++) {
-			if (Vector3.Distance (player.position, myFish [i].transform.position) > 200) {
-				Destroy (myFish [i],10f);
+			if (Vector3.Distance (player.position, myFish [i].transform.position) > 400) {
+				Destroy (myFish [i],0f);
 				myFish[i] = Instantiate(fish[Random.Range(0,fish.Length)]);
 			}
 		}
