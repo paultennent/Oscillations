@@ -207,6 +207,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 }                
                 break;
         }
+		swingPhase = MapASin (swingPhase);
         if(Time.deltaTime>0)
         {
             swingAngVel=(swingAngle-lastAngle)/Time.deltaTime;
@@ -259,6 +260,23 @@ public class AbstractGameEffects : MonoBehaviour {
 //		fading = false;
 //		faded = true;
 //	}
+
+	float MapASin(float phaseIn)
+	{
+		float intPart=Mathf.Floor (phaseIn);
+		float fracPart = phaseIn - intPart;
+		// 0 = 0---> 1, 2== 0-->-1
+		if (intPart == 0 || intPart == 2) {
+			float sinVal = Mathf.Asin (fracPart);
+			print (fracPart+",s:"+ sinVal);
+			return intPart + (sinVal / (.5f * Mathf.PI));
+		} else {
+			// 1 = 1-->0, 3= -1->0
+			float cosVal = Mathf.Acos (fracPart);
+			print (fracPart+",c:"+ cosVal);
+			return intPart + 1 - (cosVal / (.5f * Mathf.PI));
+		}
+	}
 
 
 }
