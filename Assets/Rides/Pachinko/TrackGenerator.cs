@@ -10,13 +10,34 @@ public class TrackGenerator : MonoBehaviour {
     public float gapPercent = 5f;
     public float width=2f;
 
+    public bool generateNew=false;
+    
 	void Start () {
 		GetComponent<MeshFilter>().sharedMesh = Create();
 	}
 	
 	void Update () {
          UpdateMeshVertices(GetComponent<MeshFilter>().sharedMesh);
+         if(generateNew)
+         {
+             generateNew=false;
+             CreateNewSegment(22,0);
+//             CreateNewSegment(45,40);
+         }
 	}
+    
+    public GameObject CreateNewSegment(float angleVert,float angleHorz)
+    {
+        float r= angleVert*Mathf.Deg2Rad;
+        Vector3 startPoint=transform.TransformPoint(new Vector3(0,radiusLoop-Mathf.Cos(r)*radiusLoop,lengthInlet+Mathf.Sin(r)*radiusLoop));
+        GameObject newObj=Instantiate(gameObject);
+        newObj.transform.position=startPoint;
+        Quaternion hRot=Quaternion.Euler(0,angleHorz,0);
+        Quaternion vRot=Quaternion.Euler(-angleVert,0,0);
+        newObj.transform.rotation=newObj.transform.rotation*vRot*hRot;
+//        newObj.transform.Rotate(new Vector3(-angleVert,angleHorz,0));
+        return newObj;
+    }
     
     Vector3 []vertices;
     int currentSubdivisions;
@@ -27,7 +48,7 @@ public class TrackGenerator : MonoBehaviour {
         vertices[0]=new Vector3(-width,0,0);
         vertices[1]=new Vector3(width,0,0);
         float centreY=radiusLoop;
-        float centreZ=radiusLoop+lengthInlet;
+        float centreZ=lengthInlet;
         float n = vertices.Length-2;
         float mult=1f-0.01f*gapPercent;
         for(int i=2;i<vertices.Length;i+=2)
