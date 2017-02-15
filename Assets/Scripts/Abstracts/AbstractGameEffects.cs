@@ -30,7 +30,10 @@ public class AbstractGameEffects : MonoBehaviour {
     protected float swingAmplitude=0;
     protected float swingAngVel=0;
     protected int swingQuadrant=0;
+    protected float swingCycleTime=2f;
 
+    protected float[] lastCycleTimes={-1,-1,-1,-1};
+    protected bool swingCycleTimeFound=false;
 	public int maxSessions = 1;
 
 	protected float highAngle;
@@ -164,6 +167,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 {
                     swingQuadrant=1;
                     swingAmplitude=highAngle;
+                    updateCycleTimes(1);
                 }
                 break;
             case 1:
@@ -177,6 +181,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 if(swingAngle<0f)
                 {
                     swingQuadrant=2;
+                    updateCycleTimes(2);
                 }
                 break;
             case 2:
@@ -191,6 +196,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 {
                     swingQuadrant=3;
                     swingAmplitude=-lowAngle;
+                    updateCycleTimes(3);
                 }
                 break;
             case 3:
@@ -204,7 +210,8 @@ public class AbstractGameEffects : MonoBehaviour {
                 if(swingAngle>0f)
                 {
                     swingQuadrant=0;
-                }                
+                    updateCycleTimes(0);
+                }
                 break;
         }
 		swingPhase = MapASin (swingPhase);
@@ -261,6 +268,22 @@ public class AbstractGameEffects : MonoBehaviour {
 //		faded = true;
 //	}
 
+    void updateCycleTimes(int phase)
+    {
+        if(lastCycleTimes[phase]>0)
+        {
+            if(swingCycleTimeFound)
+            {
+                swingCycleTime=swingCycleTime*0.5f + (Time.time-lastCycleTimes[phase])*0.5f;
+            }else
+            {
+                swingCycleTime=Time.time-lastCycleTimes[phase];
+                swingCycleTimeFound=true;
+            }
+        }
+        lastCycleTimes[phase]=Time.time;        
+    }
+
 	float MapASin(float phaseIn)
 	{
 		float intPart=Mathf.Floor (phaseIn);
@@ -268,12 +291,10 @@ public class AbstractGameEffects : MonoBehaviour {
 		// 0 = 0---> 1, 2== 0-->-1
 		if (intPart == 0 || intPart == 2) {
 			float sinVal = Mathf.Asin (fracPart);
-			print (fracPart+",s:"+ sinVal);
 			return intPart + (sinVal / (.5f * Mathf.PI));
 		} else {
 			// 1 = 1-->0, 3= -1->0
 			float cosVal = Mathf.Acos (fracPart);
-			print (fracPart+",c:"+ cosVal);
 			return intPart + 1 - (cosVal / (.5f * Mathf.PI));
 		}
 	}

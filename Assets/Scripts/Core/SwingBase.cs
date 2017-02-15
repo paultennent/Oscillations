@@ -23,6 +23,7 @@ public class SwingBase : MonoBehaviour {
 	private float altAngle = float.PositiveInfinity;
 
 	public bool sineWave = true;
+    public float sineAmplitude= 45f;
 
 	private GyroAccelFilter errorFilter=new GyroAccelFilter();
 	public UnityEvent zeroCrossingEvent = new UnityEvent();
@@ -80,7 +81,7 @@ public class SwingBase : MonoBehaviour {
 		if (!sineWave) {
 			swingAngle = Gxyz [1];
 		} else {
-			swingAngle = Mathf.Sin(Time.time * 2) * 45;
+			swingAngle = Mathf.Sin(Time.time * 2) * sineAmplitude;
 		}
 		
 //		swingAngle=errorFilter.addValue (time, Gxyz [1], Gaccel [2]);
