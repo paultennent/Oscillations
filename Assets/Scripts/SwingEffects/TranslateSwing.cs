@@ -16,11 +16,11 @@ public class TranslateSwing : AbstractGameEffects {
 	void Update () {
 		base.Update ();
 		if(axis == 0){
-			viewPoint.position = new Vector3 (swingSeat.position.x, viewPoint.position.y, viewPoint.position.z);
+			swingSeat.position = new Vector3 (swingSeat.position.x, viewPoint.position.y, viewPoint.position.z);
 		}else if(axis == 1){
-			viewPoint.position = new Vector3 (viewPoint.position.x, swingSeat.position.y, viewPoint.position.z);
+			swingSeat.position = new Vector3 (viewPoint.position.x, swingSeat.position.y, viewPoint.position.z);
 		}else if(axis == 2){
-			viewPoint.position = new Vector3 (viewPoint.position.x, viewPoint.position.y, swingSeat.position.z);
+			swingSeat.position = new Vector3 (viewPoint.position.x, viewPoint.position.y, swingSeat.position.z);
 		}
 	}
 }
