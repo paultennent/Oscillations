@@ -25,6 +25,7 @@ public class PachinkoCamMover : AbstractGameEffects
     public Slider chargeDisplay;
         
     float charge=0;
+    float launchCharge=0;
     int chargeSwings=1;
     int lastQuadrant=-10;
     float rotateFadePercent=0;
@@ -33,65 +34,34 @@ public class PachinkoCamMover : AbstractGameEffects
 	// Use this for initialization
 	void Start () {
         base.Start();
+        trackDistance=trackGen.GetInitialDistance();
 	}
 
     float trackVelocity=0f;
     float trackDistance=0f;
     void MoveOnTrack(float amount)
     {
-        float inletLen=trackGen.lengthInlet;
-        float radiusLoop=trackGen.radiusLoop;
         trackDistance+=amount;
-        if(trackDistance<inletLen)
+        Vector3 pos=trackGen.GetTrackPosition(trackDistance);
+        pos=trackGen.transform.TransformPoint(pos);
+        pivot.transform.position=pos;
+        if(rotateFadePercent<1)
         {
-            // along track
-            Vector3 trackStart=trackGen.transform.TransformPoint(new Vector3(0,0,0));
-            Vector3 trackEnd=trackGen.transform.TransformPoint(new Vector3(0,0,inletLen));
-            pivot.transform.position=Vector3.Lerp(trackStart,trackEnd,trackDistance/inletLen);
-//            pivot.transform.eulerAngles=new Vector3(0,0,0);
-            if(rotateFadePercent<1)
-            {
-                rotateFadePercent+=Time.deltaTime*2.0f;
-                pivot.transform.rotation=Quaternion.Slerp(lastRotation,trackGen.transform.rotation,rotateFadePercent);
-            }else
-            {
-                pivot.transform.rotation=trackGen.transform.rotation;
-            }
+            rotateFadePercent+=Time.deltaTime*.5f;
+            pivot.transform.rotation=Quaternion.Slerp(lastRotation,trackGen.transform.rotation,rotateFadePercent);
         }else
         {
-//            float circumference=(2.0*radiusLoop*Mathf.PI);            
-//            float circleAngleRad=((trackDistance-inletLen)/circumference)*2.0*Mathf.PI;
-            // angle round the loop
-            float circleAngleRad=((trackDistance-inletLen)/radiusLoop);
-            float posY=radiusLoop-Mathf.Cos(circleAngleRad)*radiusLoop;
-            float posZ=inletLen+Mathf.Sin(circleAngleRad)*radiusLoop;
-            pivot.transform.position=trackGen.transform.TransformPoint(new Vector3(0,posY,posZ));
-            if(rotateFadePercent<1)
-            {
-                rotateFadePercent+=Time.deltaTime*2.0f;
-                pivot.transform.rotation=Quaternion.Slerp(lastRotation,trackGen.transform.rotation,rotateFadePercent);
-            }else
-            {
-                pivot.transform.rotation=trackGen.transform.rotation;
-            }
-            pivot.transform.Rotate(new Vector3(-circleAngleRad*Mathf.Rad2Deg,0,0));
+            pivot.transform.rotation=trackGen.transform.rotation;
         }
+        pivot.transform.Rotate(new Vector3(-trackGen.GetTrackSlopeAngle(trackDistance)*Mathf.Rad2Deg,0,0));
     }
     
     // get force in direction of track (only)
     float GetTrackForces()
     {
-        float inletLen=trackGen.lengthInlet;
-        float radiusLoop=trackGen.radiusLoop;
         float gravityForce=0;
-        if(trackDistance<inletLen)
-        {
-            gravityForce=0;
-        }else
-        {
-            float circleAngleRad=((trackDistance-inletLen)/radiusLoop);
-            gravityForce=-gravity*Mathf.Sin(circleAngleRad);
-        }
+        gravityForce=Mathf.Sin(trackGen.GetTrackSlopeAngle(trackDistance))*-gravity;
+        
         float dragForce=trackVelocity*trackVelocity*friction;
         if(trackVelocity<0)dragForce=-dragForce;
         return gravityForce-dragForce;
@@ -99,16 +69,10 @@ public class PachinkoCamMover : AbstractGameEffects
     
     void NewTrack()
     {
-        float inletLen=trackGen.lengthInlet;
-        float radiusLoop=trackGen.radiusLoop;
-        float circleAngleRad=0;
-        if(trackDistance>=inletLen)
-        {
-            circleAngleRad=Mathf.Repeat((trackDistance-inletLen)/radiusLoop,Mathf.PI*2.0f);            
-        }
+        float circleAngleRad=trackGen.GetTrackSlopeAngle(trackDistance);
         lastRotation=pivot.transform.rotation;
         trackGen=trackGen.CreateNewSegment(circleAngleRad*Mathf.Rad2Deg,40).GetComponent<TrackGenerator>();
-        trackDistance=0;
+        trackDistance=trackGen.GetInitialDistance();
         trackVelocity=0;
         rotateFadePercent=0;
     }
@@ -116,6 +80,8 @@ public class PachinkoCamMover : AbstractGameEffects
 	// Update is called once per frame
 	void Update () {
         base.Update();
+//        MoveOnTrack(-1f*Time.deltaTime);
+//        return;
         trackVelocity+=GetTrackForces()*Time.deltaTime;
         if(state==State.LAUNCH || state==State.BRAKE)
         {
@@ -124,9 +90,14 @@ public class PachinkoCamMover : AbstractGameEffects
         {
             MoveOnTrack(0);
         }
-        if(trackDistance<0 || reset)
+        if(trackDistance<0)
         {
             trackDistance=0;
+            trackVelocity=0;
+        }
+        if(reset)
+        {
+            trackDistance=trackGen.GetInitialDistance();
             trackVelocity=0;
             reset=false;
         }
@@ -136,9 +107,11 @@ public class PachinkoCamMover : AbstractGameEffects
             case State.CHARGING:
                 if(swingQuadrant==3 || swingQuadrant==0)
                 {
-                    charge+=swingAngVel*swingAngVel*Time.deltaTime*chargeMultiplier;
+                    charge+=swingAngVel*swingAngVel*Time.deltaTime*chargeMultiplier*chargeSwings;
                 }
                 if(charge>1)charge=1;
+                trackDistance=(1f-charge)*trackGen.GetInitialDistance();
+                MoveOnTrack(0);
                 if(chargeDisplay!=null)
                 {
                     chargeDisplay.value=charge;
@@ -157,7 +130,7 @@ public class PachinkoCamMover : AbstractGameEffects
             case State.LAUNCH:
                 if(swingQuadrant==1 || swingQuadrant==2)
                 {
-                    trackVelocity+=swingAngVel*swingAngVel*Time.deltaTime*launchMult*charge;
+                    trackVelocity+=swingAngVel*swingAngVel*Time.deltaTime*launchMult;
                 }
                 if(swingQuadrant==3)
                 {
@@ -180,6 +153,7 @@ public class PachinkoCamMover : AbstractGameEffects
 //                print(trackVelocity+":"+trackDistance);
                 break;
         }
+
         lastQuadrant=swingQuadrant;
 	}    
 }

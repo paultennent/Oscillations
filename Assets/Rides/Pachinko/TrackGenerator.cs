@@ -5,7 +5,8 @@ using System.Collections;
 [RequireComponent (typeof (MeshFilter))]
 public class TrackGenerator : MonoBehaviour {
 
-    public float lengthInlet = 10f;
+    public float startRampRadius = 5f;
+    public float lengthTransition = 50f;
     public float radiusLoop = 20f;
     public float gapPercent = 5f;
     public float width=2f;
@@ -14,17 +15,35 @@ public class TrackGenerator : MonoBehaviour {
     public bool generateNew=false;
     
     private float []extrusionX={1,-1,-1,1};
-    private float []extrusionY={1,1,-1,-1};
+    private float []extrusionY={0,0,-1,-1};
+   
+    private float lastStartRadius=0;
+    private float lastTransition=0;
+    private float lastRadius=0;
+    private float lastGap=0;
+    private float lastThick=0;
+    private float lastWidth=0;
+    
    
    
-    const int NUM_POINTS=41;
+    const int NUM_POINTS=61;
+    const int START_POINTS=20;
     
 	void Start () {
 		GetComponent<MeshFilter>().sharedMesh = Create();
 	}
 	
 	void Update () {
-         UpdateMeshVertices(GetComponent<MeshFilter>().sharedMesh,null);
+        if(lastTransition!=lengthTransition || lastRadius!=radiusLoop || lastGap!=gapPercent || lastThick!=thickness || lastWidth!=width || lastStartRadius!=startRampRadius)
+        {
+            UpdateMeshVertices(GetComponent<MeshFilter>().sharedMesh,null);
+            lastTransition=lengthTransition;
+            lastRadius=radiusLoop;
+            lastGap=gapPercent;
+            lastThick=thickness;
+            lastWidth=width;
+            lastStartRadius=startRampRadius;
+        }
          if(generateNew)
          {
              generateNew=false;
@@ -33,16 +52,97 @@ public class TrackGenerator : MonoBehaviour {
          }
 	}
     
+    public Vector3 GetTrackPosition(float trackDistance)
+    {
+        float startDistance = startRampRadius*Mathf.PI*.75f;
+        
+        if(trackDistance<startDistance)
+        {
+            float circleAngleRad=((startDistance-trackDistance)/startRampRadius);
+            float posY=startRampRadius-Mathf.Cos(circleAngleRad)*startRampRadius;
+            float posZ=-Mathf.Sin(circleAngleRad)*startRampRadius;
+            return new Vector3(0,posY,posZ);
+        }else if(trackDistance-startDistance<lengthTransition)
+        {
+            return new Vector3(0,0,trackDistance-startDistance);
+        }else
+        {
+            float circleAngleRad=((trackDistance-(lengthTransition+startDistance))/radiusLoop);
+            float posY=radiusLoop-Mathf.Cos(circleAngleRad)*radiusLoop;
+            float posZ=lengthTransition+Mathf.Sin(circleAngleRad)*radiusLoop;
+            return new Vector3(0,posY,posZ);
+        }        
+    }
+    
+    public float GetTrackSlopeAngle(float trackDistance)
+    {
+        float startDistance = startRampRadius*Mathf.PI*.75f;
+        if(trackDistance<startDistance)
+        {
+            float circleAngleRad=((startDistance-trackDistance)/startRampRadius);
+            return -circleAngleRad;            
+        }else if(trackDistance-startDistance<lengthTransition)
+        {
+            return 0;
+        }else
+        {
+            float circleAngleRad=((trackDistance-(lengthTransition+startDistance))/radiusLoop);
+            return circleAngleRad;
+        }
+    }
+    
+    public float GetTrackLength()
+    {
+        float mult = 1f - gapPercent*.01f;
+        return lengthTransition+radiusLoop*2f*Mathf.PI*mult;
+    }
+    
+    float GetDistanceForPoint(int num)
+    {
+        if(startRampRadius>0)
+        {
+            float startDistance = startRampRadius*Mathf.PI*.75f;
+            if(num==START_POINTS)
+            {
+                return startDistance;
+            }else if(num<START_POINTS)
+            {
+                float ratio=(float)num/(float)START_POINTS;
+                return ratio*startDistance;
+            }else
+            {
+                float ratio=(num-(START_POINTS+1))/(float)(NUM_POINTS-(START_POINTS+1));
+                float mult = 1f - gapPercent*.01f;
+                return startDistance+lengthTransition + ratio*radiusLoop*2f*Mathf.PI*mult;
+            }
+        }else
+        {
+            if(num==0)
+            {
+                return 0;
+            }else
+            {
+                float ratio=(num-1f)/(float)(NUM_POINTS-1);
+                float mult = 1f - gapPercent*.01f;
+                return lengthTransition + ratio*radiusLoop*2f*Mathf.PI*mult;
+            }
+        }
+    }
+    
+    public float GetInitialDistance()
+    {
+        return startRampRadius*Mathf.PI*.75f;
+    }
+    
     public GameObject CreateNewSegment(float angleVert,float angleHorz)
     {
         float r= angleVert*Mathf.Deg2Rad;
-        Vector3 startPoint=transform.TransformPoint(new Vector3(0,radiusLoop-Mathf.Cos(r)*radiusLoop,lengthInlet+Mathf.Sin(r)*radiusLoop));
+        Vector3 startPoint=transform.TransformPoint(new Vector3(0,radiusLoop-Mathf.Cos(r)*radiusLoop,lengthTransition+Mathf.Sin(r)*radiusLoop));
         GameObject newObj=Instantiate(gameObject);
         newObj.transform.position=startPoint;
         Quaternion hRot=Quaternion.Euler(0,angleHorz,0);
         Quaternion vRot=Quaternion.Euler(-angleVert,0,0);
         newObj.transform.rotation=newObj.transform.rotation*vRot*hRot;
-//        newObj.transform.Rotate(new Vector3(-angleVert,angleHorz,0));
         return newObj;
     }
     
@@ -53,39 +153,30 @@ public class TrackGenerator : MonoBehaviour {
     void UpdateMeshVertices(Mesh mesh,Vector2[] uv)
     {        
         int pointsPerSlice=extrusionX.Length;
-        //start ramp
-        for(int k=0;k<pointsPerSlice;k++)
+            
+        for(int i=0,n=0;i<vertices.Length;i+=pointsPerSlice,n+=1)
         {
-            float texX=k/(float)pointsPerSlice;
-            vertices[k]=new Vector3(extrusionX[k]*width,-extrusionY[k]*thickness,0);
-            if(uv!=null)
-            {
-                uv[k]=new Vector2(texX,0);
-            }
-        }      
-        float centreY=radiusLoop;
-        float centreZ=lengthInlet;
-        //loop
-        float mult = 1.0f-gapPercent*0.01f;
-        float n = vertices.Length-pointsPerSlice;        
-        for(int i=pointsPerSlice;i<vertices.Length;i+=pointsPerSlice)
-        {
-            float ratio = (float)(i-4) / n;
-            float r = mult*ratio * (Mathf.PI * 2f);
-            float cosR=Mathf.Cos(r);
-            float sinR=Mathf.Sin(r);
+            float ratio=n/(NUM_POINTS-1);
+            float distanceTrack=GetDistanceForPoint(n);
+            float angle=GetTrackSlopeAngle(distanceTrack);
+            Vector3 pos = GetTrackPosition(distanceTrack);
+
+            print(n+":"+pos+"["+distanceTrack+"]");
+            float cosAngle=Mathf.Cos(angle);
+            float sinAngle=Mathf.Sin(angle);
             
             for(int k=0;k<pointsPerSlice;k++)
             {
                 float texX=k/(float)pointsPerSlice;
-                float y=centreY-cosR*(radiusLoop+extrusionY[k]*thickness);
-                float z=sinR*(radiusLoop+extrusionY[k]*thickness) + centreZ;
-                vertices[i+k]=new Vector3(extrusionX[k]*width,y,z);
+                
+                vertices[i+k]=new Vector3(extrusionX[k]*width,pos.y-extrusionY[k]*cosAngle ,pos.z+ extrusionY[k]*sinAngle);
                 if(uv!=null)
                 {
                     uv[i+k]=new Vector2(texX,ratio);
                 }
             }
+            
+            
         }
 
         mesh.vertices=vertices;
