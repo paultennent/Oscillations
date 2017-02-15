@@ -6,20 +6,13 @@ public class FloatCamMover : AbstractGameEffects {
 
 	private float curHeight=0f;
 	private float yVelocity=0f;
-
-	public float velocityDragConstant=.00003f;
-	public  float upforceConstant=.001f;
 	public  float gravityConstant=9.8f;
+	public float buoyancy = 10f;
+
+	public float buoyancyModConstant = 3f;
 
 	private Vector3 initialPosition;
-
 	public GameObject pivot;
-
-	public bool launch=false;
-
-	public bool infiniteFall = true;
-
-	private Skirt skirtObj;
 
 	// Use this for initialization
 	void Start () {
@@ -34,31 +27,26 @@ public class FloatCamMover : AbstractGameEffects {
 
 		yVelocity+=upforce*Time.deltaTime;
 		curHeight=curHeight+yVelocity*Time.deltaTime;
-		if(curHeight<0 & !infiniteFall)
-		{
-			curHeight=0;
-			yVelocity=0;
-		}
 		pivot.transform.position=initialPosition+new Vector3(0,curHeight,0);
 	
 	}
 
 	float calculateUpforce()
 	{
-		float totalForce=swingAngVel*swingAngVel*upforceConstant;
-		if(launch==true)
-		{
-			totalForce=20f;
-		}
+		float totalForce = 0f;
+
 
 		totalForce-=gravityConstant;
-		if(yVelocity>0)
-		{
-			totalForce-=(yVelocity*yVelocity)*velocityDragConstant;
-		}else
-		{
-			totalForce+=(yVelocity*yVelocity)*velocityDragConstant;
+
+		float curYPos = pivot.transform.position.y;
+		float curbouy = buoyancy;
+
+		if (curYPos > 0f) {
+			curbouy = buoyancy - (curYPos * buoyancyModConstant); 	 
 		}
+
+		totalForce+=curbouy;
+
 		return totalForce;
 	}
 }

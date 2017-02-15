@@ -148,8 +148,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 51149369}
-  m_LocalRotation: {x: -0.034068096, y: 0.9196761, z: 0.08190199, w: 0.38252756}
-  m_LocalPosition: {x: -11.934582, y: -23.832863, z: -22.33273}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1524,12 +1524,10 @@ MonoBehaviour:
   pauseEndTime: 0
   maxSessions: 0
   pauseStartTime: 0
-  velocityDragConstant: 0.75
-  upforceConstant: 0.005
   gravityConstant: 9.8
+  buoyancy: 10
+  buoyancyModConstant: 3
   pivot: {fileID: 1959593108}
-  launch: 0
-  infiniteFall: 1
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -1537,7 +1535,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1670035074}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1571,6 +1569,7 @@ MonoBehaviour:
   applySwingTransform: 0
   debug: 1
   sineWave: 1
+  sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1768,7 +1767,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1959593108}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 768310624}
