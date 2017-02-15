@@ -158,7 +158,7 @@ public class TrackGenerator : MonoBehaviour {
     public GameObject CreateNewSegment(float angleVert,float angleHorz)
     {
         float r= angleVert*Mathf.Deg2Rad;
-        Vector3 startPoint=transform.TransformPoint(new Vector3(0,radiusLoop-Mathf.Cos(r)*radiusLoop,lengthTransition+Mathf.Sin(r)*radiusLoop));
+        Vector3 startPoint=transform.TransformPoint(new Vector3(0,radiusLoop-Mathf.Cos(r)*(radiusLoop-lipHeight*2f),lengthTransition+Mathf.Sin(r)*(radiusLoop-lipHeight*2f)));
         GameObject newObj=Instantiate(gameObject);
         newObj.transform.position=startPoint;
         Quaternion hRot=Quaternion.Euler(0,angleHorz,0);
@@ -182,7 +182,7 @@ public class TrackGenerator : MonoBehaviour {
             float angle=GetTrackSlopeAngle(distanceTrack);
             Vector3 pos = GetTrackPosition(distanceTrack);
 
-            print(n+":"+pos+"["+distanceTrack+"]");
+            //print(n+":"+pos+"["+distanceTrack+"]");
             float cosAngle=Mathf.Cos(angle);
             float sinAngle=Mathf.Sin(angle);
             
