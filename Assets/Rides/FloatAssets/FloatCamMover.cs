@@ -10,6 +10,7 @@ public class FloatCamMover : AbstractGameEffects {
 	public float buoyancy = 10f;
 
 	public float buoyancyModConstant = 3f;
+	public float angularVelocityCoefficient = 0.01f;
 
 	private Vector3 initialPosition;
 	public GameObject pivot;
@@ -46,6 +47,11 @@ public class FloatCamMover : AbstractGameEffects {
 		}
 
 		totalForce+=curbouy;
+
+		//add impel upwards:
+		if (swingQuadrant == 0) {
+			totalForce += Mathf.Abs(swingAngVel) * angularVelocityCoefficient;
+		}
 
 		return totalForce;
 	}
