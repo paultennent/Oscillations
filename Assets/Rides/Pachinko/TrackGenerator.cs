@@ -11,11 +11,20 @@ public class TrackGenerator : MonoBehaviour {
     public float gapPercent = 5f;
     public float width=2f;
     public float thickness=1f;
+    public float lipHeight = 0.2f;
+    public float lipWidth=0.1f;
 
     public bool generateNew=false;
     
-    private float []extrusionX={1,-1,-1,1};
-    private float []extrusionY={0,0,-1,-1};
+//    #  #
+//    ####
+    
+    
+    
+    private float []extrusionX={1f,.9f,.9f,-.9f, -.9f, -1, -1 , 1};
+    private float []extrusionY={.1f,.1f,0, 0  , .1f , .1f , -1 , -1};
+//    private float []extrusionX={1,-1,-1,1};
+//    private float []extrusionY={0,0,-1,-1};
    
     private float lastStartRadius=0;
     private float lastTransition=0;
@@ -23,8 +32,17 @@ public class TrackGenerator : MonoBehaviour {
     private float lastGap=0;
     private float lastThick=0;
     private float lastWidth=0;
+    private float lastLipWidth=0;
+    private float lastLipHeight=0;    
+
+    public void CalculateExtrusion()
+    {
+        float[] newX={1f,1-lipWidth,1-lipWidth,-1+lipWidth, -1+lipWidth, -1, -1 , 1};
+        extrusionX=newX;
+        float[] newY={lipHeight,lipHeight,0, 0  , lipHeight , lipHeight , -1 , -1};
+        extrusionY=newY;
+    }
     
-   
    
     const int NUM_POINTS=61;
     const int START_POINTS=20;
@@ -34,8 +52,9 @@ public class TrackGenerator : MonoBehaviour {
 	}
 	
 	void Update () {
-        if(lastTransition!=lengthTransition || lastRadius!=radiusLoop || lastGap!=gapPercent || lastThick!=thickness || lastWidth!=width || lastStartRadius!=startRampRadius)
+        if(lastTransition!=lengthTransition || lastRadius!=radiusLoop || lastGap!=gapPercent || lastThick!=thickness || lastWidth!=width || lastStartRadius!=startRampRadius || lastLipHeight!=lipHeight || lastLipWidth!=lipWidth)
         {
+            CalculateExtrusion();
             UpdateMeshVertices(GetComponent<MeshFilter>().sharedMesh,null);
             lastTransition=lengthTransition;
             lastRadius=radiusLoop;
@@ -43,6 +62,8 @@ public class TrackGenerator : MonoBehaviour {
             lastThick=thickness;
             lastWidth=width;
             lastStartRadius=startRampRadius;
+            lastLipWidth=lipWidth;
+            lastLipHeight=lipHeight;
         }
          if(generateNew)
          {
@@ -169,7 +190,7 @@ public class TrackGenerator : MonoBehaviour {
             {
                 float texX=k/(float)pointsPerSlice;
                 
-                vertices[i+k]=new Vector3(extrusionX[k]*width,pos.y-extrusionY[k]*cosAngle ,pos.z+ extrusionY[k]*sinAngle);
+                vertices[i+k]=new Vector3(extrusionX[k]*width,pos.y+extrusionY[k]*cosAngle ,pos.z-extrusionY[k]*sinAngle);
                 if(uv!=null)
                 {
                     uv[i+k]=new Vector2(texX,ratio);
@@ -204,12 +225,12 @@ public class TrackGenerator : MonoBehaviour {
                 int p2=i*pointsPerSlice+k2;
                 int p3=(i+1)*pointsPerSlice+k;
                 int p4=(i+1)*pointsPerSlice+k2;
-                triangles[offset + 0] = p1 ; 
+                triangles[offset + 2] = p1 ; 
                 triangles[offset + 1] = p3 ; 
-                triangles[offset + 2] = p2; 
-                triangles[offset+3 ] = p2 ; 
+                triangles[offset + 0] = p2; 
+                triangles[offset+5 ] = p2 ; 
                 triangles[offset + 4] = p3 ; 
-                triangles[offset + 5] = p4; 
+                triangles[offset + 3] = p4; 
             }
         }
         UpdateMeshVertices(mesh,uv);
