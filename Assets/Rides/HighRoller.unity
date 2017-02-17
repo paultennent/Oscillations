@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SkyboxMaterial: {fileID: 2100000, guid: 29d2bb922f79ece4c90867d92e25976e, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 86a2d5e2a5b69b048a2ac96a92080ff3, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4857908, g: 0.547386, b: 0.5894805, a: 1}
+  m_IndirectSpecularColor: {r: 0.4940173, g: 0.54021823, b: 0.55217654, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -987,7 +987,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceFog: 1
-  excludeFarPixels: 1
   useRadialDistance: 1
   heightFog: 1
   height: 10
@@ -1485,7 +1484,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16b6cea6128bb49af94ef15477119db7, type: 3}
   m_Name: 
@@ -1505,10 +1504,10 @@ MonoBehaviour:
   floorDepth: 0.3
   focusdistance: 200
   materials:
-  - {fileID: 2100000, guid: 159feee72b3e3154c818c2bce65957ea, type: 2}
-  - {fileID: 2100000, guid: 33b5e0376ab7443e8a127bc0da0af7c4, type: 2}
-  - {fileID: 2100000, guid: 9af12153cd3ff4b8a95333c0c4b8fb97, type: 2}
-  - {fileID: 2100000, guid: 8adba3fa3600448e4af1e4e17338eb1f, type: 2}
+  - {fileID: 2100000, guid: 14b71119610121b4db454c76f190a697, type: 2}
+  - {fileID: 2100000, guid: 76d20bcbcb197d2409b1d4710ed3cd26, type: 2}
+  - {fileID: 2100000, guid: 76d20bcbcb197d2409b1d4710ed3cd26, type: 2}
+  - {fileID: 2100000, guid: d9ebd7148ad8de24c97722f102d66909, type: 2}
   colourBlockSize: 1
 --- !u!4 &1670035076
 Transform:
@@ -1573,6 +1572,7 @@ MonoBehaviour:
   applySwingTransform: 1
   debug: 1
   sineWave: 1
+  sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
       m_Calls: []

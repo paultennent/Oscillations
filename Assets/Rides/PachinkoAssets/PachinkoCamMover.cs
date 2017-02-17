@@ -120,7 +120,7 @@ public class PachinkoCamMover : AbstractGameEffects
                 {
                     chargeSwings+=1;
                     print("Charge:"+chargeSwings);
-                    if(chargeSwings==3)
+                    if(chargeSwings==4)
                     {
                         state=State.LAUNCH;
                         print("Launching: charge");
