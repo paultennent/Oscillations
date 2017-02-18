@@ -28,6 +28,7 @@ public class WalkerCamMover : AbstractGameEffects
     
     public float rockMultiplier=0.25f;
     public float twistMultiplier=0.25f;
+    public float strideMultiplier=0.25f;
     
     public float leftAngle=0f;
     public float rightAngle=0f;
@@ -65,30 +66,68 @@ public class WalkerCamMover : AbstractGameEffects
         {
             float legAngle=swingAngle;
             Transform lockFoot=rightFoot;
+            Transform otherFoot=leftFoot;
             if(swingQuadrant==1 || swingQuadrant==2)
             {
                 lockFoot=leftFoot;
+                otherFoot=rightFoot;
             }
-            Vector3 footPos=lockFoot.position;
-            // set hip angles
+            Vector3 footPos;
+            Vector3 offset;
             
+/*            footPos=lockFoot.position;
+            // set hip angles then fix foot            
+            leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,0);
+            rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,0);
+            offset = lockFoot.position-footPos;
+            body.position+=offset;*/
+            footPos=lockFoot.position;
+//            float rockAngle=-swingAngle*rockMultiplier;
+            float rockAngle=-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
+            body.eulerAngles=new Vector3(0,0,rockAngle);
+            leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
+            rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
+            offset = lockFoot.position-footPos;
+            body.position-=offset;
             
-            leftHip.localEulerAngles=new Vector3(0,swingAngle*twistMultiplier,0);
-            rightHip.localEulerAngles=new Vector3(0,-swingAngle*twistMultiplier,0);
-            Vector3 offset = lockFoot.position-footPos;
-            body.position+=offset;
-            
-/*            float twistAmount = Mathf.Abs(swingAngVel*twistMultiplier*Time.deltaTime);
-            if(firstStep)twistAmount*=0.5f;
-            if(swingAngle<0)
+            RaycastHit hitThis,hitOther;
+            Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
+            if(hitOther.distance<1000)
             {
-                if(swingAngVel>0)twistAmount=0;
-                pivotBody(swingAngle*rockMultiplier,-twistAmount,leftFoot,rightFoot);
-            }else
+                // add rotation
+            }
+/*            RaycastHit hitThis,hitOther;
+            // now raycast down from high above each foot (robot is in ignore raycast layer)
+            Physics.Raycast(lockFoot.position+new Vector3(0,100,0),-Vector3.up,out hitThis);
+            
+            if(hitThis.distance<1000 )
             {
-                if(swingAngVel<0)twistAmount=0;
-                pivotBody(swingAngle*rockMultiplier,twistAmount,rightFoot,leftFoot);            
-            }*/
+                Vector3 thisPt=hitThis.point;
+                float distThis=lockFoot.position.y-thisPt.y;
+                body.Translate(new Vector3(0,-distThis,0),Space.World);
+
+                Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
+                Vector3 otherPt=hitOther.point;
+                float distOther=otherFoot.position.y-otherPt.y;
+                if(hitOther.distance<1000)
+                {
+                    // rotate body until foot  is directly on the ground
+                    Vector3 feetDiff=(otherFoot.position-lockFoot.position).normalized;
+                    Vector3 bodyDiff=(body.position - lockFoot.position).normalized;
+                    Vector3 axis=Vector3.Cross(feetDiff,bodyDiff);
+                    axis=Vector3.fwd;
+                    float rotationRads = Mathf.Asin(distOther)/Vector3.Distance(otherFoot.position,lockFoot.position);
+                    if(lockFoot==rightFoot){
+                        rotationRads=-rotationRads;
+                    }
+                    print (axis+","+lockFoot.position+":"+Mathf.Rad2Deg*rotationRads);
+                    body.RotateAround(lockFoot.position,axis,-Mathf.Rad2Deg*rotationRads);
+                }
+            }            */
+            
+            
+            
+            
         }
         prevAngle=swingAngle;
 	}    
