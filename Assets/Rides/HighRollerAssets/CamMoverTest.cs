@@ -8,10 +8,13 @@ public class CamMoverTest : AbstractGameEffects {
 	public float speed;
 
     public bool manual = false;
-    public Transform wheel;
 
 	private float angVelscaler = 3f;
-	private float dragConstant = 0.3f;
+	private float dragConstant = 0.1f;
+
+	public GameObject[] wheels;
+	public GameObject[] wheelpivots;
+	private float wheelrotationconstant = 100f;
 
 	// Use this for initialization
 	void Start () {
@@ -25,16 +28,13 @@ public class CamMoverTest : AbstractGameEffects {
 
 		//angVelscaler = angVelscaler * (1 + climaxRatio);
 
-        if (!inSession) {
-            wheel.GetComponent<Renderer>().enabled = false;
-            return; }
-
-        wheel.GetComponent<Renderer>().enabled = true;
 
 		speed = speed + (getAccelerationNow () * Time.deltaTime);
 
         pivot.transform.Translate(Vector3.forward * Time.deltaTime * speed);
-        wheel.RotateAround(pivot.transform.position, Vector3.left, Time.deltaTime * speed);
+		for (int i = 0; i < wheels.Length; i++) {
+			wheels[i].transform.RotateAround (wheelpivots[i].transform.position, Vector3.right, Time.deltaTime * speed * wheelrotationconstant);
+		}
         
     }
 
