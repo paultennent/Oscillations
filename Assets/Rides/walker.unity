@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 129343495}
   - component: {fileID: 129343494}
   - component: {fileID: 129343493}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 237051904}
   - component: {fileID: 237051903}
   - component: {fileID: 237051902}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: lower-leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 271442088}
   - component: {fileID: 271442087}
   - component: {fileID: 271442086}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 415861359}
   - component: {fileID: 415861358}
   - component: {fileID: 415861357}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -544,6 +544,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 37c42c4e7a4c84044bd2bc4db207005c, type: 2}
+    - target: {fileID: 100000, guid: 8e6df45ddf68ec647a33da1deba5b79a, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e6df45ddf68ec647a33da1deba5b79a, type: 3}
   m_IsPrefabParent: 0
@@ -559,7 +563,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 482438109}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Grips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -594,7 +598,7 @@ GameObject:
   - component: {fileID: 493523026}
   - component: {fileID: 493523025}
   - component: {fileID: 493523024}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Ankle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -677,7 +681,7 @@ GameObject:
   - component: {fileID: 516383568}
   - component: {fileID: 516383567}
   - component: {fileID: 516383566}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Ankle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,7 +764,7 @@ GameObject:
   - component: {fileID: 588418482}
   - component: {fileID: 588418481}
   - component: {fileID: 588418480}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -840,7 +844,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 621664810}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SwingSeat
   m_TagString: Swing
   m_Icon: {fileID: 0}
@@ -871,7 +875,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 724054340}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -903,7 +907,7 @@ GameObject:
   - component: {fileID: 762440982}
   - component: {fileID: 762440981}
   - component: {fileID: 762440980}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -984,7 +988,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 768310624}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SwingStructure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1017,7 +1021,7 @@ GameObject:
   - component: {fileID: 779216415}
   - component: {fileID: 779216414}
   - component: {fileID: 779216413}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1102,7 +1106,7 @@ GameObject:
   - component: {fileID: 791115876}
   - component: {fileID: 791115875}
   - component: {fileID: 791115874}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Knee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1363,7 +1367,7 @@ GameObject:
   - component: {fileID: 852922766}
   - component: {fileID: 852922765}
   - component: {fileID: 852922764}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1449,7 +1453,7 @@ GameObject:
   - component: {fileID: 880634698}
   - component: {fileID: 880634697}
   - component: {fileID: 880634696}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1529,7 +1533,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 913160787}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: camPositioner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1542,14 +1546,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 913160786}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1021388842}
   m_Father: {fileID: 621664810}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &939068529
 GameObject:
   m_ObjectHideFlags: 0
@@ -1561,7 +1565,7 @@ GameObject:
   - component: {fileID: 939068533}
   - component: {fileID: 939068532}
   - component: {fileID: 939068531}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: lower-leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1644,7 +1648,7 @@ GameObject:
   - component: {fileID: 939924823}
   - component: {fileID: 939924822}
   - component: {fileID: 939924821}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1731,7 +1735,7 @@ GameObject:
   - component: {fileID: 1002473883}
   - component: {fileID: 1002473882}
   - component: {fileID: 1002473881}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1820,7 +1824,7 @@ GameObject:
   - component: {fileID: 1021388838}
   - component: {fileID: 1021388844}
   - component: {fileID: 1021388846}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1944,7 +1948,7 @@ GameObject:
   - component: {fileID: 1065794251}
   - component: {fileID: 1065794250}
   - component: {fileID: 1065794249}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Grip (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2023,7 +2027,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1068163609}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ViewPoint
   m_TagString: ViewPoint
   m_Icon: {fileID: 0}
@@ -2106,6 +2110,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 37c42c4e7a4c84044bd2bc4db207005c, type: 2}
+    - target: {fileID: 100000, guid: 8e6df45ddf68ec647a33da1deba5b79a, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e6df45ddf68ec647a33da1deba5b79a, type: 3}
   m_IsPrefabParent: 0
@@ -2121,7 +2129,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1083488368}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CageCenterer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2164,7 +2172,7 @@ GameObject:
   - component: {fileID: 1164015799}
   - component: {fileID: 1164015798}
   - component: {fileID: 1164015797}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2369,6 +2377,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 37c42c4e7a4c84044bd2bc4db207005c, type: 2}
+    - target: {fileID: 100000, guid: a66fedd8eb6ae5643bc608453b0116bf, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a66fedd8eb6ae5643bc608453b0116bf, type: 3}
   m_IsPrefabParent: 0
@@ -2387,7 +2399,7 @@ GameObject:
   - component: {fileID: 1222604673}
   - component: {fileID: 1222604672}
   - component: {fileID: 1222604671}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Axle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2470,7 +2482,7 @@ GameObject:
   - component: {fileID: 1231380212}
   - component: {fileID: 1231380211}
   - component: {fileID: 1231380210}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2556,7 +2568,7 @@ GameObject:
   - component: {fileID: 1266907634}
   - component: {fileID: 1266907633}
   - component: {fileID: 1266907632}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2694,6 +2706,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 37c42c4e7a4c84044bd2bc4db207005c, type: 2}
+    - target: {fileID: 100000, guid: a66fedd8eb6ae5643bc608453b0116bf, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a66fedd8eb6ae5643bc608453b0116bf, type: 3}
   m_IsPrefabParent: 0
@@ -2713,7 +2729,7 @@ GameObject:
   - component: {fileID: 1369954196}
   - component: {fileID: 1369954195}
   - component: {fileID: 1369954194}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2799,7 +2815,7 @@ GameObject:
   - component: {fileID: 1378559438}
   - component: {fileID: 1378559437}
   - component: {fileID: 1378559436}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2987,7 +3003,7 @@ GameObject:
   - component: {fileID: 1483093450}
   - component: {fileID: 1483093449}
   - component: {fileID: 1483093448}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3071,7 +3087,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1576519256}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Pivot
   m_TagString: SwingPivot
   m_Icon: {fileID: 0}
@@ -3104,7 +3120,7 @@ GameObject:
   - component: {fileID: 1659464119}
   - component: {fileID: 1659464118}
   - component: {fileID: 1659464117}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Knee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3220,6 +3236,9 @@ MonoBehaviour:
   body: {fileID: 1959593109}
   rockMultiplier: 0.25
   twistMultiplier: 0.25
+  strideMultiplier: 0.5
+  leftAngle: 0
+  rightAngle: 0
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -3258,7 +3277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d17bd963cb2f4b7183d9935cb88e4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  applySwingTransform: 1
+  applySwingTransform: 0
   debug: 1
   sineWave: 1
   sineAmplitude: 45
@@ -3287,7 +3306,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1856534962}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rightfoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3318,7 +3337,7 @@ GameObject:
   - component: {fileID: 1864038612}
   - component: {fileID: 1864038611}
   - component: {fileID: 1864038610}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3401,7 +3420,7 @@ GameObject:
   - component: {fileID: 1884801322}
   - component: {fileID: 1884801321}
   - component: {fileID: 1884801320}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3533,7 +3552,7 @@ GameObject:
   - component: {fileID: 1923736761}
   - component: {fileID: 1923736760}
   - component: {fileID: 1923736759}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Grip (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3615,7 +3634,7 @@ GameObject:
   - component: {fileID: 1944137619}
   - component: {fileID: 1944137618}
   - component: {fileID: 1944137617}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Grip (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3694,7 +3713,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1959593109}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Centre
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3725,7 +3744,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2008437301}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LeftFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3757,7 +3776,7 @@ GameObject:
   - component: {fileID: 2030385866}
   - component: {fileID: 2030385865}
   - component: {fileID: 2030385864}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3840,7 +3859,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2099604709}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: RightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3873,7 +3892,7 @@ GameObject:
   - component: {fileID: 2136583786}
   - component: {fileID: 2136583785}
   - component: {fileID: 2136583784}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

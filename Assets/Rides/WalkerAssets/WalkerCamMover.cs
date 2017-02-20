@@ -33,6 +33,7 @@ public class WalkerCamMover : AbstractGameEffects
     public float leftAngle=0f;
     public float rightAngle=0f;
     
+    
 	// Use this for initialization
 	void Start () 
     {
@@ -45,6 +46,9 @@ public class WalkerCamMover : AbstractGameEffects
     
     float prevAngle=0;
     float maxAngle=0;
+    
+    float rockExtra=0f;
+    
 	// Update is called once per frame
 	void Update () 
     {
@@ -83,18 +87,45 @@ public class WalkerCamMover : AbstractGameEffects
             body.position+=offset;*/
             footPos=lockFoot.position;
 //            float rockAngle=-swingAngle*rockMultiplier;
-            float rockAngle=-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
+            float rockAngle=rockExtra+-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
             body.eulerAngles=new Vector3(0,0,rockAngle);
             leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
             rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
             offset = lockFoot.position-footPos;
             body.position-=offset;
             
-            RaycastHit hitThis,hitOther;
-            Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
-            if(hitOther.distance<1000)
+            // terrain bits
+            RaycastHit hitLock,hitOther;
+            // the fixed foot has to be on the ground - if not then drop everything down
+            Physics.Raycast(lockFoot.position+new Vector3(0,100,0),-Vector3.up,out hitLock);
+            if(hitLock.distance>100)
             {
-                // add rotation
+                float moveDistance=hitLock.distance-100;
+                // max move speed = 1m per second
+                if(moveDistance<Time.deltaTime)
+                {
+                    moveDistance=Time.deltaTime;
+                }
+                body.position-=new Vector3(0,moveDistance,0);
+            }
+            // if the moving foot is about to go through the scenery, then tilt more so it doesn't hit
+            Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
+            for(int c=0;c<50 && hitOther.distance<100;c++)
+            {
+                if(lockFoot==leftFoot)
+                {
+                    rockExtra+=1f;
+                }else
+                {
+                    rockExtra-=1f;
+                }
+                rockAngle=rockExtra+-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
+                body.eulerAngles=new Vector3(0,0,rockAngle);
+                leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
+                rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
+                offset = lockFoot.position-footPos;
+                body.position-=offset;
+                Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
             }
 /*            RaycastHit hitThis,hitOther;
             // now raycast down from high above each foot (robot is in ignore raycast layer)
