@@ -18,7 +18,7 @@ public class WallBuilder : AbstractGameEffects {
 	private float floorwidth;
 	public float focusdistance = 500f;
 
-	private Vector3 lastPoivotPos;
+	private Vector3 lastPivotPos;
 
 	public Material[] materials;
 	private int curMat = 1;
@@ -74,8 +74,8 @@ public class WallBuilder : AbstractGameEffects {
 		if (timeCounter > 60f) {
 			timeCounter = 0f;
 		}
-
-		if (lastPoivotPos.z < pivot.transform.position.z) {
+/*
+		if (lastPivotPos.z < pivot.transform.position.z) {
 			//we're going forward
 			if (focusPoint.transform.position.z > (walls.Last.Value) [0].transform.position.z + wallprefab.transform.localScale.z) {
 				//it's more than a wall since we drew one
@@ -83,15 +83,15 @@ public class WallBuilder : AbstractGameEffects {
 			}
 
 
-		} else if (lastPoivotPos.z > pivot.transform.position.z) {
+		} else if (lastPivotPos.z > pivot.transform.position.z) {
 			//we're going backwards
 			if (rearfocusPoint.transform.position.z < (walls.First.Value) [0].transform.position.z - wallprefab.transform.localScale.z) {
 				//it's more than a wall since we drew one
 				addMoreWalls (false);
 			}
-		}
+		}*/
 
-		lastPoivotPos = pivot.transform.position;
+		lastPivotPos = pivot.transform.position;
 	}
 
 	private void AddWallPair(bool forward, float leftwidth, float rightwidth, int leftColour, int rightColour, int floorColour, float leftTilt, float rightTilt){

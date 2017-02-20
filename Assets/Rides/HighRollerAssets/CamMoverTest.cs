@@ -40,11 +40,17 @@ public class CamMoverTest : AbstractGameEffects {
 
 	private float getAccelerationNow(){
 		float totalAcc = 0;
-		if (swingQuadrant == 3) {
-			//print ("impelling");
+		if (swingQuadrant == 1) {
+			print ("impelling:"+swingAngVel+":"+speed);
 			totalAcc = -swingAngVel * angVelscaler;
 		}
-		totalAcc -= (speed * speed) * dragConstant;
+        if(speed<0)
+        {
+            totalAcc += (speed * speed) * dragConstant;
+        }else
+        {
+            totalAcc -= (speed * speed) * dragConstant;
+        }
 		return totalAcc;
 	}
 }
