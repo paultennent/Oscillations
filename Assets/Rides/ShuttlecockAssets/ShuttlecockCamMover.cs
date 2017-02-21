@@ -17,6 +17,9 @@ public class ShuttlecockCamMover : AbstractGameEffects {
     
     public float gravity=9.8f;
 
+    public float nextZ=0f;
+    public float nextX=0f;
+    
 	private bool forward;
     int lastQuadrant=-1;
 
@@ -25,6 +28,8 @@ public class ShuttlecockCamMover : AbstractGameEffects {
 	// Use this for initialization
 	void Start () {
 		base.Start();
+        nextZ=Random.Range(-4,4);
+        nextX=.5f*(3+7);
 	}
 	
     
@@ -35,16 +40,16 @@ public class ShuttlecockCamMover : AbstractGameEffects {
         // as swing phase switches, launch us towards the top
         // at a speed that will land us at T = swingCycleTime later
         
-        if(swingQuadrant!=lastQuadrant && swingQuadrant==1)
+        if(swingQuadrant!=lastQuadrant && swingQuadrant==0)
         {
             launchAt(point1,point2);
             targetPoint=2;
-            moveTargetPoint(point1,-3,-7);
-        }else if(swingQuadrant!=lastQuadrant && swingQuadrant==3)
+            moveTargetPoint(point1,3,7,-1);
+        }else if(swingQuadrant!=lastQuadrant && swingQuadrant==2)
         {
             targetPoint=1;
             launchAt(point2,point1);
-            moveTargetPoint(point2,3,7);
+            moveTargetPoint(point2,3,7,1);
         }
         pivot.transform.position+=velocity*Time.deltaTime;;
         velocity=new Vector3(velocity.x,velocity.y-(gravity*Time.deltaTime),velocity.z);
@@ -69,15 +74,18 @@ public class ShuttlecockCamMover : AbstractGameEffects {
     void moveBat(GameObject bat,Transform pt)
     {
         bat.transform.position=Vector3.MoveTowards(bat.transform.position,pt.position,Time.deltaTime*5f);
-		
+        bat.transform.rotation=Quaternion.RotateTowards(bat.transform.rotation,pt.rotation,Time.deltaTime*90f);		
     }
     
-    void moveTargetPoint(Transform pt,float minX,float maxX)
+    void moveTargetPoint(Transform pt,float minX,float maxX,float sign)
     {
         if( swingAmplitude!=0)
         {
             float amplitudeScaling = Mathf.Min(swingAmplitude/45f,1f);
-            pt.position=new Vector3(Mathf.Lerp(minX,maxX,amplitudeScaling),pt.position.y,Random.Range(-4,4));
+            pt.position=new Vector3(nextX*sign,pt.position.y,nextZ);
+            nextX=Mathf.Lerp(minX,maxX,amplitudeScaling);
+            nextZ=Random.Range(-4,4);
+            pt.rotation=Quaternion.LookRotation(pt.position-new Vector3(nextX*-sign,pt.position.y,nextZ))*Quaternion.Euler(0,-90*sign,0);
         }
     }
     

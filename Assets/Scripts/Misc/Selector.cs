@@ -7,17 +7,25 @@ using UnityEngine.VR;
 
 public class Selector : MonoBehaviour {
 
+    public GameObject crosshair;
+    Vector3[] corners=new Vector3[4];
 
 	public void Update()
 	{
+        RectTransform rt=(RectTransform)crosshair.transform;
+        rt.GetWorldCorners(corners);
+
+        Vector3 screenPoint=Camera.allCameras[0].WorldToScreenPoint(corners[0]);
+        
 		PointerEventData pointer = new PointerEventData (EventSystem.current);
-		pointer.position = new Vector2 (Camera.current.pixelWidth / 2, Camera.current.pixelHeight / 2);
+		pointer.position = new Vector2 (screenPoint.x, screenPoint.y);
 		pointer.button = PointerEventData.InputButton.Left;
 
 		List<RaycastResult> raycastResults = new List<RaycastResult> ();
 		EventSystem.current.RaycastAll (pointer, raycastResults);
 
 		if (raycastResults.Count > 0) {
+            print(raycastResults[0].gameObject.name);
 			if(Input.GetButtonUp("Tap")){
 				SceneManager.LoadScene (raycastResults [0].gameObject.name);
 			}
