@@ -1716,7 +1716,7 @@ MonoBehaviour:
   gravityConstant: 9.8
   buoyancy: 10
   buoyancyModConstant: 3
-  angularVelocityCoefficient: 0.1
+  angularVelocityCoefficient: 0.03
   pivot: {fileID: 1959593108}
 --- !u!4 &1670035076
 Transform:
@@ -1785,7 +1785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   applySwingTransform: 0
   debug: 1
-  sineWave: 1
+  sineWave: 0
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
