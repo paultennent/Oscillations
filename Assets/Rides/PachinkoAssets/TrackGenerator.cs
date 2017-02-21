@@ -13,6 +13,9 @@ public class TrackGenerator : MonoBehaviour {
     public float thickness=1f;
     public float lipHeight = 0.2f;
     public float lipWidth=0.1f;
+	public float startRampPercent= 60f;
+	public float newTrackAngle=40f;
+
 
     public bool generateNew=false;
     
@@ -25,15 +28,6 @@ public class TrackGenerator : MonoBehaviour {
     private float []extrusionY={.1f,.1f,0, 0  , .1f , .1f , -1 , -1};
 //    private float []extrusionX={1,-1,-1,1};
 //    private float []extrusionY={0,0,-1,-1};
-   
-    private float lastStartRadius=0;
-    private float lastTransition=0;
-    private float lastRadius=0;
-    private float lastGap=0;
-    private float lastThick=0;
-    private float lastWidth=0;
-    private float lastLipWidth=0;
-    private float lastLipHeight=0;    
 
     public void CalculateExtrusion()
     {
@@ -52,30 +46,28 @@ public class TrackGenerator : MonoBehaviour {
 	}
 	
 	void Update () {
-        if(lastTransition!=lengthTransition || lastRadius!=radiusLoop || lastGap!=gapPercent || lastThick!=thickness || lastWidth!=width || lastStartRadius!=startRampRadius || lastLipHeight!=lipHeight || lastLipWidth!=lipWidth)
-        {
-            CalculateExtrusion();
-            UpdateMeshVertices(GetComponent<MeshFilter>().sharedMesh,null);
-            lastTransition=lengthTransition;
-            lastRadius=radiusLoop;
-            lastGap=gapPercent;
-            lastThick=thickness;
-            lastWidth=width;
-            lastStartRadius=startRampRadius;
-            lastLipWidth=lipWidth;
-            lastLipHeight=lipHeight;
-        }
          if(generateNew)
          {
              generateNew=false;
 //             CreateNewSegment(22,0);
-             CreateNewSegment(45,40);
+             CreateNewSegment(45);
          }
 	}
     
+	void OnValidate()
+	{
+//		print ("woo");
+		CalculateExtrusion();
+		if (currentMesh != null) 
+		{
+			
+			UpdateMeshVertices (currentMesh, null);
+		}
+	}
+
     public Vector3 GetTrackPosition(float trackDistance)
     {
-        float startDistance = startRampRadius*Mathf.PI*.75f;
+		float startDistance = GetInitialDistance();
         
         if(trackDistance<startDistance)
         {
@@ -97,7 +89,7 @@ public class TrackGenerator : MonoBehaviour {
     
     public float GetTrackSlopeAngle(float trackDistance)
     {
-        float startDistance = startRampRadius*Mathf.PI*.75f;
+		float startDistance = GetInitialDistance();
         if(trackDistance<startDistance)
         {
             float circleAngleRad=((startDistance-trackDistance)/startRampRadius);
@@ -122,7 +114,7 @@ public class TrackGenerator : MonoBehaviour {
     {
         if(startRampRadius>0)
         {
-            float startDistance = startRampRadius*Mathf.PI*.75f;
+			float startDistance = GetInitialDistance();
             if(num==START_POINTS)
             {
                 return startDistance;
@@ -152,11 +144,13 @@ public class TrackGenerator : MonoBehaviour {
     
     public float GetInitialDistance()
     {
-        return startRampRadius*Mathf.PI*.75f;
+		float startDistance = startRampRadius*Mathf.PI*.02f*startRampPercent;
+		return startDistance;
     }
     
-    public GameObject CreateNewSegment(float angleVert,float angleHorz)
+    public GameObject CreateNewSegment(float angleVert)
     {
+		float angleHorz = newTrackAngle;
         float r= angleVert*Mathf.Deg2Rad;
         Vector3 startPoint=transform.TransformPoint(new Vector3(0,radiusLoop-Mathf.Cos(r)*(radiusLoop-lipHeight*2f),lengthTransition+Mathf.Sin(r)*(radiusLoop-lipHeight*2f)));
         GameObject newObj=Instantiate(gameObject);
@@ -164,6 +158,7 @@ public class TrackGenerator : MonoBehaviour {
         Quaternion hRot=Quaternion.Euler(0,angleHorz,0);
         Quaternion vRot=Quaternion.Euler(-angleVert,0,0);
         newObj.transform.rotation=newObj.transform.rotation*vRot*hRot;
+		newObj.tag="Generated";
         return newObj;
     }
     

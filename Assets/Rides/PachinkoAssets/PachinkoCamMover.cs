@@ -16,11 +16,13 @@ public class PachinkoCamMover : AbstractGameEffects
 
     public GameObject pivot;
     public float chargeMultiplier=1f;
+	public float unchargeMultiplier = 0.25f;
     public TrackGenerator trackGen;
     public float friction=0.001f;
     public float gravity=9.8f;
     public float launchMult=0.1f;
     public float brakeMult=0.1f;
+	public float dischargeMult=0.1f;
     public bool reset=false;
     public Slider chargeDisplay;
         
@@ -71,7 +73,7 @@ public class PachinkoCamMover : AbstractGameEffects
     {
         float circleAngleRad=trackGen.GetTrackSlopeAngle(trackDistance);
         lastRotation=pivot.transform.rotation;
-        trackGen=trackGen.CreateNewSegment(circleAngleRad*Mathf.Rad2Deg,40).GetComponent<TrackGenerator>();
+        trackGen=trackGen.CreateNewSegment(circleAngleRad*Mathf.Rad2Deg).GetComponent<TrackGenerator>();
         trackDistance=trackGen.GetInitialDistance();
         trackVelocity=0;
         rotateFadePercent=0;
@@ -80,6 +82,11 @@ public class PachinkoCamMover : AbstractGameEffects
 	// Update is called once per frame
 	void Update () {
         base.Update();
+
+		if (!inSession) {
+			return;
+		}
+
 //        MoveOnTrack(-1f*Time.deltaTime);
 //        return;
         trackVelocity+=GetTrackForces()*Time.deltaTime;
@@ -104,11 +111,15 @@ public class PachinkoCamMover : AbstractGameEffects
         
         switch(state)
         {
-            case State.CHARGING:
-                if(swingQuadrant==3 || swingQuadrant==0)
-                {
-                    charge+=swingAngVel*swingAngVel*Time.deltaTime*chargeMultiplier*chargeSwings;
-                }
+		case State.CHARGING:
+			if (swingQuadrant == 3 || swingQuadrant == 0) {
+				charge += swingAngVel * swingAngVel * Time.deltaTime * chargeMultiplier * chargeSwings;
+			} else {
+				charge -= swingAngVel * swingAngVel * Time.deltaTime * unchargeMultiplier;
+			}
+			if (charge < 0) {
+				charge = 0;
+			}
                 if(charge>1)charge=1;
                 trackDistance=(1f-charge)*trackGen.GetInitialDistance();
                 MoveOnTrack(0);
@@ -119,11 +130,11 @@ public class PachinkoCamMover : AbstractGameEffects
                 if(swingQuadrant!=lastQuadrant && swingQuadrant==1)
                 {
                     chargeSwings+=1;
-                    print("Charge:"+chargeSwings);
+                    //print("Charge:"+chargeSwings);
                     if(chargeSwings==4)
                     {
                         state=State.LAUNCH;
-                        print("Launching: charge");
+                        //print("Launching: charge");
                     }
                 }
                 break;
@@ -131,6 +142,8 @@ public class PachinkoCamMover : AbstractGameEffects
                 if(swingQuadrant==1 || swingQuadrant==2)
                 {
                     trackVelocity+=swingAngVel*swingAngVel*Time.deltaTime*launchMult;
+					trackVelocity += charge * Time.deltaTime * dischargeMult;
+					charge = Mathf.Max(0, charge-Time.deltaTime);
                 }
                 if(swingQuadrant==3)
                 {

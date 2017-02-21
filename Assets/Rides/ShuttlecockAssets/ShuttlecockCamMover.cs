@@ -36,7 +36,9 @@ public class ShuttlecockCamMover : AbstractGameEffects {
 	// Update is called once per frame
 	void Update () {
 		base.Update();
-
+		if (!inSession) {
+			return;
+		}
         // as swing phase switches, launch us towards the top
         // at a speed that will land us at T = swingCycleTime later
         
@@ -51,9 +53,13 @@ public class ShuttlecockCamMover : AbstractGameEffects {
             launchAt(point2,point1);
             moveTargetPoint(point2,3,7,1);
         }
-        pivot.transform.position+=velocity*Time.deltaTime;;
-        velocity=new Vector3(velocity.x,velocity.y-(gravity*Time.deltaTime),velocity.z);
-        lastQuadrant=swingQuadrant;        
+		if ((velocity.x < 0 && pivot.transform.position.x > point1.position.x) || (velocity.x>1 && pivot.transform.position.x<point2.position.x) ){
+			
+			pivot.transform.position += velocity * Time.deltaTime;
+			;
+			velocity = new Vector3 (velocity.x, velocity.y - (gravity * Time.deltaTime), velocity.z);
+		}
+        lastQuadrant=swingQuadrant;
         if(targetPoint==1)
         {
             moveBat(bat1,point1);

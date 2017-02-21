@@ -205,8 +205,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8f78021c249b4e2d83d30d87df171c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xBlocks: 10
-  zBlocks: 10
+  xBlocks: 4
+  zBlocks: 200
   spacer: 4
   block: {fileID: 1141159344528098, guid: cb4a480cfc9094c3ea6fb3cf643af9d2, type: 2}
 --- !u!4 &1393810417

@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.VR;
+using UnityEngine.UI;
 
 public class Selector : MonoBehaviour {
 
     public GameObject crosshair;
     Vector3[] corners=new Vector3[4];
+
 
 	public void Update()
 	{
@@ -23,12 +25,14 @@ public class Selector : MonoBehaviour {
 
 		List<RaycastResult> raycastResults = new List<RaycastResult> ();
 		EventSystem.current.RaycastAll (pointer, raycastResults);
-
 		if (raycastResults.Count > 0) {
-            print(raycastResults[0].gameObject.name);
-			if(Input.GetButtonUp("Tap")){
+			EventSystem.current.SetSelectedGameObject (raycastResults[0].gameObject);
+			print (raycastResults [0].gameObject.name);
+			if (Input.GetButtonUp ("Tap")) {
 				SceneManager.LoadScene (raycastResults [0].gameObject.name);
 			}
+		} else {
+			EventSystem.current.SetSelectedGameObject (null);
 		}
 
 	}

@@ -21,3 +21,5 @@ EditorBuildSettings:
     path: Assets/Rides/Shuttlecock.unity
   - enabled: 1
     path: Assets/Rides/Walker.unity
+  - enabled: 1
+    path: Assets/Rides/Oscillate.unity
