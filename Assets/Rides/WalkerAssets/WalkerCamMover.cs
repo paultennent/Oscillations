@@ -32,6 +32,8 @@ public class WalkerCamMover : AbstractGameEffects
     
     public float leftAngle=0f;
     public float rightAngle=0f;
+
+    private float yRot;
     
     
 	// Use this for initialization
@@ -39,6 +41,7 @@ public class WalkerCamMover : AbstractGameEffects
     {
         base.Start();
         bodyParent=body.parent;
+        yRot = body.localEulerAngles.y;
 	}
 
     bool seenZeroCrossing=false;
@@ -88,7 +91,7 @@ public class WalkerCamMover : AbstractGameEffects
             footPos=lockFoot.position;
 //            float rockAngle=-swingAngle*rockMultiplier;
             float rockAngle=rockExtra+-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
-            body.eulerAngles=new Vector3(0,0,rockAngle);
+            body.eulerAngles=new Vector3(0, yRot, rockAngle);
             leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
             rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
             offset = lockFoot.position-footPos;
@@ -120,7 +123,7 @@ public class WalkerCamMover : AbstractGameEffects
                     rockExtra-=1f;
                 }
                 rockAngle=rockExtra+-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
-                body.eulerAngles=new Vector3(0,0,rockAngle);
+                body.eulerAngles=new Vector3(0, yRot, rockAngle);
                 leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
                 rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
                 offset = lockFoot.position-footPos;

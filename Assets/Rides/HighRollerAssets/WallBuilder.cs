@@ -74,7 +74,7 @@ public class WallBuilder : AbstractGameEffects {
 		if (timeCounter > 60f) {
 			timeCounter = 0f;
 		}
-/*
+
 		if (lastPivotPos.z < pivot.transform.position.z) {
 			//we're going forward
 			if (focusPoint.transform.position.z > (walls.Last.Value) [0].transform.position.z + wallprefab.transform.localScale.z) {
@@ -89,7 +89,7 @@ public class WallBuilder : AbstractGameEffects {
 				//it's more than a wall since we drew one
 				addMoreWalls (false);
 			}
-		}*/
+		}
 
 		lastPivotPos = pivot.transform.position;
 	}
