@@ -1659,7 +1659,6 @@ GameObject:
   - component: {fileID: 1929857246}
   - component: {fileID: 1929857249}
   - component: {fileID: 1929857250}
-  - component: {fileID: 1929857251}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -1692,6 +1691,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lowPassfilter: 0
   smoothFactor: 0.9
+  useAccelerometer: 0
 --- !u!4 &1929857247
 Transform:
   m_ObjectHideFlags: 0
@@ -1718,7 +1718,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   applySwingTransform: 1
   debug: 1
-  sineWave: 0
+  sineWave: 1
+  sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1735,10 +1736,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d1f775ed1854d67bcbbc1a58062abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sessionLength: 60
+  climaxTime: 30
+  dontcycle: 0
+  climaxRatio: 0
+  pauseEndTime: 10
+  maxSessions: 1
+  pauseStartTime: 0
   lineMaterial: {fileID: 2100000, guid: b6b260fde18d64c32ad45e1a9e8fba44, type: 2}
   gapDistance: 2
   lineCount: 5
   lineWidth: 0.025
+  lineparent: {fileID: 0}
 --- !u!114 &1929857250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1747,34 +1756,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 1929857244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcd500db54c4640c3b74b683da46490e, type: 3}
+  m_Script: {fileID: 11500000, guid: 231b94aca9c714ee2b8e28050b29a55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sessionLength: 60
-  climaxTime: 5
-  dontcycle: 1
+  climaxTime: 30
+  dontcycle: 0
   climaxRatio: 0
-  maxSessions: 0
-  cage: {fileID: 1221548506}
-  targetScale: {x: 0.25, y: 0.25, z: 0.25}
---- !u!114 &1929857251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1929857244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48f502d24c1f40b9b73ca8bb4875e58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sessionLength: 60
-  climaxTime: 5
-  dontcycle: 1
-  climaxRatio: 0
-  maxSessions: 0
-  cage: {fileID: 1221548507}
-  cagePivot: {fileID: 2142546089}
+  pauseEndTime: 10
+  maxSessions: 1
+  pauseStartTime: 0
+  swing_angle_at_time_t: 0
+  delta_swing_angle_at_time_t: 0
+  swing_angular_velocity_at_time_t: 0
+  rider_CofG_x_coordinate_at_time_t: 0
+  delta_rider_CofG_x_coordinate_at_time_t: 0
+  rider_CofG_z_coordinate_at_time_t: 0
+  delta_rider_CofG_z_coordinate_at_time_t: 0
+  rider_eye_x_coordinate_at_time_t: 0
+  delta_rider_eye_x_coordinate_at_time_t: 0
+  rider_eye_z_coordinate_at_time_t: 0
+  delta_rider_eye_z_coordinate_at_time_t: 0
+  rider_CofG_velocity_in_x: 0
+  rider_CofG_velocity_in_z: 0
+  rider_eye_velocity_in_x: 0
+  rider_eye_velocity_in_z: 0
+  body_linear_speed: 0
+  eye_linear_speed: 0
+  centripetal_Force_per_unit_mass: 0
+  gravity_force_per_unit_mass_at_CofG_tangential_to_direction: 0
+  gravity_force_per_unit_mass_at_CofG_perpendicular_to_direction: 0
+  resultant_force_per_unit_mass_at_CofG: 0
+  angle_as_offset_from_perpendicular_to_CofG_direction: 0
+  Centripetal_G_Force: 0
+  Gravity_G_Force_at_CofG_tangential_to_direction: 0
+  Gravity_G_Force_at_CofG_perpendicular_to_direction: 0
+  resultant_G_Force_at_CofG: 0
 --- !u!1 &1981523753
 GameObject:
   m_ObjectHideFlags: 0

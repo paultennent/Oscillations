@@ -1715,7 +1715,7 @@ MonoBehaviour:
   pauseStartTime: 0
   gravityConstant: 9.8
   buoyancy: 10
-  buoyancyModConstant: 3
+  buoyancyModConstant: 5
   angularVelocityCoefficient: 0.03
   pivot: {fileID: 1959593108}
 --- !u!4 &1670035076

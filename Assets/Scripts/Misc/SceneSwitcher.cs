@@ -26,7 +26,7 @@ public class SceneSwitcher : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		scenes = new string[]{"Float","Pachinko","HighRoller","Jellyfish","Shuttlecock","Walker","Oscillate"};
+		scenes = new string[]{"Float","Pachinko","HighRoller","Jellyfish","Shuttlecock","Walker","Oscillate","Variables"};
 	}
 	
 	// Update is called once per frame
