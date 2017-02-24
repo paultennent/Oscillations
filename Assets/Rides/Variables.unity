@@ -2585,7 +2585,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -234}
+  m_AnchoredPosition: {x: 0, y: -257}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1526037200
@@ -3104,7 +3104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d17bd963cb2f4b7183d9935cb88e4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  applySwingTransform: 1
+  applySwingTransform: 0
+  applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
   sineAmplitude: 45
@@ -3144,6 +3145,8 @@ MonoBehaviour:
   pauseEndTime: 10
   maxSessions: 1
   pauseStartTime: 0
+  beta: 0
+  omega: 0
 --- !u!1 &1981523753
 GameObject:
   m_ObjectHideFlags: 0

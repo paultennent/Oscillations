@@ -16,6 +16,10 @@ public class Equations : AbstractGameEffects {
 	float centre_of_gravity_radius = 1.25f; //depends on max_sensor_G_reading_in_z_axis_as_crosses_mid_point which we don't have - using approx for now
 	float rider_eye_radius = 1f;
 
+	public float beta;
+	public float omega;
+
+
 	//brendan's shopping list
 
 	public Dictionary<string,float> shopping;
@@ -72,7 +76,7 @@ public class Equations : AbstractGameEffects {
 		swingPeriod = swingCycleTime;
 		halfSwingPeriod = swingPeriod / 2f;
 
-		shopping["swing_angle_at_time_t"] = swingAngle;
+		shopping["swing_angle_at_time_t"] = Mathf.Deg2Rad * (swingAngle);
 		shopping["delta_swing_angle_at_time_t"] = shopping["swing_angle_at_time_t"] - last_swing_angle_at_time_t;
 		last_swing_angle_at_time_t = shopping["swing_angle_at_time_t"];
 
@@ -115,5 +119,7 @@ public class Equations : AbstractGameEffects {
 		shopping["Gravity_G_Force_at_CofG_perpendicular_to_direction"] = Mathf.Sin (shopping["swing_angle_at_time_t"]);
 
 		shopping["resultant_G_Force_at_CofG"] = (1f / gravity) * (Mathf.Sqrt ((shopping["centripetal_Force_per_unit_mass"] + shopping["gravity_force_per_unit_mass_at_CofG_perpendicular_to_direction"]) * (shopping["centripetal_Force_per_unit_mass"] + shopping["gravity_force_per_unit_mass_at_CofG_perpendicular_to_direction"])) + (shopping["gravity_force_per_unit_mass_at_CofG_tangential_to_direction"] * shopping["gravity_force_per_unit_mass_at_CofG_tangential_to_direction"]));
+
+	
 	}
 }

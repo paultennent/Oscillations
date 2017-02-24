@@ -5,7 +5,10 @@ using UnityEngine.VR;
 
 public class SwingBase : MonoBehaviour {
 
+	//add inverse trasform
+
 	public bool applySwingTransform = true;
+	public bool applyInverseSwingTransform = false;
 	public bool debug = true;
 
 	private AbstractDataReader swingData;
@@ -93,6 +96,10 @@ public class SwingBase : MonoBehaviour {
 
 		if (applySwingTransform) {
 			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 0);
+			viewPoint.localEulerAngles = new Vector3 (-swingAngle, 0, 0);
+		}
+
+		if (applyInverseSwingTransform) {
 			viewPoint.localEulerAngles = new Vector3 (-swingAngle, 0, 0);
 		}
 

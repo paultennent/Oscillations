@@ -14,18 +14,18 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 7
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SkyboxMaterial: {fileID: 2100000, guid: 4468cf691a0d9e74183ca9beb3c7c990, type: 2}
+  m_AmbientMode: 3
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.16266859, g: 0.35944578, b: 0.5089832, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -535,7 +535,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &752155458 stripped
 GameObject:
@@ -632,13 +632,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 804048288}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.2585728, y: 0.04213311, z: -0.011289535, w: 0.96500653}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 5, z: 0}
 --- !u!1 &852922762
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +980,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -1011,20 +1011,20 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1021388837}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 913160787}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!114 &1021388843
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1021388837}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a07a781cad112c75d0008dfa8d76c639, type: 3}
   m_Name: 
@@ -1036,7 +1036,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1021388837}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 730475ee64f9a894bbac0d9e6f22e813, type: 3}
   m_Name: 
@@ -1469,7 +1469,7 @@ Prefab:
     - target: {fileID: 224567231749343532, guid: 65d21961811333c48af7ba53156ebcc3,
         type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 224567231749343532, guid: 65d21961811333c48af7ba53156ebcc3,
         type: 2}
@@ -1641,7 +1641,7 @@ Transform:
   m_GameObject: {fileID: 1576519255}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.025, y: 0.5, z: 0.025}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 621664810}
   m_Father: {fileID: 1959593109}
@@ -1655,12 +1655,12 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1670035076}
-  - component: {fileID: 1670035075}
   - component: {fileID: 1670035077}
   - component: {fileID: 1670035078}
   - component: {fileID: 1670035080}
   - component: {fileID: 1670035081}
   - component: {fileID: 1670035079}
+  - component: {fileID: 1670035075}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -1676,7 +1676,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1670035074}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16b6cea6128bb49af94ef15477119db7, type: 3}
+  m_Script: {fileID: 11500000, guid: d268fc7e8375645e98f59710a1de6445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sessionLength: 60
@@ -1684,21 +1684,20 @@ MonoBehaviour:
   dontcycle: 0
   climaxRatio: 0
   pauseEndTime: 10
-  maxSessions: 0
+  maxSessions: 1
   pauseStartTime: 0
-  wallprefab: {fileID: 1513175295948024, guid: bdf3f502304f74dc2826a8fc73cc2b40, type: 2}
+  wallprefab: {fileID: 1141159344528098, guid: cb4a480cfc9094c3ea6fb3cf643af9d2, type: 2}
   wallparent: {fileID: 715057169}
-  pivot: {fileID: 1959593108}
-  floorPrefab: {fileID: 1648479249211396, guid: 5d235f32c1bae455693a3de156ac91c7,
+  pivot: {fileID: 1576519255}
+  floorPrefab: {fileID: 1648479249211396, guid: f74e83c1049844fd9bdd9750b4c451ef,
     type: 2}
-  floorDepth: 1.3
+  floorDepth: 1
+  floorwidth: 0
   focusdistance: 200
   materials:
-  - {fileID: 2100000, guid: 9d7f41a1823a0457a91fb819bfdf850e, type: 2}
-  - {fileID: 2100000, guid: 14b71119610121b4db454c76f190a697, type: 2}
-  - {fileID: 2100000, guid: 14b71119610121b4db454c76f190a697, type: 2}
-  - {fileID: 2100000, guid: 14b71119610121b4db454c76f190a697, type: 2}
+  - {fileID: 2100000, guid: 159feee72b3e3154c818c2bce65957ea, type: 2}
   colourBlockSize: 1
+  blocksize: 0
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -1781,7 +1780,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d17bd963cb2f4b7183d9935cb88e4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  applySwingTransform: 1
+  applySwingTransform: 0
+  applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
   sineAmplitude: 45
@@ -1931,7 +1931,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1889614922
 Transform:
   m_ObjectHideFlags: 0

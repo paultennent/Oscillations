@@ -52,5 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
+  - {fileID: 1267276167297896, guid: 75a2db22abc5844d593733e675318f1d, type: 2}
+  - {fileID: 1267276167297896, guid: d167d68aec0d44a1492ed3462eff1090, type: 2}
   - {fileID: 1185010814598578, guid: 9e30b26919d654a6fb68fc2e95501346, type: 2}
+  - {fileID: 1788836897172974, guid: 91bb337b94256489d9d1efe1f8a7966f, type: 2}
   innerBlockCount: 5
+  buildingHeightScaleVariationMax: 15

@@ -8,7 +8,7 @@ public class CityBlockGen : MonoBehaviour {
 
 	public float innerBlockCount = 5f;
 	private float buildingHeightScaleVariationMin = 0.2f;
-	private float buildingHeightScaleVariationMax = 10f;
+	public float buildingHeightScaleVariationMax = 10f;
 
 	// Use this for initialization
 	void Start () {
