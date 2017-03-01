@@ -95,7 +95,7 @@ public class SwingBase : MonoBehaviour {
 //		}
 
 		if (applySwingTransform) {
-			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 0);
+			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 90);
 			viewPoint.localEulerAngles = new Vector3 (-swingAngle, 0, 0);
 		}
 

@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildings:
   - {fileID: 1185010814598578, guid: 9e30b26919d654a6fb68fc2e95501346, type: 2}
-  innerBlockCount: 10
+  innerBlockCount: 5
   totalSize: 50
   buildingHeightScaleVariationMax: 25
   innerGap: 1
