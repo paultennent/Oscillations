@@ -2,34 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CityBlockGen : MonoBehaviour {
+public class SimpleCityBlockGen : MonoBehaviour {
 
 	public GameObject[] buildings;
 
-	public float totalSize = 5f;
 	public float innerBlockCount = 5f;
+	public float totalSize = 5f;
 	private float buildingHeightScaleVariationMin = 0.2f;
 	public float buildingHeightScaleVariationMax = 10f;
+	public float innerGap = 1f;
+
 
 	// Use this for initialization
 	void Start () {
 		initBuild();
 	}
-	
-	private void initBuild(){
-		float rows = innerBlockCount;
-		while (rows > 0){
-			float xwidth = Random.Range(1,rows+1);
-			float cols = innerBlockCount;
-			while (cols > 0){
-				float zwidth = Random.Range(1,cols+1);
-				build(innerBlockCount-rows,innerBlockCount-cols,xwidth,zwidth);
-				cols -= zwidth;
+
+	// Update is called once per frame
+	private void initBuild () {
+		for (float i = 0; i < innerBlockCount; i++) {
+			for (float j = 0; j < innerBlockCount; j++) {
+				build(i*(totalSize/innerBlockCount),j*(totalSize/innerBlockCount),(totalSize/innerBlockCount)-innerGap,(totalSize/innerBlockCount)-innerGap);
 			}
-			rows -=xwidth;
 		}
-
-
 	}
 
 	private void build(float xpos,float zpos,float xwidth,float zwidth){

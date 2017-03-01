@@ -19,7 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4245710640366592}
-  - component: {fileID: 114839702731427820}
+  - component: {fileID: 114326407930410080}
+  - component: {fileID: 114975949277853766}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -40,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114839702731427820
+--- !u!114 &114326407930410080
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -48,13 +49,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1141159344528098}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f35b7461cf74b518119a5a2c8da8d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildings:
+  - {fileID: 1185010814598578, guid: 9e30b26919d654a6fb68fc2e95501346, type: 2}
+  innerBlockCount: 10
+  totalSize: 50
+  buildingHeightScaleVariationMax: 25
+  innerGap: 1
+--- !u!114 &114975949277853766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1141159344528098}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb73716edc4634440952598576dd9068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
-  - {fileID: 1267276167297896, guid: 75a2db22abc5844d593733e675318f1d, type: 2}
-  - {fileID: 1267276167297896, guid: d167d68aec0d44a1492ed3462eff1090, type: 2}
   - {fileID: 1185010814598578, guid: 9e30b26919d654a6fb68fc2e95501346, type: 2}
-  - {fileID: 1788836897172974, guid: 91bb337b94256489d9d1efe1f8a7966f, type: 2}
+  totalSize: 5
   innerBlockCount: 5
-  buildingHeightScaleVariationMax: 15
+  buildingHeightScaleVariationMax: 20

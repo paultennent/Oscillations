@@ -601,13 +601,13 @@ Light:
   m_Enabled: 1
   serializedVersion: 7
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1046,7 +1046,7 @@ MonoBehaviour:
   sensitivityNormals: 1
   lumThreshold: 0.3
   edgeExp: 1
-  sampleDist: 1
+  sampleDist: 0.5
   edgesOnly: 0
   edgesOnlyBgColor: {r: 1, g: 1, b: 1, a: 1}
   edgeDetectShader: {fileID: 4800000, guid: 0d1644bdf064147baa97f235fc5b4903, type: 3}
@@ -1693,11 +1693,13 @@ MonoBehaviour:
     type: 2}
   floorDepth: 1
   floorwidth: 0
-  focusdistance: 200
+  focusdistance: 100
   materials:
-  - {fileID: 2100000, guid: 159feee72b3e3154c818c2bce65957ea, type: 2}
+  - {fileID: 2100000, guid: b9cbba60324f145f09777dd5d82b6ff8, type: 2}
   colourBlockSize: 1
   blocksize: 0
+  gapWidth: 5
+  roadWidth: 5
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0

@@ -35,6 +35,11 @@ public class HighRollerCityBuilder : AbstractGameEffects {
     private bool wallsExist = false;
 	public float blocksize;
 
+	public float gapWidth = 10f;
+	public float roadWidth = 5f;
+
+	private float blockOffset = 2.25f;
+
 	// Use this for initialization
 	void Start () {
         base.Start();
@@ -54,8 +59,10 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 		drawPoint.transform.position = pivot.transform.position;
 
 
-		blocksize = wallprefab.GetComponent<CityBlockGen> ().innerBlockCount;
-		floorwidth = blocksize * 3;//floorPrefab.transform.localScale.x * 2;
+		blocksize = wallprefab.GetComponent<SimpleCityBlockGen> ().totalSize + gapWidth;
+		blockOffset = ((wallprefab.GetComponent<SimpleCityBlockGen> ().totalSize / wallprefab.GetComponent<SimpleCityBlockGen> ().innerBlockCount) - wallprefab.GetComponent<SimpleCityBlockGen> ().innerGap)/2f ;
+
+		floorwidth = blocksize ;//floorPrefab.transform.localScale.x * 2;
 		
 	}
 	
@@ -110,7 +117,7 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 		}
 
 		//left wall
-		float xpos = drawPoint.transform.position.x - leftwidth - blocksize/2;
+		float xpos = drawPoint.transform.position.x - leftwidth;
 		float ypos = (drawPoint.transform.position.y) - floorDepth;
 		float zpos = drawPoint.transform.position.z;
 		if(!forward){
@@ -136,7 +143,7 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 		wallset [1] = wall2;
 
 		//floor
-		xpos = drawPoint.transform.position.x + ((rightwidth-leftwidth)/2f);
+		xpos = drawPoint.transform.position.x;
 		ypos = drawPoint.transform.position.y - floorDepth;
 
 		GameObject floor1 = GameObject.Instantiate(floorPrefab, new Vector3(xpos,ypos,zpos), Quaternion.identity) as GameObject;
@@ -145,6 +152,8 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 		floor1.transform.localScale = new Vector3(leftwidth + rightwidth + blocksize,floor1.transform.localScale.y,blocksize);
 
 		floor1.GetComponent<Renderer> ().material = materials [floorColour];
+		//make the floor disappear
+		floor1.GetComponent<Renderer> ().enabled = false;
 		wallset [2] = floor1;
 
 		float[] wallinfo = {leftwidth, rightwidth, (float) leftColour, (float)rightColour, (float)floorColour, leftTilt, rightTilt};
@@ -192,7 +201,7 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 		for (float i = -focusdistance; i < focusdistance; i += blocksize) {
 			drawPoint.transform.position = pivot.transform.position + new Vector3 (0, 0, i);
 			int mat = getNextMat ();
-			AddWallPair (true, floorwidth/3f, floorwidth/3f, mat, mat, 0, 0, 0);
+			AddWallPair (true, getNextLeftWidth(), getNextRightWidth(), mat, mat, 0, 0, 0);
 		}
         wallsExist = true;
 	}
@@ -240,11 +249,11 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 	}
 
 	private float getNextLeftWidth(){
-		return floorwidth/2f;
+		return blocksize - gapWidth + (roadWidth /2) - blockOffset;
 	}
 
 	private float getNextRightWidth(){
-		return floorwidth/2f;
+		return + (roadWidth /2) + blockOffset;
 	}
 
 	private float getNextLeftTilt(){
