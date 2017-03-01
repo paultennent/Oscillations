@@ -229,6 +229,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4377565524337408}
+  - component: {fileID: 114270872353417542}
   m_Layer: 0
   m_Name: CutoutCube
   m_TagString: Untagged
@@ -2673,3 +2674,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114270872353417542
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1267276167297896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 250da9000b9ee4bf493089515c8ca4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mats:
+  - {fileID: 2100000, guid: 1f4f20eb57f7b4872b5b71a7a81cc4d3, type: 2}
+  - {fileID: 2100000, guid: 638e2cc2f63d146e98adbcd83a0eb7cf, type: 2}
+  - {fileID: 2100000, guid: 3fe4bfac181914b8e8400f4b8391b6c2, type: 2}
+  - {fileID: 2100000, guid: 73ad1d222f68f43febff4d7f1a35c427, type: 2}
+  - {fileID: 2100000, guid: 20087d636d2b7490a97ec7a776f892d5, type: 2}
+  outerCube: {fileID: 4849880571478948}
