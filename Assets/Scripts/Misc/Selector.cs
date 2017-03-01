@@ -41,7 +41,7 @@ public class Selector : MonoBehaviour {
 	}
 
 	public void openHighRoller(){
-		SceneManager.LoadScene ("HighRoller");
+		SceneManager.LoadScene ("HighRoller-City");
 	}
 
 	public void openFloat(){
@@ -61,6 +61,6 @@ public class Selector : MonoBehaviour {
 	}
 
 	public void openShuttlecock(){
-		SceneManager.LoadScene ("Shuttlecock");
+		SceneManager.LoadScene ("Shuttlecock-city");
 	}
 }
