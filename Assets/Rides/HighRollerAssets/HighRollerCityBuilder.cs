@@ -40,6 +40,8 @@ public class HighRollerCityBuilder : AbstractGameEffects {
 
 	private float blockOffset = 2.25f;
 
+	public bool buildingsExist = false;
+
 	// Use this for initialization
 	void Start () {
         base.Start();
@@ -75,6 +77,7 @@ public class HighRollerCityBuilder : AbstractGameEffects {
             if (!wallsExist)
             {
                 initWalls();
+				buildingsExist = true;
             }
         }
         else { return; }
