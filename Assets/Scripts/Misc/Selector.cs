@@ -27,10 +27,13 @@ public class Selector : MonoBehaviour {
 		EventSystem.current.RaycastAll (pointer, raycastResults);
 		if (raycastResults.Count > 0) {
 			EventSystem.current.SetSelectedGameObject (raycastResults[0].gameObject);
-			print (raycastResults [0].gameObject.name);
-			if (Input.GetButtonUp ("Tap")) {
-				SceneManager.LoadScene (raycastResults [0].gameObject.name);
-			}
+            if(raycastResults[0].gameObject.GetComponent<Button>()!=null)
+            {
+                print (raycastResults [0].gameObject.name);
+                if (Input.GetButtonUp ("Tap")) {
+                    SceneManager.LoadScene (raycastResults [0].gameObject.name);
+                }
+            }
 		} else {
 			EventSystem.current.SetSelectedGameObject (null);
 		}

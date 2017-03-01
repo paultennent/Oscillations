@@ -11,7 +11,7 @@ public class AbstractGameEffects : MonoBehaviour {
 	protected Transform swingPivot;
 	protected Transform swingSeat;
 	protected Transform viewPoint;
-    protected AndroidFlasher statusFlasher;
+    protected AndroidCameraHandler statusFlasher;
 
 
 	protected float swingAngle;
@@ -57,11 +57,14 @@ public class AbstractGameEffects : MonoBehaviour {
 		swingSeat = GameObject.FindGameObjectWithTag ("Swing").transform;
 		swingPivot = GameObject.FindGameObjectWithTag ("SwingPivot").transform;
 		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
-        statusFlasher=  GameObject.FindGameObjectWithTag ("Controller").GetComponent<AndroidFlasher>();
 	}
 	
 	// Update is called once per frame
 	public void Update () {
+        if (statusFlasher==null)
+        {
+            statusFlasher=  AndroidCameraHandler.GetInstance();
+        }
 
         if (Time.time < pauseStartTime)
         {
@@ -226,37 +229,39 @@ public class AbstractGameEffects : MonoBehaviour {
         //print("phase:"+swingPhase+",quadrant:"+swingQuadrant+",angVel:"+swingAngVel);
         
         // set status flashlight
-        //switch(swingData.getConnectionState())
-        //{
-        //    case AbstractDataReader.CONNECTION_PARTIAL:
-        //        statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ONE);
-        //        break;
-        //    case AbstractDataReader.CONNECTION_NONE:
-        //        statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ALL);            
-        //        break;
-        //    default:
-        //        // connected ok
-        //        {
-        //            print("connected");
-        //            if(inSession)
-        //            {
-        //                if(timeLeftInGame<=0)
-        //                {
-        //                    statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHED);
-        //                }else if(timeLeftInGame<10)
-        //                {
-        //                    statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHING);
-        //                }else
-        //                {
-        //                    statusFlasher.setFlashPattern(statusFlasher.FLASH_RUNNING);
-        //                }
-        //            }else
-        //            {
-        //                statusFlasher.setFlashPattern(null);
-        //            }                        
-        //        }
-        //        break;
-        //}
+        if(statusFlasher)
+        {
+            switch(swingData.getConnectionState())
+            {
+               case AbstractDataReader.CONNECTION_PARTIAL:
+                   statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ONE);
+                   break;
+               case AbstractDataReader.CONNECTION_NONE:
+                   statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ALL);            
+                   break;
+               default:
+                   // connected ok
+                   {
+                       if(inSession)
+                       {
+                           if(timeLeftInGame<=0)
+                           {
+                               statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHED);
+                           }else if(timeLeftInGame<10)
+                           {
+                               statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHING);
+                           }else
+                           {
+                               statusFlasher.setFlashPattern(statusFlasher.FLASH_RUNNING);
+                           }
+                       }else
+                       {
+                           statusFlasher.setFlashPattern(null);
+                       }                        
+                   }
+                   break;
+            }
+        }
 
 	}
 
