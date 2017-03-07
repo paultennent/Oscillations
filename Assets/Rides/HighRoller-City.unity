@@ -1780,7 +1780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d17bd963cb2f4b7183d9935cb88e4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  applySwingTransform: 1
+  applySwingTransform: 0
   applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
