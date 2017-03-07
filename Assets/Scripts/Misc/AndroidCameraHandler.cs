@@ -20,6 +20,8 @@ public class AndroidCameraHandler: MonoBehaviour
     bool isScanningCode=false;
     bool flashOn=false;
     bool lastFlash=false;
+    string currentSwing=null;
+    
     
     const float FLASH_STEP_TIME=0.1f;
     float currentTime=0;
@@ -37,6 +39,8 @@ public class AndroidCameraHandler: MonoBehaviour
     
     public CodeType acceptBarcodeTypes=CodeType.CODETYPE_ALL;
     string detectedCode="";
+    
+    public string getCurrentSwing(){return currentSwing;}
     
 	// Use this for initialization
 	void Start () {
@@ -195,6 +199,19 @@ public class AndroidCameraHandler: MonoBehaviour
     public string getDetectedCode()
     {
         return detectedCode;
+    }
+    
+    public void clearDetectedCode()
+    {
+        detectedCode="";
+    }
+
+    public bool connectToSwing(string code)
+    {
+        currentSwing=code;
+        AndroidJavaObject context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+        AndroidJavaObject wifiSelector=new AndroidJavaObject("com.mrl.flashcamerasource.ClientWifiSelector");
+        return wifiSelector.Call<bool>("SelectNetworkForBarcode",context,code);
     }
 	
 	// Update is called once per frame

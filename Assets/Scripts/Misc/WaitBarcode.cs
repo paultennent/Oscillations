@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaitBarcode : MonoBehaviour {
 
     Transform originalParent;
     AndroidCameraHandler barcodeReader=null;
     bool active=true;
-    
+   
+    public GameObject mTextObject;
+    Text mText;
 	// Use this for initialization
 	void Start () 
     {
         originalParent=transform.parent;
         WaitForBarcode();
+        mText=mTextObject.GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
@@ -29,6 +33,14 @@ public class WaitBarcode : MonoBehaviour {
         }
         if(barcodeReader!=null && active)
         {
+            if(mText && barcodeReader.getCurrentSwing()==null)
+            {
+                // no swing yet, ask for that
+                mText.text="SCAN SWING BARCODE";
+            }else
+            {
+                mText.text="SCAN \nA RIDER \nBARCODE";
+            }
             string code=barcodeReader.getDetectedCode();
             if(Input.GetKeyDown("x"))
             {
@@ -50,7 +62,8 @@ public class WaitBarcode : MonoBehaviour {
                 ResearchLogger r= ResearchLogger.GetInstance();
                 if(r!=null)
                 {
-                    if(IsUserBarcode(code))
+                    print("code:"+code);
+                    if(IsUserBarcode(code) && barcodeReader.getCurrentSwing()!=null)
                     {
                         r.OnNewUser(code);
                         // found a user, hide us so the rest of the UI is functional
@@ -60,25 +73,28 @@ public class WaitBarcode : MonoBehaviour {
                         print("Found user:"+code);
                     }else if(IsSwingBarcode(code))
                     {
+                        barcodeReader.stopCodeCapture();
+                        barcodeReader.connectToSwing(code);
                         // found a swing, need to pair to this swing
                         // but stick in the same UI
                         print("Found swing:"+code);
                         r.OnNewSwing(code);
-//                        PairWithSwing(code);
+                        barcodeReader.initCodeCapture();                        
                     }
                 }                                
             }
+            barcodeReader.clearDetectedCode();
         }
 	}
     
     bool IsUserBarcode(string code)
     {
-        if(code[0]=='9')return true;
+        if(code[0]=='0')return true;
         return false;
     }
     bool IsSwingBarcode(string code)
     {
-        if(code[0]=='3')return true;
+        if(code[0]>='1')return true;
         return false;
     }
     
