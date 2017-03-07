@@ -1688,18 +1688,16 @@ MonoBehaviour:
   pauseStartTime: 0
   wallprefab: {fileID: 1141159344528098, guid: cb4a480cfc9094c3ea6fb3cf643af9d2, type: 2}
   wallparent: {fileID: 715057169}
-  pivot: {fileID: 1576519255}
+  pivot: {fileID: 1959593108}
   floorPrefab: {fileID: 1648479249211396, guid: f74e83c1049844fd9bdd9750b4c451ef,
     type: 2}
   floorDepth: 1
-  floorwidth: 0
-  focusdistance: 100
-  materials:
-  - {fileID: 2100000, guid: b9cbba60324f145f09777dd5d82b6ff8, type: 2}
-  colourBlockSize: 1
+  ZFocusDistance: 200
+  XFocusDistance: 100
   blocksize: 0
   gapWidth: 5
   roadWidth: 5
+  buildingsExist: 0
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0

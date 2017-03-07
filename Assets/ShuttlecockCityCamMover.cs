@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShuttlecockCityCamMover : MonoBehaviour {
 
-	private HighRollerCityBuilder cb;
+	private CityBuilder cb;
 	private bool madeStart = false;
 
 	List<Vector3> currentTrajectory=null;
@@ -16,7 +16,7 @@ public class ShuttlecockCityCamMover : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cb = GetComponent<HighRollerCityBuilder> ();
+		cb = GetComponent<CityBuilder> ();
 		currentTrajectory = new List<Vector3> ();
 	}
 	
