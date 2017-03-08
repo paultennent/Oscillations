@@ -69,6 +69,10 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         }
         lastQuadrant=swingQuadrant;
         
+        if(swingAmplitude!=0)
+        {
+            targetDistance=swingAmplitude;
+        }        
 		if (!madeStart) {
             Vector3 b = FindFirstBuilding (out madeStart);
 			if (madeStart) {
