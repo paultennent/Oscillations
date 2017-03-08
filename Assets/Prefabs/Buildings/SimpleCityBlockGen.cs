@@ -8,7 +8,7 @@ public class SimpleCityBlockGen : MonoBehaviour {
 
 	public float innerBlockCount = 5f;
 	public float totalSize = 5f;
-	private float buildingHeightScaleVariationMin = 0.2f;
+	public float buildingHeightScaleVariationMin = 0.2f;
 	public float buildingHeightScaleVariationMax = 10f;
 	public float innerGap = 1f;
 
@@ -20,9 +20,10 @@ public class SimpleCityBlockGen : MonoBehaviour {
 
 	// Update is called once per frame
 	private void initBuild () {
+        float offset=totalSize*0.5f-(totalSize/innerBlockCount)*0.5f;
 		for (float i = 0; i < innerBlockCount; i++) {
 			for (float j = 0; j < innerBlockCount; j++) {
-				build(i*(totalSize/innerBlockCount),j*(totalSize/innerBlockCount),(totalSize/innerBlockCount)-innerGap,(totalSize/innerBlockCount)-innerGap);
+				build(i*(totalSize/innerBlockCount)-offset,j*(totalSize/innerBlockCount)-offset,(totalSize/innerBlockCount)-innerGap,(totalSize/innerBlockCount)-innerGap);
 			}
 		}
 	}

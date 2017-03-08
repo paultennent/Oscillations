@@ -59,6 +59,7 @@ MonoBehaviour:
   - {fileID: 1788836897172974, guid: 91bb337b94256489d9d1efe1f8a7966f, type: 2}
   innerBlockCount: 5
   totalSize: 50
+  buildingHeightScaleVariationMin: 2
   buildingHeightScaleVariationMax: 25
   innerGap: 1
 --- !u!114 &114975949277853766

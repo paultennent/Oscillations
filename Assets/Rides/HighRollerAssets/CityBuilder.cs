@@ -26,7 +26,7 @@ public class CityBuilder : AbstractGameEffects {
 
 	private float timeCounter = 0;
     private bool wallsExist = false;
-	public float blocksize;
+	public float blockSize;
 
 	public float gapWidth = 10f;
 	public float roadWidth = 5f;
@@ -44,8 +44,8 @@ public class CityBuilder : AbstractGameEffects {
 		drawPoint = new GameObject ("Drawer");
 		drawPoint.transform.position = pivot.transform.position;
 
-		blocksize = wallprefab.GetComponent<SimpleCityBlockGen> ().totalSize + gapWidth;
-		blockOffset = ((wallprefab.GetComponent<SimpleCityBlockGen> ().totalSize / wallprefab.GetComponent<SimpleCityBlockGen> ().innerBlockCount) - wallprefab.GetComponent<SimpleCityBlockGen> ().innerGap)/2f ;
+		blockSize = wallprefab.GetComponent<SimpleCityBlockGen> ().totalSize;
+		blockOffset = blockSize+gapWidth;
 	}
 	
 	// Update is called once per frame
@@ -70,7 +70,7 @@ public class CityBuilder : AbstractGameEffects {
 
 		if (lastPivotPos.z < pivot.transform.position.z) {
 			//we're going forward
-			if (focusPoint.transform.position.z > (walls.Last.Value) [0].transform.position.z + blocksize) {
+			if (focusPoint.transform.position.z > (walls.Last.Value) [0].transform.position.z + blockOffset) {
 				//it's more than a wall since we drew one
 				addMoreWalls (true);
 			}
@@ -78,7 +78,7 @@ public class CityBuilder : AbstractGameEffects {
 
 		} else if (lastPivotPos.z > pivot.transform.position.z) {
 			//we're going backwards
-			if (rearfocusPoint.transform.position.z < (walls.First.Value) [0].transform.position.z - blocksize) {
+			if (rearfocusPoint.transform.position.z < (walls.First.Value) [0].transform.position.z - blockOffset) {
 				//it's more than a wall since we drew one
 				addMoreWalls (false);
 			}
@@ -96,12 +96,12 @@ public class CityBuilder : AbstractGameEffects {
 		float ypos = (drawPoint.transform.position.y) - floorDepth;
 		float zpos = drawPoint.transform.position.z;
 		if(!forward){
-			zpos = drawPoint.transform.position.z - blocksize / (blocksize / 2f);
+			zpos = drawPoint.transform.position.z - blockSize / (blockSize / 2f);
 		}
 
 		//left blocks
-		for (float i = 0; i < XFocusDistance; i += blocksize) {
-			xpos = i - (roadWidth /2) - blockOffset + blocksize;
+		for (float i = 0; i <= XFocusDistance; i += (blockOffset)) {
+			xpos = i + (roadWidth *.5f) + blockSize*.5f;
 			GameObject wall1 = GameObject.Instantiate (wallprefab, new Vector3 (-xpos, ypos, zpos), Quaternion.identity) as GameObject;
 			wall1.name = "w1 " + zpos;
 			wall1.transform.parent = wallparent.transform;
@@ -109,8 +109,8 @@ public class CityBuilder : AbstractGameEffects {
 		}
 
 		//right blocks
-		for (float i = 0; i < XFocusDistance; i += blocksize) {
-			xpos = i  + blockOffset + roadWidth/2;
+		for (float i = 0; i <= XFocusDistance; i += (blockOffset)) {
+			xpos = i  + blockSize*.5f + roadWidth*.5f;
 			GameObject wall2 = GameObject.Instantiate (wallprefab, new Vector3 (xpos, ypos, zpos), Quaternion.identity) as GameObject;
 			wall2.name = "w2 " + zpos;
 			wall2.transform.parent = wallparent.transform;
@@ -127,8 +127,8 @@ public class CityBuilder : AbstractGameEffects {
 	private void addMoreWalls(bool forward){
 		if (forward) {
 			//add in the necessary amount of walls forward
-			float start = (walls.Last.Value)[0].transform.position.z + (blocksize);
-			for (float i = start; i <= focusPoint.transform.position.z; i += blocksize) {
+			float start = (walls.Last.Value)[0].transform.position.z + (blockOffset);
+			for (float i = start; i <= focusPoint.transform.position.z; i += blockOffset) {
 				drawPoint.transform.position = new Vector3 (0, 0, i);
 				AddWallPair (true);
 				removeWalls (true);
@@ -136,9 +136,9 @@ public class CityBuilder : AbstractGameEffects {
 
 		} else {
 			//add in the necessarty amount of walls backward
-			float start = (walls.First.Value)[0].transform.position.z- (blocksize);
+			float start = (walls.First.Value)[0].transform.position.z- (blockOffset);
 
-			for (float i = start; i >= rearfocusPoint.transform.position.z; i -= blocksize) {
+			for (float i = start; i >= rearfocusPoint.transform.position.z; i -= blockOffset) {
 				drawPoint.transform.position = new Vector3 (0, 0, i);
 				AddWallPair (false);
 				removeWalls (false);
@@ -152,7 +152,7 @@ public class CityBuilder : AbstractGameEffects {
 		//wallinfos = new LinkedList<float[]> ();
 
 
-		for (float i = -ZFocusDistance; i < ZFocusDistance; i += blocksize) {
+		for (float i = -ZFocusDistance; i < ZFocusDistance; i += blockOffset) {
 			drawPoint.transform.position = pivot.transform.position + new Vector3 (0, 0, i);
 			AddWallPair (true);
 		}
