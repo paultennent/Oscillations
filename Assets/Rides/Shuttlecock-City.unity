@@ -2931,7 +2931,7 @@ MonoBehaviour:
   floorDepth: 1
   ZFocusDistance: 300
   XFocusDistance: 300
-  blocksize: 0
+  blockSize: 0
   gapWidth: 10
   roadWidth: 5
   buildingsExist: 0
@@ -2986,9 +2986,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f340bddf804d43dc889de9dd6690dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sessionLength: 60
+  climaxTime: 30
+  dontcycle: 0
+  climaxRatio: 0
+  pauseEndTime: 10
+  maxSessions: 1
+  pauseStartTime: 0
   currentPos: {fileID: 1959593109}
   gravity: 9.81
   dt: 0.01
+  showCast: 0
+  showPointObjects: 1
+  roadCentre: {x: 0, y: 0, z: 0}
+  roadDirection: {x: 0, y: 0, z: 1}
+  jumpAngle: 15
+  roadWidth: 5
+  targetDistance: 40
+  targetTime: 1
 --- !u!114 &1670035080
 MonoBehaviour:
   m_ObjectHideFlags: 0
