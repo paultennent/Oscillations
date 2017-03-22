@@ -26,6 +26,7 @@ public class SwingBase : MonoBehaviour {
 	private float altAngle = float.PositiveInfinity;
 
 	public bool sineWave = true;
+    public bool forceSineOnMobile=false;
     public float sineAmplitude= 45f;
 
 	private GyroAccelFilter errorFilter=new GyroAccelFilter();
@@ -62,7 +63,7 @@ public class SwingBase : MonoBehaviour {
 		viewPoint = GameObject.FindGameObjectWithTag ("ViewPoint").transform;
 
 		#if !UNITY_EDITOR
-			sineWave = false;
+			sineWave = forceSineOnMobile;
 		#endif
 
 	}

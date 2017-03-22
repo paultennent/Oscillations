@@ -15,7 +15,12 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     public float dt = 0.01f;
     public bool showCast=false;
     public bool showPointObjects=false;
-    
+    public GameObject travelPath;
+
+    // for jumping, we create a height map in a line in the direction we want to jump
+    // by using downwards raycasts
+    // then we calculate which gravity based trajectory to a point on the other side of the 'road' 
+    // will a)hit something, b)get us there in closest to the target total distance
     const int MAP_POINTS=100;
     float []heightMap;
     float []trajectoryLens;
@@ -25,17 +30,23 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     private GameObject endMarker;
     private GameObject roadMarker;
     private GameObject castParent;
+    private float stretchMultiplier=1f;
+    
 
     public Vector3 roadCentre=new Vector3(0,0,0);
     public Vector3 roadDirection=new Vector3(0,0,1);
     public float jumpAngle=15f;
     public float roadWidth=5f;
-    public float targetDistance=40f;
+    private float targetDistance=0f;
     public float targetTime=1f;
+    public float targetDistanceMultiplier=1f;
 
     private float targetEndTime=-1;
     
     private int lastQuadrant=-1;
+    
+    private Transform[] travelPathPoints;
+    private int travelPathSegment=0;
     
 	// Use this for initialization
 	void Start () {
@@ -52,28 +63,29 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         trajectoryLens=new float[MAP_POINTS];
         gravityMults=new float[MAP_POINTS];
         upVelocities=new float[MAP_POINTS];
+        
+        travelPathPoints=new Transform[travelPath.transform.childCount];        
+        for(int c=0;c<travelPath.transform.childCount;c++)
+        {
+            travelPathPoints[c]=travelPath.transform.GetChild(c);
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
         base.Update();
-		while (!cb.buildingsExist) {
-			return;
-		}
         if(swingQuadrant!=lastQuadrant && (swingQuadrant==0 || swingQuadrant==2))
         {
             // this is a point where we should launch 
             // set target end time to be this time + swingcycletime/2
             targetEndTime=Time.time + swingCycleTime/2f;
-            print("swing");
         }
         lastQuadrant=swingQuadrant;
+        if(!inSession)return;
         
-        if(swingAmplitude!=0)
-        {
-            targetDistance=swingAmplitude;
-        }        
 		if (!madeStart) {
+            currentPos.position=travelPathPoints[0].position;
+            updateTravelPath();
             Vector3 b = FindFirstBuilding (out madeStart);
 			if (madeStart) {
                 if(showPointObjects)
@@ -85,6 +97,11 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 				currentPos.position = b;
 			}
 		} else {
+            updateTravelPath();
+            if(swingAmplitude!=0)
+            {
+                targetDistance=swingAmplitude*targetDistanceMultiplier;
+            }        
 			// if we've got trajectory points left, replay them
 			if (currentTrajectory != null && currentTrajectory.Count > (int)trajectoryIndex) {
 				currentPos.position = currentTrajectory [(int)trajectoryIndex];
@@ -101,84 +118,123 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 {
                     targetTime = targetEndTime- Time.time;
                 }
-                for(float angleOffset=0;angleOffset<45;angleOffset+=1f)
+                for(int retries=5;retries>0;retries--)
                 {
-                    
-                    // distance to other side of road is the minimum we need to launch
-                    // make sure that our array goes to 10% more than that at least
-                    
-                    Quaternion roadRotation = Quaternion.AngleAxis(90,Vector3.up);
-                    Vector3 perpendicular=roadRotation*roadDirection;
-                    // distance to centre of road
-                    float roadDistancePerpendicular = Vector3.Dot((currentPos.position - roadCentre),perpendicular);
-
-                    bool leftSide = (roadDistancePerpendicular < 0);
-                    float leftRight=leftSide?1f:-1f;
-
-                    Quaternion jumpRotation;
-                    jumpRotation = Quaternion.AngleAxis(leftRight*(90-(jumpAngle+angleOffset)),Vector3.up);
-                    Vector3 launchDir = jumpRotation*roadDirection ;
-                    
-                    float roadDistance = -(roadDistancePerpendicular-leftRight*roadWidth*.5f)/Vector3.Dot(launchDir,perpendicular);
-                    // closest point on line = 
-                    float minLaunchDistance=1.1f* roadDistance;
-                    float mapDistance=Mathf.Max(targetDistance,minLaunchDistance);
-
-                    // are we on left or right side of road?
-                    if(showPointObjects)
+                    float offsetFrom=0;
+                    float offsetTo=40;
+                    float offsetStep=1f;
+                    if(jumpAngle>45)
                     {
-                        roadMarker.transform.position=currentPos.position+launchDir*roadDistance;
+                        offsetTo=-40;
+                        offsetStep=-1f;
                     }
+                    for(float angleOffset=offsetFrom;(offsetStep<0 && angleOffset>offsetTo)|| (offsetStep>0 && angleOffset<offsetTo);angleOffset+=offsetStep)
+                    {
+                        
+                        // distance to other side of road is the minimum we need to launch
+                        // make sure that our array goes to 10% more than that at least
+                        
+                        Quaternion roadRotation = Quaternion.AngleAxis(90,Vector3.up);
+                        Vector3 perpendicular=roadRotation*roadDirection;
+                        // distance to centre of road
+                        float roadDistancePerpendicular = Vector3.Dot((currentPos.position - roadCentre),perpendicular);
 
-                    CreateHeightMapLine(currentPos.position,launchDir,mapDistance,heightMap);
-                    CalculateHeightMapTrajectories(heightMap,roadDistance,mapDistance,targetTime,trajectoryLens,gravityMults,upVelocities);
-                    float bestFitDiff=99999f;
-                    int bestFitPos=-1;
-                    float bestFitHeight=-1f;
-                    for(int c=0;c<trajectoryLens.Length;c++)
-                    {
-                        if(trajectoryLens[c]>0)
-                        {
-                            float diff=targetDistance-trajectoryLens[c];
-                            if(Mathf.Abs(diff)<bestFitDiff)
-                            {
-                                bestFitDiff=Mathf.Abs(diff);
-                                bestFitPos=c;
-                                bestFitHeight=heightMap[c];
-                            }
-                        }
-                    }
-//                    print("RD:"+roadDistance+" MD:"+mapDistance+" LD:"+launchDir+ "BFD:"+bestFitDiff);
-                    if(bestFitPos!=-1)
-                    {
-                        Vector3 targetPos=currentPos.position+((float)bestFitPos)*mapDistance*launchDir*(1.0f/(float)trajectoryLens.Length);
-                        targetPos.y=bestFitHeight;
-                        //print( bestFitPos+":"+targetPos+":"+bestFitHeight);
+                        bool leftSide = (roadDistancePerpendicular < 0);
+                        float leftRight=leftSide?1f:-1f;
+
+                        Quaternion jumpRotation;
+                        jumpRotation = Quaternion.AngleAxis(leftRight*(90-(jumpAngle+angleOffset)),Vector3.up);
+                        Vector3 launchDir = jumpRotation*roadDirection ;
+                        
+                        float roadDistance = -(roadDistancePerpendicular-leftRight*roadWidth*.5f)/Vector3.Dot(launchDir,perpendicular);
+                        // closest point on line = 
+                        float minLaunchDistance=1.1f* roadDistance*stretchMultiplier;
+                        float mapDistance=Mathf.Max(targetDistance,minLaunchDistance);
+
+                        // are we on left or right side of road?
                         if(showPointObjects)
                         {
-                            GameObject toPoint = new GameObject ();
-                            toPoint.transform.position=targetPos;
-                            toPoint.name = "To Point";
+                            roadMarker.transform.position=currentPos.position+launchDir*roadDistance;
                         }
-                        currentTrajectory.Clear();
-                        float mult = 1f/(float)99f;
-                        CreateTrajectoryFromDescription(currentPos.position,targetPos,upVelocities[bestFitPos],gravityMults[bestFitPos],targetTime);    
-                        
-//                        for(int c=0;c<100;c++)
- //                       {
-  //                          currentTrajectory.Add(Vector3.Lerp(currentPos.position,targetPos,mult*(float)c));
-   //                     }
-                        trajectoryIndex=0;
-                        break;
-                    }else
-                    {
-                        //print("Can't find new target");
+
+                        CreateHeightMapLine(currentPos.position,launchDir,mapDistance,heightMap);
+                        CalculateHeightMapTrajectories(heightMap,roadDistance,mapDistance,targetTime,trajectoryLens,gravityMults,upVelocities);
+                        float bestFitDiff=99999f;
+                        int bestFitPos=-1;
+                        float bestFitHeight=-1f;
+                        for(int c=0;c<trajectoryLens.Length;c++)
+                        {
+                            if(trajectoryLens[c]>0)
+                            {
+                                float diff=targetDistance-trajectoryLens[c];
+                                if(Mathf.Abs(diff)<bestFitDiff)
+                                {
+                                    bestFitDiff=Mathf.Abs(diff);
+                                    bestFitPos=c;
+                                    bestFitHeight=heightMap[c];
+                                }
+                            }
+                        }
+    //                    print("RD:"+roadDistance+" MD:"+mapDistance+" LD:"+launchDir+ "BFD:"+bestFitDiff);
+                        if(bestFitPos!=-1)
+                        {
+                            Vector3 targetPos=currentPos.position+((float)bestFitPos)*mapDistance*launchDir*(1.0f/(float)trajectoryLens.Length);
+                            targetPos.y=bestFitHeight;
+                            //print( bestFitPos+":"+targetPos+":"+bestFitHeight);
+                            if(showPointObjects)
+                            {
+                                GameObject toPoint = new GameObject ();
+                                toPoint.transform.position=targetPos;
+                                toPoint.name = "To Point";
+                            }
+                            currentTrajectory.Clear();
+                            float mult = 1f/(float)99f;
+                            CreateTrajectoryFromDescription(currentPos.position,targetPos,upVelocities[bestFitPos],gravityMults[bestFitPos],targetTime);    
+                            
+                            trajectoryIndex=0;
+                            stretchMultiplier=1f;
+                            retries=0;
+                            break;
+                        }else
+                        {
+                            // try slightly further next frame if we can't hit anything
+                            stretchMultiplier+=.5f;
+                            print("Can't find new target"+currentPos.position);
+                        }
                     }
                 }
-//				CreateLaunchTrajectory(currentPos.position,launchDir,new Vector3(0,0,1),-2f*leftRight*(currentPos.position.x/Mathf.Cos(15f*Mathf.Deg2Rad)),1f);
 			}
 		}
 	}
+    
+    private void updateTravelPath()
+    {
+        // get current travel path
+        Transform tFrom=travelPathPoints[travelPathSegment];
+        Transform tTo=travelPathPoints[travelPathSegment+1];
+        targetDistanceMultiplier=tFrom.localScale.y;
+
+        roadDirection=(tTo.position-tFrom.position).normalized;
+        roadCentre=tFrom.position;
+        jumpAngle=tFrom.localRotation.eulerAngles.y;
+        roadWidth=tFrom.localScale.x;
+        // distance along road of tTo
+        float distanceSegment = (tTo.position-tFrom.position).magnitude;
+        // distance along road of currentPos
+        float distanceCurrent = Vector3.Dot((currentPos.position-tFrom.position),roadDirection);
+        if(tFrom.localScale.z==0 || distanceCurrent>distanceSegment)
+        {
+            if(travelPathSegment<travelPathPoints.Length-2)
+            {
+                print ("next segment");
+                // go to next point
+                travelPathSegment+=1;
+                updateTravelPath();
+            }
+        }                
+        // if we are past the end, then we need to rotate onto next travel path and update
+        // road centre and direction accordingly
+    }
 
     // first we create a height map line for all directions we might fly in
     private void CreateHeightMapLine(Vector3 startPos,Vector3 direction,float distance,float[] heights)
@@ -449,8 +505,8 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         Vector3 hitTest=new Vector3();
         for(float pos=0;pos<500f;pos+=0.2f)
         {
-            hitTest.x=transform.position.x-pos;
-            hitTest.z=transform.position.z;
+            hitTest.x=currentPos.position.x-pos*roadDirection.z;
+            hitTest.z=currentPos.position.z+pos*roadDirection.x;
             hitTest.y=1000;
             if (Physics.Raycast (hitTest, Vector3.down, out hit,1000f)) 
             {
@@ -460,6 +516,6 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             }
 		}
         print("Couldn't find start object");
-        return transform.position;
+        return currentPos.position;
 	}
 }
