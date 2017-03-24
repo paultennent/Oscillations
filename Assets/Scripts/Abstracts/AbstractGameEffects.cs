@@ -19,12 +19,15 @@ public class AbstractGameEffects : MonoBehaviour {
 	protected bool inSession;
     protected float lastAngle;
 
+    
+    public float debugTimeOffset=0f;
 	public float sessionLength = 60f;
 	public float climaxTime = 30.0f;
 	public bool dontcycle = false;
 	public float climaxRatio = 0f;
     public float pauseEndTime= 10.0f;
 	protected float offsetTime;
+    protected bool countUp=true;
     
     protected float swingPhase=0;
     protected float swingAmplitude=0;
@@ -51,6 +54,7 @@ public class AbstractGameEffects : MonoBehaviour {
 
 	// Use this for initialization
 	public void Start () {
+        debugTimeOffset=0f;
 		swingBase = GameObject.FindGameObjectWithTag ("Controller").GetComponent<SwingBase> ();
 		swingData = GameObject.FindGameObjectWithTag ("Controller").GetComponent<AbstractDataReader> ();
 		sessionManager = GameObject.FindGameObjectWithTag ("Controller").GetComponent<SessionManager> ();
@@ -71,7 +75,7 @@ public class AbstractGameEffects : MonoBehaviour {
             return;
         }
         swingAngle = swingBase.getSwingAngle ();
-		sessionTime = sessionManager.getSessionTime ();
+		sessionTime = sessionManager.getSessionTime ()+debugTimeOffset;
 		inSession = sessionManager.isInSession ();
 
 		if (suppressEffects && !inSession) {
@@ -87,11 +91,12 @@ public class AbstractGameEffects : MonoBehaviour {
             float totalGameTime=climaxTime*2.0f+pauseEndTime;
 			int gameNumber = (int)(sessionTime / totalGameTime);
 
-			if (gameNumber > maxSessions && maxSessions > 0) {
+			if (gameNumber >= maxSessions && maxSessions > 0) {
 				suppressEffects = true;
                 timeLeftInGame=0;
 			}else
             {
+                countUp=true;
                 offsetTime = sessionTime - (gameNumber * totalGameTime);
                 timeLeftInGame=totalGameTime - offsetTime -pauseEndTime;
                 if(timeLeftInGame<0)
@@ -100,6 +105,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 }
                 if(offsetTime>climaxTime)                
                 {
+                    countUp=false;
                     if(offsetTime<climaxTime*2.0f)
                     {
                         // going back down

@@ -5,21 +5,23 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Menu.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Float.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Jellyfish.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Pachinko.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Walker.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Oscillate.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Variables.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/HighRoller-City.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Shuttlecock-City.unity
+  - enabled: 1
+    path: Assets/Rides/Shuttlecock-City-Static.unity
