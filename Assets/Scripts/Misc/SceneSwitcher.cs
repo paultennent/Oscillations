@@ -43,7 +43,7 @@ public class SceneSwitcher : MonoBehaviour {
 			SceneManager.LoadScene ("Menu");
 		}
 
-		if(!On && allOn){
+/*		if(!On && allOn){
 			turnOff();
 			allOn = false;
 		}
@@ -51,7 +51,7 @@ public class SceneSwitcher : MonoBehaviour {
 		if(On && !allOn){
 			turnOn();
 			allOn = true;
-		}
+		}*/
 
 	}
 
