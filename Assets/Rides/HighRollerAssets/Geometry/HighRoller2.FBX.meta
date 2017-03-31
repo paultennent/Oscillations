@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: be07512a66037194c99f3c153837a133
+timeCreated: 1490193977
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Block_end
+    100002: Block_high01
+    100004: Block_high02
+    100006: Block_mid01
+    100008: Block_mid02
+    100010: Block_mid03
+    100012: Block_mid04
+    100014: block_start
+    100016: //RootNode
+    100018: RoadC031
+    100020: RoadC031_MeshPart0
+    100022: RoadC031_MeshPart1
+    100024: Block_high_02
+    100026: Box_H_cl3_008
+    100028: Box_H_cl3_009
+    100030: Lorry
+    100032: Park_01
+    100034: Park_02
+    100036: Park_rp_01
+    100038: Park_rp_02
+    100040: Train
+    400000: Block_end
+    400002: Block_high01
+    400004: Block_high02
+    400006: Block_mid01
+    400008: Block_mid02
+    400010: Block_mid03
+    400012: Block_mid04
+    400014: block_start
+    400016: //RootNode
+    400018: RoadC031
+    400020: RoadC031_MeshPart0
+    400022: RoadC031_MeshPart1
+    400024: Block_high_02
+    400026: Box_H_cl3_008
+    400028: Box_H_cl3_009
+    400030: Lorry
+    400032: Park_01
+    400034: Park_02
+    400036: Park_rp_01
+    400038: Park_rp_02
+    400040: Train
+    2300000: Block_end
+    2300002: Block_high01
+    2300004: Block_high02
+    2300006: Block_mid01
+    2300008: Block_mid02
+    2300010: Block_mid03
+    2300012: Block_mid04
+    2300014: block_start
+    2300016: RoadC031_MeshPart0
+    2300018: RoadC031_MeshPart1
+    2300020: Block_high_02
+    2300022: Box_H_cl3_008
+    2300024: Box_H_cl3_009
+    2300026: Lorry
+    2300028: Park_01
+    2300030: Park_02
+    2300032: Park_rp_01
+    2300034: Park_rp_02
+    2300036: Train
+    3300000: Block_end
+    3300002: Block_high01
+    3300004: Block_high02
+    3300006: Block_mid01
+    3300008: Block_mid02
+    3300010: Block_mid03
+    3300012: Block_mid04
+    3300014: block_start
+    3300016: RoadC031_MeshPart0
+    3300018: RoadC031_MeshPart1
+    3300020: Block_high_02
+    3300022: Box_H_cl3_008
+    3300024: Box_H_cl3_009
+    3300026: Lorry
+    3300028: Park_01
+    3300030: Park_02
+    3300032: Park_rp_01
+    3300034: Park_rp_02
+    3300036: Train
+    4300000: Block_high02
+    4300002: RoadC031_MeshPart0
+    4300004: RoadC031_MeshPart1
+    4300006: Block_mid01
+    4300008: Block_high01
+    4300010: Block_mid03
+    4300012: Block_mid04
+    4300014: Block_end
+    4300016: Block_mid02
+    4300018: block_start
+    4300020: Block_high_02
+    4300022: Park_01
+    4300024: Park_rp_01
+    4300026: Park_rp_02
+    4300028: Park_02
+    4300030: Box_H_cl3_008
+    4300032: Box_H_cl3_009
+    4300034: Train
+    4300036: Lorry
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -9,8 +9,8 @@ public class CamMoverTest : AbstractGameEffects {
 
     public bool manual = false;
 
-	private float angVelscaler = 3.5f;
-	private float dragConstant = 0.05f;
+	private float angVelscaler = 10f;
+	private float dragConstant = 0.01f;
 
 	public GameObject[] wheels;
 	public GameObject[] wheelpivots;

@@ -1,0 +1,209 @@
+fileFormatVersion: 2
+guid: bad8f30046a40284781e160588160500
+timeCreated: 1490193969
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Box_cl1_001
+    100004: Box_cl2_001
+    100006: Box_cl3_001
+    100008: Box_cl4_001
+    100010: Box_H_cl1_001
+    100012: Box_H_cl2_001
+    100014: Box_H_cl3_001
+    100016: Box_H_cl4_001
+    100018: Box_S_cl1_001
+    100020: Box_S_cl2_001
+    100022: Box_S_cl3_001
+    100024: Box_S_cl4_001
+    100026: Box_S_cl5_001
+    100028: Box_S_cl6_001
+    100030: HiRiseA001
+    100032: HiRiseB001
+    100034: HiRiseC001
+    100036: LowRiseA001
+    100038: LowRiseB001
+    100040: LowRiseC001
+    100042: MedRiseA001
+    100044: MedRiseB001
+    100046: MedRiseC001
+    100048: RoadA001
+    100050: RoadB001
+    100052: RoadC001
+    400000: //RootNode
+    400002: Box_cl1_001
+    400004: Box_cl2_001
+    400006: Box_cl3_001
+    400008: Box_cl4_001
+    400010: Box_H_cl1_001
+    400012: Box_H_cl2_001
+    400014: Box_H_cl3_001
+    400016: Box_H_cl4_001
+    400018: Box_S_cl1_001
+    400020: Box_S_cl2_001
+    400022: Box_S_cl3_001
+    400024: Box_S_cl4_001
+    400026: Box_S_cl5_001
+    400028: Box_S_cl6_001
+    400030: HiRiseA001
+    400032: HiRiseB001
+    400034: HiRiseC001
+    400036: LowRiseA001
+    400038: LowRiseB001
+    400040: LowRiseC001
+    400042: MedRiseA001
+    400044: MedRiseB001
+    400046: MedRiseC001
+    400048: RoadA001
+    400050: RoadB001
+    400052: RoadC001
+    2300000: Box_cl1_001
+    2300002: Box_cl2_001
+    2300004: Box_cl3_001
+    2300006: Box_cl4_001
+    2300008: Box_H_cl1_001
+    2300010: Box_H_cl2_001
+    2300012: Box_H_cl3_001
+    2300014: Box_H_cl4_001
+    2300016: Box_S_cl1_001
+    2300018: Box_S_cl2_001
+    2300020: Box_S_cl3_001
+    2300022: Box_S_cl4_001
+    2300024: Box_S_cl5_001
+    2300026: Box_S_cl6_001
+    2300028: HiRiseA001
+    2300030: HiRiseB001
+    2300032: HiRiseC001
+    2300034: LowRiseA001
+    2300036: LowRiseB001
+    2300038: LowRiseC001
+    2300040: MedRiseA001
+    2300042: MedRiseB001
+    2300044: MedRiseC001
+    2300046: RoadA001
+    2300048: RoadB001
+    2300050: RoadC001
+    3300000: Box_cl1_001
+    3300002: Box_cl2_001
+    3300004: Box_cl3_001
+    3300006: Box_cl4_001
+    3300008: Box_H_cl1_001
+    3300010: Box_H_cl2_001
+    3300012: Box_H_cl3_001
+    3300014: Box_H_cl4_001
+    3300016: Box_S_cl1_001
+    3300018: Box_S_cl2_001
+    3300020: Box_S_cl3_001
+    3300022: Box_S_cl4_001
+    3300024: Box_S_cl5_001
+    3300026: Box_S_cl6_001
+    3300028: HiRiseA001
+    3300030: HiRiseB001
+    3300032: HiRiseC001
+    3300034: LowRiseA001
+    3300036: LowRiseB001
+    3300038: LowRiseC001
+    3300040: MedRiseA001
+    3300042: MedRiseB001
+    3300044: MedRiseC001
+    3300046: RoadA001
+    3300048: RoadB001
+    3300050: RoadC001
+    4300000: Box_cl1_001
+    4300002: Box_H_cl1_001
+    4300004: Box_S_cl1_001
+    4300006: Box_S_cl2_001
+    4300008: Box_S_cl3_001
+    4300010: Box_S_cl4_001
+    4300012: Box_S_cl5_001
+    4300014: Box_S_cl6_001
+    4300016: Box_cl2_001
+    4300018: Box_cl3_001
+    4300020: Box_cl4_001
+    4300022: Box_H_cl2_001
+    4300024: Box_H_cl3_001
+    4300026: Box_H_cl4_001
+    4300028: RoadA001
+    4300030: RoadB001
+    4300032: RoadC001
+    4300034: MedRiseC001
+    4300036: MedRiseB001
+    4300038: MedRiseA001
+    4300040: LowRiseC001
+    4300042: LowRiseB001
+    4300044: LowRiseA001
+    4300046: HiRiseC001
+    4300048: HiRiseB001
+    4300050: HiRiseA001
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
