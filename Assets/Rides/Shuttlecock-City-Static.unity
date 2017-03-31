@@ -72741,7 +72741,6 @@ GameObject:
   - component: {fileID: 1670035081}
   - component: {fileID: 1670035077}
   - component: {fileID: 1670035079}
-  - component: {fileID: 1670035075}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -72749,37 +72748,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1670035075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d268fc7e8375645e98f59710a1de6445, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugTimeOffset: 0
-  sessionLength: 60
-  climaxTime: 30
-  dontcycle: 0
-  climaxRatio: 0
-  pauseEndTime: 10
-  maxSessions: 1
-  pauseStartTime: 0
-  wallprefab: {fileID: 1141159344528098, guid: cb4a480cfc9094c3ea6fb3cf643af9d2, type: 2}
-  wallparent: {fileID: 1889015150}
-  pivot: {fileID: 322379130}
-  floorPrefab: {fileID: 1648479249211396, guid: 5d235f32c1bae455693a3de156ac91c7,
-    type: 2}
-  floorDepth: 1
-  ZFocusDistance: 300
-  XFocusDistance: 300
-  blockSize: 0
-  gapWidth: 10
-  roadWidth: 5
-  buildingsExist: 0
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -72846,7 +72814,7 @@ MonoBehaviour:
   showCast: 0
   showPointObjects: 0
   travelPath: {fileID: 707240473}
-  finalDropMinimum: 10
+  minJumpUp: 10
   outroNext: 0
   roadCentre: {x: 0, y: 0, z: 0}
   roadDirection: {x: 0, y: 0, z: 1}
@@ -72869,7 +72837,7 @@ MonoBehaviour:
   applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
-  forceSineOnMobile: 1
+  forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:

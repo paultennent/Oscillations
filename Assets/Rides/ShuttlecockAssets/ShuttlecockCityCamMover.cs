@@ -17,11 +17,12 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     public bool showCast=false;
     public bool showPointObjects=false;
     public GameObject travelPath;
-    public float finalDropMinimum=10f;
+    public float minJumpUp=10f;
 
     private Transform seat;
     private float seatDistance=-1.5f;
 
+    
     
     // for jumping, we create a height map in a line in the direction we want to jump
     // by using downwards raycasts
@@ -195,6 +196,10 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 			if (currentTrajectory != null && currentTrajectory.Count > (int)trajectoryIndex) {
 				currentPos.position = currentTrajectory [(int)trajectoryIndex];
 				trajectoryIndex+=Time.deltaTime/dt;
+                if(Input.GetKeyDown("s"))
+                {
+                    trajectoryIndex=currentTrajectory.Count;
+                }
 			}else
 			{
                 if(currentTrajectory.Count>0)
@@ -284,6 +289,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                                 toPoint.transform.position=targetPos;
                                 toPoint.name = "To Point";
                             }
+//                            print("GM:"+gravityMults[bestFitPos]);
                             currentTrajectory.Clear();
                             float mult = 1f/(float)99f;
                             CreateTrajectoryFromDescription(currentPos.position,targetPos,upVelocities[bestFitPos],gravityMults[bestFitPos],targetTime);    
@@ -452,7 +458,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         }
 
         // calculate closest to gravity trajectory to this point
-        // with the exception that we must go 10m(finalDropMinimum) higher than the final point, as
+        // with the exception that we must go 10m(minJumpUp) higher than the final point, as
         // otherwise it looks bad that you don't drop in on it
         for(int c=startPoint;c<numPoints;c++)
         {
@@ -464,6 +470,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 continue;
             }
             float ratio=((float)c)/((float)numPoints);
+            float heightStart=heights[0];
             float heightEnd=heights[c];
             float distanceUp=heights[c]-heights[0];
             // first calculate pure gravity trajectory
@@ -486,6 +493,9 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             
             float lastVel=upVelocity;
             
+            float maxY=y;
+            float maxBaseline=0f;
+            
             for(int d=0;d<c;d++)
             {
                 y+=upVelocity*stepTime;
@@ -493,27 +503,35 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 baselineY+=baselineStep;
                 scaledY=(y-baselineY)*finalScale+baselineY;
                 float compareHeight=heights[d];
-                if(lastVel>0 && upVelocity<0)
+                if(y>maxY)
                 {
-                    // top of trajectory, we want it to be at least 10 more than the final point
-                    // so make sure it hops over that
-                    // - nb: only if it is hopping much up from the start point that is
-                    if(y>heights[0]+finalDropMinimum)
-                    {
-                        compareHeight = Mathf.Max(heightEnd+finalDropMinimum,compareHeight);
-                    }else
-                    {
-                        compareHeight = Mathf.Max(heights[0],compareHeight);
-                    }
+                    maxY=y;
+                    maxBaseline=baselineY;
                 }
-
-                if(y<compareHeight && y>baselineY)
+                if(compareHeight!=-1 && y<compareHeight && y>baselineY)
                 {
                     // need to scale us bigger or else we'll hit a building -i.e. breaks gravity
                     float scaleNeeded=(compareHeight-baselineY)/(y-baselineY);
                     finalScale=Mathf.Max(scaleNeeded,finalScale);
                 }
                 lastVel=upVelocity;
+            }
+            // make path look nice (except for intro section, where we
+            // don't want to mess with gravity)
+            if(travelPathSegment!=0)
+            {
+                // we want to drop down to final point always
+                if(maxY< heightEnd+minJumpUp)
+                {
+                    float scaleNeeded=((minJumpUp+heightEnd)-maxBaseline)/(maxY-maxBaseline);
+                    finalScale=Mathf.Max(scaleNeeded,finalScale);
+                }
+                // we want to go up from start always
+                if(maxY< heightStart+minJumpUp)
+                {
+                    float scaleNeeded=((minJumpUp+heightStart)-maxBaseline)/(maxY-maxBaseline);
+                    finalScale=Mathf.Max(scaleNeeded,finalScale);
+                }
             }
             float x = 0;
             upVelocity = initialUpVelocity;
@@ -548,6 +566,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         float distanceUp=endPos.y-startPos.y;
         float baselineStep=distanceUp/(float)numPoints;
         float baselineY=y;
+        float maxY=y;
         for(int c=0;c<numPoints;c++)
         {
             y+=upVelocity*stepTime;
@@ -558,8 +577,10 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             Vector3 outPos=Vector3.Lerp(startPos,endPos,ratio);
             outPos.y=scaledY;
             currentTrajectory.Add(outPos);
+            maxY=Mathf.Max(scaledY,maxY);
         }
         currentTrajectory.Add(endPos);
+        //print("FS:"+finalScale+"MY:"+maxY+"EP:"+endPos.y);
     }
 
     
@@ -683,7 +704,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             if (Physics.Raycast (hitTest, Vector3.down, out hit,1000f)) 
             {
                 found=true;
-                print ("Found an object - height: " + hit.distance);
+                //print ("Found an object - height: " + hit.distance);
                 return hit.point;
             }
 		}
