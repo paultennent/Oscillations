@@ -57,6 +57,10 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     
     private Transform[] travelPathPoints;
     private int travelPathSegment=0;
+
+	public bool isInIntro(){
+		return inIntro;
+	}
     
 	// Use this for initialization
 	void Start () {
