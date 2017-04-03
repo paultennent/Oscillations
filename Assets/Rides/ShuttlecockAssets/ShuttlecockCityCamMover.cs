@@ -61,6 +61,16 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 	public bool isInIntro(){
 		return inIntro;
 	}
+
+	public bool isInOuttro()
+	{
+		return inOutro;
+	}
+
+	public bool isInTraining()
+	{
+		return false;
+	}
     
 	// Use this for initialization
 	void Start () {
