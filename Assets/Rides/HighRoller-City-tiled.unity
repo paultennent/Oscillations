@@ -1993,7 +1993,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1381935220}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 540, y: 0, z: 0}
+  m_LocalPosition: {x: 540, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 296501542}
@@ -2657,6 +2657,7 @@ MonoBehaviour:
   parkEndBlock: {fileID: 943434132}
   drawForward: 1000
   viewpoint: {fileID: 1959593109}
+  currentTarget: {fileID: 0}
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -2682,26 +2683,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugTimeOffset: 0
-  sessionLength: 120
-  climaxTime: 60
+  sessionLength: 60
+  climaxTime: 30
   dontcycle: 0
   climaxRatio: 0
   pauseEndTime: 0
-  maxSessions: 0
+  maxSessions: 1
   pauseStartTime: 0
-  pivot: {fileID: 1959593108}
+  viewpoint: {fileID: 1959593108}
   speed: 1
+  seatDrop: 1.5
   manual: 0
   wheels:
   - {fileID: 1189277521}
   - {fileID: 1084603298}
   - {fileID: 752155458}
   - {fileID: 629267462}
-  wheelpivots:
-  - {fileID: 271442084}
-  - {fileID: 271442084}
-  - {fileID: 1369954192}
-  - {fileID: 1369954192}
+  wheelviewpoints: []
 --- !u!114 &1670035078
 MonoBehaviour:
   m_ObjectHideFlags: 0

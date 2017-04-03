@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockLayout : MonoBehaviour {
+    
+    static BlockLayout sBlockLayout=null;
+    public static BlockLayout GetBlockLayout()
+    {
+        return sBlockLayout;
+    }
 
     public GameObject[] midBlocks;
     public GameObject[] highBlocks;
@@ -14,6 +20,7 @@ public class BlockLayout : MonoBehaviour {
 
     public float drawForward=1000f;
     public Transform viewpoint;
+    
     
     private float startTime=0f;
     private float blockDropPos=0f;
@@ -31,11 +38,22 @@ public class BlockLayout : MonoBehaviour {
     };
     
     // if the block has a 'target' point (e.g. start and end)
-    private Transform currentTarget;
+    public Transform currentTarget;
     private LayoutPos currentBlockPos=LayoutPos.START;
+
+    public float GetMaxZ()
+    {
+        if(currentBlockPos==LayoutPos.FINISHED)
+        {
+            return currentTarget.position.z;
+        }
+        return 0;
+    }
+    
     
 	// Use this for initialization
 	void Start () {
+        sBlockLayout=this;
         startTime=Time.time;
         LayoutIncrementally(0,0);
         if(currentTarget!=null)
@@ -177,6 +195,18 @@ public class BlockLayout : MonoBehaviour {
             break;
         }        
     }
+
+    public void EnsureEndBlock()
+    {
+        // make sure that we're in state FINISHED
+        if(currentBlockPos!=LayoutPos.FINISHED)
+        {
+            currentBlockPos=LayoutPos.END;
+            float zPos=viewpoint.position.z;
+            LayoutIncrementally(zPos,1f);            
+        }
+    }
+
     
     void LayoutCity()
     {
