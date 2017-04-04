@@ -69,7 +69,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 
 	public bool isInTraining()
 	{
-		return false;
+		return (travelPathSegment==0);
 	}
     
 	// Use this for initialization
