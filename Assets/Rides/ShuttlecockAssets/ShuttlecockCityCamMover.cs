@@ -230,7 +230,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 // a double jump
                 if(targetTime<0.3f)
                 {
-                    targetTime+=swingCycleTime/2f
+					targetTime += swingCycleTime / 2f;
                 }
                 // if we're coming to the end, zoom to the final point instead
                 if((!countUp && offsetTime-targetTime<10f) || outroNext)

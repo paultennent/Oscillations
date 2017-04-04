@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CamMoverTest : AbstractGameEffects {
+public class HighRollerCamMover : AbstractGameEffects {
 
 	public GameObject viewpoint;
 	public float speed;
@@ -10,8 +10,8 @@ public class CamMoverTest : AbstractGameEffects {
     
     public bool manual = false;
 
-	private float angVelscaler = 10f;
-	private float dragConstant = 0.01f;
+	public float angVelscaler = 10f;
+	public float dragConstant = 0.01f;
 
 	public GameObject[] wheels;
 	public GameObject[] wheelviewpoints;
@@ -81,7 +81,6 @@ public class CamMoverTest : AbstractGameEffects {
         {
             //angVelscaler = angVelscaler * (1 + climaxRatio);
 
-
             speed = speed + (getAccelerationNow () * Time.deltaTime);
             
             float mz = BlockLayout.GetBlockLayout().GetMaxZ();
@@ -100,7 +99,7 @@ public class CamMoverTest : AbstractGameEffects {
 		float totalAcc = 0;
 		if (swingQuadrant == 1) {
 			print ("impelling:"+swingAngVel+":"+speed);
-			totalAcc = -swingAngVel * angVelscaler;
+			totalAcc = -swingAngVel * angVelscaler * climaxRatio;
 		}
         if(speed<0)
         {

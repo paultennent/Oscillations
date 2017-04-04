@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class AbstractGameEffects : MonoBehaviour {
 
+	static AbstractGameEffects s_Singleton;
+	public static AbstractGameEffects GetSingleton()
+	{
+		return s_Singleton;
+	}
+
 	protected AbstractDataReader swingData;
 	protected SessionManager sessionManager;
 	protected SwingBase swingBase;
@@ -12,7 +18,6 @@ public class AbstractGameEffects : MonoBehaviour {
 	protected Transform swingSeat;
 	protected Transform viewPoint;
     protected AndroidCameraHandler statusFlasher;
-
 
 	protected float swingAngle;
 	protected float sessionTime;
@@ -27,7 +32,7 @@ public class AbstractGameEffects : MonoBehaviour {
 	public float climaxRatio = 0f;
     public float pauseEndTime= 10.0f;
 	protected float offsetTime;
-    protected bool countUp=true;
+    public bool countUp=true;
     
     protected float swingPhase=0;
     protected float swingAmplitude=0;
@@ -54,6 +59,7 @@ public class AbstractGameEffects : MonoBehaviour {
 
 	// Use this for initialization
 	public void Start () {
+		s_Singleton = this;
         debugTimeOffset=0f;
 		swingBase = GameObject.FindGameObjectWithTag ("Controller").GetComponent<SwingBase> ();
 		swingData = GameObject.FindGameObjectWithTag ("Controller").GetComponent<AbstractDataReader> ();

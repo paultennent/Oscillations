@@ -24,13 +24,14 @@ public class BlockLayout : MonoBehaviour {
     
     private float startTime=0f;
     private float blockDropPos=0f;
-    enum LayoutPos
+    public enum LayoutPos
     {
         START,
         MID1,
         HIGH1,
         PARKSTART,
         PARKREST,
+		PARKEND,
         HIGH2,
         MID2,
         END,
@@ -41,6 +42,15 @@ public class BlockLayout : MonoBehaviour {
     public Transform currentTarget;
     private LayoutPos currentBlockPos=LayoutPos.START;
 
+	public class BlockDescription
+	{
+	public LayoutPos type;
+	public float zMin;
+	public float zMax;
+	};
+
+	private List<BlockDescription> allBlocks=new List<BlockDescription>();
+
     public float GetMaxZ()
     {
         if(currentBlockPos==LayoutPos.FINISHED)
@@ -50,6 +60,15 @@ public class BlockLayout : MonoBehaviour {
         return 0;
     }
     
+	public LayoutPos GetBlockAt(float z)
+	{
+		foreach (BlockDescription b in allBlocks) {
+			if (b.zMin <= z && b.zMax > z) {
+				return b.type;
+			}
+		}
+		return LayoutPos.FINISHED;
+	}
     
 	// Use this for initialization
 	void Start () {
@@ -78,7 +97,11 @@ public class BlockLayout : MonoBehaviour {
         }
         else if(zPos+drawForward>blockDropPos)
         {
-            float timeFraction=(Time.time-startTime)/60f;
+			AbstractGameEffects ag = AbstractGameEffects.GetSingleton ();
+			float timeFraction = ag.climaxRatio*0.5f;
+			if (!ag.countUp) {
+				timeFraction = 1f - timeFraction;
+			}			
             if(timeFraction>1f)timeFraction=1f;
             LayoutIncrementally(zPos,timeFraction);
         }
@@ -124,7 +147,7 @@ public class BlockLayout : MonoBehaviour {
          case LayoutPos.START:
             {
                 // layout start block
-                float newPos=PlaceBlock(startBlock,blockDropPos);        ;
+                float newPos=PlaceBlock(currentBlockPos,startBlock,blockDropPos);        ;
                 // we start in the middle of block zero
                 blockDropPos+=newPos;
                 currentBlockPos=LayoutPos.MID1;
@@ -132,8 +155,8 @@ public class BlockLayout : MonoBehaviour {
             break;
          case LayoutPos.MID1:
             {
-                blockDropPos=PlaceBlock(midBlocks[Random.Range(0,midBlocks.Length-1)],blockDropPos);
-                if(fractionThrough>0.25)
+				blockDropPos=PlaceBlock(currentBlockPos,midBlocks[Random.Range(0,midBlocks.Length-1)],blockDropPos);
+                if(fractionThrough>0.4)
                 {
                     currentBlockPos=LayoutPos.HIGH1;
                 }
@@ -141,8 +164,8 @@ public class BlockLayout : MonoBehaviour {
             break;
          case LayoutPos.HIGH1:
             {
-                blockDropPos=PlaceBlock(highBlocks[Random.Range(0,highBlocks.Length-1)],blockDropPos);
-                if(fractionThrough>0.4)
+				blockDropPos=PlaceBlock(currentBlockPos,highBlocks[Random.Range(0,highBlocks.Length-1)],blockDropPos);
+                if(fractionThrough>0.5)
                 {
                     currentBlockPos=LayoutPos.PARKSTART;
                 }
@@ -150,23 +173,27 @@ public class BlockLayout : MonoBehaviour {
             break;
          case LayoutPos.PARKSTART:
             {
-                blockDropPos=PlaceBlock(parkStartBlock,blockDropPos);
+				blockDropPos=PlaceBlock(currentBlockPos,parkStartBlock,blockDropPos);
                 currentBlockPos=LayoutPos.PARKREST;
             }
             break;
-         case LayoutPos.PARKREST:
-            {
-                for(int c=0;c<2;c++)
-                {
-                    blockDropPos=PlaceBlock(parkRepeatingBlocks[Random.Range(0,parkRepeatingBlocks.Length-1)],blockDropPos);            
-                }
-                blockDropPos=PlaceBlock(parkEndBlock,blockDropPos);
+		case LayoutPos.PARKREST:
+			{
+				blockDropPos = PlaceBlock (currentBlockPos, parkRepeatingBlocks [Random.Range (0, parkRepeatingBlocks.Length - 1)], blockDropPos);            
+				if (fractionThrough > 0.6) {
+					currentBlockPos = LayoutPos.PARKEND;
+				}
+			}
+			break;
+		case LayoutPos.PARKEND:
+			{
+                blockDropPos=PlaceBlock(currentBlockPos,parkEndBlock,blockDropPos);
                 currentBlockPos=LayoutPos.HIGH2;
             }
             break;
          case LayoutPos.HIGH2:
             {
-                blockDropPos=PlaceBlock(highBlocks[Random.Range(0,highBlocks.Length-1)],blockDropPos);
+				blockDropPos=PlaceBlock(currentBlockPos,highBlocks[Random.Range(0,highBlocks.Length-1)],blockDropPos);
                 if(fractionThrough>0.7)
                 {
                     currentBlockPos=LayoutPos.MID2;
@@ -175,7 +202,7 @@ public class BlockLayout : MonoBehaviour {
             break;
          case LayoutPos.MID2:
             {
-                blockDropPos=PlaceBlock(midBlocks[Random.Range(0,midBlocks.Length-1)],blockDropPos);
+				blockDropPos=PlaceBlock(currentBlockPos,midBlocks[Random.Range(0,midBlocks.Length-1)],blockDropPos);
                 if(fractionThrough>0.9)
                 {
                     currentBlockPos=LayoutPos.END;
@@ -185,7 +212,7 @@ public class BlockLayout : MonoBehaviour {
          case LayoutPos.END:
             {
                 // layout end block
-                float newPos=PlaceBlock(endBlock,blockDropPos);        ;
+				float newPos=PlaceBlock(currentBlockPos,endBlock,blockDropPos);        ;
                 // we start in the middle of block zero
                 blockDropPos+=newPos;
                 currentBlockPos=LayoutPos.FINISHED;
@@ -207,48 +234,21 @@ public class BlockLayout : MonoBehaviour {
         }
     }
 
-    
-    void LayoutCity()
+    float PlaceBlock(LayoutPos objType,GameObject obj,float curLength)
     {
-        float curLength=0;
-        curLength=PlaceBlock(startBlock,curLength);        
-        for(int c=0;c<4;c++)
-        {
-            // mid rise
-            curLength=PlaceBlock(midBlocks[Random.Range(0,midBlocks.Length-1)],curLength);
-        }
-        for(int c=0;c<2;c++)
-        {
-            // high rise
-            curLength=PlaceBlock(highBlocks[Random.Range(0,highBlocks.Length-1)],curLength);
-        }
-        curLength=PlaceBlock(parkStartBlock,curLength);                
-        for(int c=0;c<2;c++)
-        {
-            curLength=PlaceBlock(parkRepeatingBlocks[Random.Range(0,highBlocks.Length-1)],curLength);            
-        }
-        curLength=PlaceBlock(parkEndBlock,curLength);        
-        for(int c=0;c<2;c++)
-        {
-            // high rise
-            curLength=PlaceBlock(highBlocks[Random.Range(0,highBlocks.Length-1)],curLength);
-        }
-        for(int c=0;c<4;c++)
-        {
-            // mid rise
-            curLength=PlaceBlock(midBlocks[Random.Range(0,midBlocks.Length-1)],curLength);
-        }
-        curLength=PlaceBlock(endBlock,curLength);        
-        print (curLength);
-    }
-    
-    
-    float PlaceBlock(GameObject obj,float curLength)
-    {
-        GameObject newObj=GameObject.Instantiate(obj);
+
+
+		GameObject newObj=GameObject.Instantiate(obj);
         newObj.transform.position=new Vector3(0,0,curLength);
         Vector3 size=newObj.GetComponent<Renderer>().bounds.size;
-        curLength+=size.z;
+
+		BlockDescription newBlock=new BlockDescription();
+		newBlock.zMin = curLength;
+		newBlock.zMax = curLength + size.z;
+		newBlock.type = objType;
+		allBlocks.Add (newBlock);
+
+		curLength+=size.z;
         newObj.SetActive(true);
         if(newObj.transform.childCount>0)
         {

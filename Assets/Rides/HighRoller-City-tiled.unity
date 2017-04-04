@@ -1596,7 +1596,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 1000
+  far clip plane: 1500
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -1622,7 +1622,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1514675617}
   m_Father: {fileID: 913160787}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
@@ -2379,6 +2380,75 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1483093446}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1514675616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1514675617}
+  - component: {fileID: 1514675618}
+  m_Layer: 0
+  m_Name: AudioController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1514675617
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1514675616}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1021388842}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514675618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1514675616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212b8f71c2b9e4532b29ebec9696c541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swingBase: {fileID: 1670035080}
+  camMover: {fileID: 1670035077}
+  cam: {fileID: 1021388842}
+  MixMixers:
+  - {fileID: 243481339068855748, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  - {fileID: 243407592913541134, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  - {fileID: 243466564560448964, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  SwingMixers:
+  - {fileID: 243676875735639628, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  - {fileID: 243234276513603498, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  BuildingsMixers:
+  - {fileID: 243053825918075110, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  - {fileID: 243856764071544240, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  WindowsMixers:
+  - {fileID: 243280992454179668, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  - {fileID: 243519364242426494, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  MixClips:
+  - {fileID: 8300000, guid: 5c3da7a089c14429b899c2b95c3dcd25, type: 3}
+  - {fileID: 8300000, guid: 703fc7d0094594f8f89a913eb54dc06a, type: 3}
+  - {fileID: 8300000, guid: a359bb2f392744111b003df0586421cc, type: 3}
+  SwingClips:
+  - {fileID: 8300000, guid: a1fd0f4ce30c54d99b9f4becb9252140, type: 3}
+  - {fileID: 8300000, guid: f905561fc8dc54b10b649fe94b945c32, type: 3}
+  BuildingsClips:
+  - {fileID: 8300000, guid: dda9562a5aad444fa8f5d7a6ab66c481, type: 3}
+  - {fileID: 8300000, guid: c7708e3c06ec34127aa9d8f77d42b594, type: 3}
+  WindowsClips:
+  - {fileID: 8300000, guid: 46e29dc32e0214063a15e61af0190f1e, type: 3}
+  - {fileID: 8300000, guid: d3620de1ae057454db7cf8005c683bc6, type: 3}
 --- !u!1 &1524788412
 GameObject:
   m_ObjectHideFlags: 0
@@ -2669,17 +2739,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugTimeOffset: 0
-  sessionLength: 60
-  climaxTime: 30
+  sessionLength: 150
+  climaxTime: 75
   dontcycle: 0
   climaxRatio: 0
   pauseEndTime: 0
+  countUp: 1
   maxSessions: 1
   pauseStartTime: 0
   viewpoint: {fileID: 1959593108}
   speed: 1
   seatDrop: 1.5
   manual: 0
+  angVelscaler: 75
+  dragConstant: 0.0025
   wheels:
   - {fileID: 1189277521}
   - {fileID: 1084603298}

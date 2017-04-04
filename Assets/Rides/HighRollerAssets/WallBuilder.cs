@@ -29,7 +29,7 @@ public class WallBuilder : AbstractGameEffects {
 	private LinkedList<GameObject[]> walls;
 	private LinkedList<float[]>wallinfos;
 
-	private CamMoverTest cmt;
+	private HighRollerCamMover cmt;
 
 	private float timeCounter = 0;
     private bool wallsExist = false;
@@ -38,7 +38,7 @@ public class WallBuilder : AbstractGameEffects {
 	void Start () {
         base.Start();
 
-		cmt = GetComponent<CamMoverTest> ();
+		cmt = GetComponent<HighRollerCamMover> ();
 
 		focusPoint = new GameObject ("Focus");
 		focusPoint.transform.position = pivot.transform.position;
