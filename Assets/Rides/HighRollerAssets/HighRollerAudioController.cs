@@ -24,15 +24,44 @@ public class HighRollerAudioController : MonoBehaviour {
 	private float[] BuildingsStartLevels;
 	private float[] WindowsStartLevels;
 
+	private List<AudioSource> MixSources;
+	private List<AudioSource> SwingSources;
+	private List<AudioSource> BuildingSources;
+	private List<AudioSource> WindowsSources;
+
 	private float maxAngle = 45f;
 	private float dbsilence = -80f;
 	private int curJumpSound = 0;
-	private List<AudioSource> sources;
+
+
 
 
 	// Use this for initialization
 	void Start () {
-		
+		MixSources = new List<AudioSource>();
+		SwingSources = new List<AudioSource>();
+		BuildingSources = new List<AudioSource>();
+		WindowsSources = new List<AudioSource>();
+
+		setupAudioSources(MixClips,MixMixers, MixSources);
+		setupAudioSources(SwingClips,SwingMixers, SwingSources);
+		setupAudioSources(BuildingsClips,BuildingsMixers, BuildingSources);
+		setupAudioSources(WindowsClips,WindowsMixers, WindowsSources);
+
+		MixStartLevels = captureStartVals(MixMixers);
+		SwingStartLevels = captureStartVals(SwingMixers);
+		BuildingsStartLevels = captureStartVals(BuildingsMixers);
+		WindowsStartLevels = captureStartVals(WindowsMixers);
+
+		zeroMixers(MixMixers, dbsilence);
+		zeroMixers(SwingMixers, dbsilence);
+		zeroMixers(BuildingsMixers, dbsilence);
+		zeroMixers(WindowsMixers, dbsilence);
+
+		startSources(MixSources);
+		startSources(SwingSources);
+		startSources(BuildingSources);
+		startSources(WindowsSources);
 	}
 	
 	// Update is called once per frame
@@ -40,7 +69,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		BlockLayout.LayoutPos curTilePos = BlockLayout.GetBlockLayout ().GetBlockAt (cam.transform.position.z);
 	}
 
-	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers)
+	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers, List<AudioSource> sources)
 	{
 		for (int i = 0; i < clips.Length; i++)
 		{

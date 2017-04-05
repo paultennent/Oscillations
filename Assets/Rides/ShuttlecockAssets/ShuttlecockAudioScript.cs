@@ -29,19 +29,26 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 	private float dbsilence = -80f;
 	private float minValueForDirectionalSounds = -20f;
 	private int curJumpSound = 0;
-	private List<AudioSource> sources;
+
+	private List<AudioSource> swingSources;
+	private List<AudioSource> jumpSources;
+	private List<AudioSource> directionalSources;
+	private List<AudioSource> mixSources;
 
 	// Use this for initialization
 	void Start () {
 
 		swingBase.zeroCrossingEvent.AddListener(OnZeroCross);
 
-		sources = new List<AudioSource>();
+		swingSources = new List<AudioSource>();
+		jumpSources = new List<AudioSource>();
+		directionalSources = new List<AudioSource>();
+		mixSources = new List<AudioSource>();
 
-		setupAudioSources(swingSounds,swingSoundsMixer);
-		setupAudioSources(jumpSounds,jumpSoundsMixer);
-		setupAudioSources(directional,directionalMixer);
-		setupAudioSources(mix,mixMixer);
+		setupAudioSources(swingSounds,swingSoundsMixer, swingSources);
+		setupAudioSources(jumpSounds,jumpSoundsMixer, jumpSources);
+		setupAudioSources(directional,directionalMixer, directionalSources);
+		setupAudioSources(mix,mixMixer, mixSources);
 
 		swingSoundsMixerStartVals = captureStartVals(swingSoundsMixer);
 		jumpSoundsMixerStartVals = captureStartVals(jumpSoundsMixer);
@@ -53,7 +60,10 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 		zeroMixers(directionalMixer, minValueForDirectionalSounds);
 		zeroMixers(mixMixer, dbsilence);
 
-		startSources(sources);
+		startSources(swingSources);
+		startSources(jumpSources);
+		startSources(directionalSources);
+		startSources(mixSources);
 
 	}
 
@@ -88,7 +98,7 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 		return myVal;
 	}
 
-	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers)
+	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers, List<AudioSource> sources)
 	{
 		for (int i = 0; i < clips.Length; i++)
 		{
