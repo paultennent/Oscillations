@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.VR;
 
 public class ShuttlecockAudioScript : MonoBehaviour {
 
@@ -69,7 +70,11 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 		updateSwingSounds(swingAngle, mixMixer, mixMixerStartVals, true);
 		updateSwingSounds(swingAngle, swingSoundsMixer, swingSoundsMixerStartVals, false);
 		updateJumpSoundMixer(swingAngle, jumpSoundsMixer, jumpSoundsMixerStartVals, curJumpSound);
+#if UNITY_EDITOR
 		updateDirectionalSounds(cam.localEulerAngles.y, directionalMixer, directionalMixerStartVals, minValueForDirectionalSounds);
+#else
+		updateDirectionalSounds(InputTracking.GetLocalRotation(VRNode.Head).eulerAngles.y, directionalMixer, directionalMixerStartVals, minValueForDirectionalSounds);    
+#endif    
 	}
 		
 
