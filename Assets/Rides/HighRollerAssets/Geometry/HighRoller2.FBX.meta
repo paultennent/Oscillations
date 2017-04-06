@@ -26,6 +26,13 @@ ModelImporter:
     100036: Park_rp_01
     100038: Park_rp_02
     100040: Train
+    100042: Start
+    100044: Start001
+    100046: Block_high03
+    100048: Block_high_03
+    100050: Block_high_04
+    100052: block_low01
+    100054: block_low02
     400000: Block_end
     400002: Block_high01
     400004: Block_high02
@@ -47,6 +54,13 @@ ModelImporter:
     400036: Park_rp_01
     400038: Park_rp_02
     400040: Train
+    400042: Start
+    400044: Start001
+    400046: Block_high03
+    400048: Block_high_03
+    400050: Block_high_04
+    400052: block_low01
+    400054: block_low02
     2300000: Block_end
     2300002: Block_high01
     2300004: Block_high02
@@ -66,6 +80,13 @@ ModelImporter:
     2300032: Park_rp_01
     2300034: Park_rp_02
     2300036: Train
+    2300038: Start
+    2300040: Start001
+    2300042: Block_high03
+    2300044: Block_high_03
+    2300046: Block_high_04
+    2300048: block_low01
+    2300050: block_low02
     3300000: Block_end
     3300002: Block_high01
     3300004: Block_high02
@@ -85,6 +106,13 @@ ModelImporter:
     3300032: Park_rp_01
     3300034: Park_rp_02
     3300036: Train
+    3300038: Start
+    3300040: Start001
+    3300042: Block_high03
+    3300044: Block_high_03
+    3300046: Block_high_04
+    3300048: block_low01
+    3300050: block_low02
     4300000: Block_high02
     4300002: RoadC031_MeshPart0
     4300004: RoadC031_MeshPart1
@@ -104,6 +132,13 @@ ModelImporter:
     4300032: Box_H_cl3_009
     4300034: Train
     4300036: Lorry
+    4300038: Start
+    4300040: Start001
+    4300042: Block_high03
+    4300044: Block_high_03
+    4300046: Block_high_04
+    4300048: block_low01
+    4300050: block_low02
     7400000: Take 001
     9500000: //RootNode
   materials:

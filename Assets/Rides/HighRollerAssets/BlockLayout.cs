@@ -10,13 +10,15 @@ public class BlockLayout : MonoBehaviour {
         return sBlockLayout;
     }
 
+	public GameObject startBlock;
+	public GameObject[] lowBlocks;
     public GameObject[] midBlocks;
     public GameObject[] highBlocks;
-    public GameObject startBlock;
-    public GameObject endBlock;
+	public GameObject[] beachBlocks;
     public GameObject parkStartBlock;
     public GameObject[] parkRepeatingBlocks;
     public GameObject parkEndBlock;
+	public GameObject endBlock;
 
     public float drawForward=1000f;
     public Transform viewpoint;
@@ -27,13 +29,17 @@ public class BlockLayout : MonoBehaviour {
     public enum LayoutPos
     {
         START,
+		LOW1,
         MID1,
         HIGH1,
+		BEACH1,
+		HIGH2,
         PARKSTART,
         PARKREST,
 		PARKEND,
-        HIGH2,
+        HIGH3,
         MID2,
+		LOW2,
         END,
         FINISHED
     };
@@ -150,13 +156,22 @@ public class BlockLayout : MonoBehaviour {
                 float newPos=PlaceBlock(currentBlockPos,startBlock,blockDropPos);        ;
                 // we start in the middle of block zero
                 blockDropPos+=newPos;
-                currentBlockPos=LayoutPos.MID1;
+                currentBlockPos=LayoutPos.LOW1;
             }
             break;
+		case LayoutPos.LOW1:
+				{
+					blockDropPos = PlaceBlock(currentBlockPos, lowBlocks[Random.Range(0, lowBlocks.Length - 1)], blockDropPos);
+					if (fractionThrough > 0.2)
+					{
+						currentBlockPos = LayoutPos.MID1;
+					}
+				}
+				break;
          case LayoutPos.MID1:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,midBlocks[Random.Range(0,midBlocks.Length-1)],blockDropPos);
-                if(fractionThrough>0.4)
+                if(fractionThrough>0.3)
                 {
                     currentBlockPos=LayoutPos.HIGH1;
                 }
@@ -165,13 +180,31 @@ public class BlockLayout : MonoBehaviour {
          case LayoutPos.HIGH1:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,highBlocks[Random.Range(0,highBlocks.Length-1)],blockDropPos);
-                if(fractionThrough>0.5)
+                if(fractionThrough>0.4)
                 {
-                    currentBlockPos=LayoutPos.PARKSTART;
+                    currentBlockPos=LayoutPos.BEACH1;
                 }
             }
             break;
-         case LayoutPos.PARKSTART:
+         case LayoutPos.BEACH1:
+				{
+					blockDropPos = PlaceBlock(currentBlockPos, beachBlocks[Random.Range(0, beachBlocks.Length - 1)], blockDropPos);
+					if (fractionThrough > 0.45)
+					{
+						currentBlockPos = LayoutPos.HIGH2;
+					}
+				}
+				break;
+			case LayoutPos.HIGH2:
+				{
+					blockDropPos = PlaceBlock(currentBlockPos, highBlocks[Random.Range(0, highBlocks.Length - 1)], blockDropPos);
+					if (fractionThrough > 0.5)
+					{
+						currentBlockPos = LayoutPos.PARKSTART;
+					}
+				}
+				break;
+			case LayoutPos.PARKSTART:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,parkStartBlock,blockDropPos);
                 currentBlockPos=LayoutPos.PARKREST;
@@ -188,10 +221,10 @@ public class BlockLayout : MonoBehaviour {
 		case LayoutPos.PARKEND:
 			{
                 blockDropPos=PlaceBlock(currentBlockPos,parkEndBlock,blockDropPos);
-                currentBlockPos=LayoutPos.HIGH2;
+                currentBlockPos=LayoutPos.HIGH3;
             }
             break;
-         case LayoutPos.HIGH2:
+         case LayoutPos.HIGH3:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,highBlocks[Random.Range(0,highBlocks.Length-1)],blockDropPos);
                 if(fractionThrough>0.7)
@@ -203,12 +236,21 @@ public class BlockLayout : MonoBehaviour {
          case LayoutPos.MID2:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,midBlocks[Random.Range(0,midBlocks.Length-1)],blockDropPos);
-                if(fractionThrough>0.9)
+                if(fractionThrough>0.8)
                 {
-                    currentBlockPos=LayoutPos.END;
+                    currentBlockPos=LayoutPos.LOW2;
                 }
             }
             break;
+				case LayoutPos.LOW2:
+				{
+					blockDropPos = PlaceBlock(currentBlockPos, midBlocks[Random.Range(0, midBlocks.Length - 1)], blockDropPos);
+					if (fractionThrough > 0.8)
+					{
+						currentBlockPos = LayoutPos.END;
+					}
+				}
+				break;
          case LayoutPos.END:
             {
                 // layout end block
@@ -240,6 +282,7 @@ public class BlockLayout : MonoBehaviour {
 
 		GameObject newObj=GameObject.Instantiate(obj);
         newObj.transform.position=new Vector3(0,0,curLength);
+
         Vector3 size=newObj.GetComponent<Renderer>().bounds.size;
 
 		BlockDescription newBlock=new BlockDescription();
