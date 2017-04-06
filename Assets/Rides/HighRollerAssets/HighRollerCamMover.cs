@@ -20,6 +20,7 @@ public class HighRollerCamMover : AbstractGameEffects {
     
     private Vector3 initialViewpointPos;
     private bool launched=false;
+	private bool inCooldown = false;
 
     private float introTime=5f;
     private float outtroTime=10f;
@@ -74,6 +75,7 @@ public class HighRollerCamMover : AbstractGameEffects {
                 viewpoint.transform.position=Vector3.Lerp(viewpoint.transform.position,targetPoint,1 - (offsetTime-outtroSwingTime)/(outtroTime-outtroSwingTime));                
             }else
             {
+				inCooldown = true;
                 viewpoint.transform.position=targetPoint;
             }
         }        
@@ -109,5 +111,10 @@ public class HighRollerCamMover : AbstractGameEffects {
             totalAcc -= (speed * speed) * dragConstant;
         }
 		return totalAcc;
+	}
+
+	public bool isMoving()
+	{
+		return launched && !inCooldown;
 	}
 }

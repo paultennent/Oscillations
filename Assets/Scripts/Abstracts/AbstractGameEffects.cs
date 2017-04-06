@@ -316,5 +316,10 @@ public class AbstractGameEffects : MonoBehaviour {
 		}
 	}
 
+	public int getSwingQuadrant()
+	{
+		return swingQuadrant;
+	}
+
 
 }
