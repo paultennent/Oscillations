@@ -14,6 +14,7 @@ public class Selector : MonoBehaviour {
 
 	public void Update()
 	{
+
         RectTransform rt=(RectTransform)crosshair.transform;
         rt.GetWorldCorners(corners);
 
@@ -23,6 +24,11 @@ public class Selector : MonoBehaviour {
 		pointer.position = new Vector2 (screenPoint.x, screenPoint.y);
 		pointer.button = PointerEventData.InputButton.Left;
 
+#if UNITY_EDITOR
+        pointer.position=Input.mousePosition;
+#endif
+        
+        
 		List<RaycastResult> raycastResults = new List<RaycastResult> ();
 		EventSystem.current.RaycastAll (pointer, raycastResults);
 		if (raycastResults.Count > 0) {
