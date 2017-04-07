@@ -101,7 +101,7 @@ public class HighRollerCamMover : AbstractGameEffects {
 		float totalAcc = 0;
 		if (swingQuadrant == 1) {
 			//print ("impelling:"+swingAngVel+":"+speed);
-			totalAcc = -swingAngVel * angVelscaler * climaxRatio;
+			totalAcc = -swingAngVel * angVelscaler * (climaxRatio * climaxRatio * climaxRatio);
 		}
         if(speed<0)
         {

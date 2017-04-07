@@ -76,7 +76,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		doRaycasting();
 
 		updateMixMixers(MixMixers, MixStartLevels, curTilePos, 5f);
-		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 5f);
+		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 5f, 0.1f);
 		updateBuildingMixers(BuildingsMixers, BuildingsStartLevels, curTilePos, BuildingSources, 10f);
 
 
@@ -103,6 +103,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		for (int i = 0; i < clips.Length; i++)
 		{
 			AudioSource source = gameObject.AddComponent<AudioSource>();
+			source.playOnAwake = false;
 			source.volume = 1.0f;
 			source.outputAudioMixerGroup = mixers[i];
 			source.clip = clips[i];
@@ -129,7 +130,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		}
 	}
 
-	private void updateSwingSounds(int swingQuadrant, AudioMixerGroup[] mixers, float[] startVals, float mixRate)
+	private void updateSwingSounds(int swingQuadrant, AudioMixerGroup[] mixers, float[] startVals, float mixRate, float mixRateSlow)
 	{
 		//this one is a bit odd as it depends on where we do the impulse - assuming forward motion for now.
 		//will have to change the quadrant values if we switch back to backwards for the impelling
@@ -142,10 +143,10 @@ public class HighRollerAudioController : MonoBehaviour {
 		//now forward (this is where we change the qaadrant vals)
 		if (swingQuadrant == 1 || swingQuadrant == 2)
 		{
-			targets[0] = dbsilence;
+			targets[0] = startVals[0];
 			targets[1] = startVals[1];
 		}else{
-			targets[0] = startVals[0];
+			targets[0] = dbsilence;
 			targets[1] = dbsilence;
 		}
 
@@ -156,7 +157,11 @@ public class HighRollerAudioController : MonoBehaviour {
 		}
 
 		mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0], targets[0], mixRate * Time.deltaTime));
-		mixers[1].audioMixer.SetFloat(mixers[1].name, Mathf.Lerp(current[1], targets[1], mixRate * Time.deltaTime));
+		if (swingQuadrant == 0 || swingQuadrant == 3) {
+			mixers [1].audioMixer.SetFloat (mixers [1].name, Mathf.Lerp (current [1], targets [1], mixRateSlow * Time.deltaTime));
+		} else {
+			mixers [1].audioMixer.SetFloat (mixers [1].name, Mathf.Lerp (current [1], targets [1], mixRate * Time.deltaTime));
+		}
 
 
 	}
