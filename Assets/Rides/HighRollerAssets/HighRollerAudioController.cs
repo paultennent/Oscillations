@@ -77,7 +77,7 @@ public class HighRollerAudioController : MonoBehaviour {
 
 		updateMixMixers(MixMixers, MixStartLevels, curTilePos, 5f);
 		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 5f, 0.1f);
-		updateBuildingMixers(BuildingsMixers, BuildingsStartLevels, curTilePos, BuildingSources, 10f);
+		updateBuildingMixers(BuildingsMixers, BuildingsStartLevels, curTilePos, BuildingSources, 1f);
 
 
 
@@ -105,6 +105,7 @@ public class HighRollerAudioController : MonoBehaviour {
 			AudioSource source = gameObject.AddComponent<AudioSource>();
 			source.playOnAwake = false;
 			source.volume = 1.0f;
+			source.dopplerLevel = 0f;
 			source.outputAudioMixerGroup = mixers[i];
 			source.clip = clips[i];
 			sources.Add(source);
@@ -215,7 +216,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		}
 		else
 		{
-			if (pos == BlockLayout.LayoutPos.START || pos == BlockLayout.LayoutPos.END)
+			if (pos == BlockLayout.LayoutPos.START || pos == BlockLayout.LayoutPos.LOW1 || pos == BlockLayout.LayoutPos.LOW2 || pos == BlockLayout.LayoutPos.END)
 			{
 				targets = new float[] { dbsilence, startVals[1] };
 			}
@@ -223,7 +224,7 @@ public class HighRollerAudioController : MonoBehaviour {
 			{
 				targets = new float[] { startVals[0], startVals[1] };
 			}
-			else if (pos == BlockLayout.LayoutPos.HIGH1 || pos == BlockLayout.LayoutPos.HIGH2)
+			else if (pos == BlockLayout.LayoutPos.HIGH1 || pos == BlockLayout.LayoutPos.HIGH2 || pos == BlockLayout.LayoutPos.HIGH3 || pos == BlockLayout.LayoutPos.BEACH1)
 			{
 				targets = new float[] { startVals[0], dbsilence };
 			}

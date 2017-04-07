@@ -92,9 +92,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0.85598373, b: 0.47794116, a: 1}
-    m_HighlightedColor: {r: 0.375, g: 1, b: 0.9482758, a: 1}
-    m_PressedColor: {r: 1, g: 0.09558821, b: 0.09558821, a: 1}
+    m_NormalColor: {r: 1, g: 0.16470589, b: 0.10588236, a: 1}
+    m_HighlightedColor: {r: 0.49264705, g: 0.11229454, b: 0.11229454, a: 1}
+    m_PressedColor: {r: 0, g: 0, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.098039225, g: 0.11764707, b: 0.15686275, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -134,7 +134,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 63db6592c7e1c4638a872aa2cddee32a, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 64
     m_FontStyle: 0
     m_BestFit: 0
