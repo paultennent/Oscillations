@@ -46,6 +46,9 @@ public class BlockLayout : MonoBehaviour {
     
     // if the block has a 'target' point (e.g. start and end)
     public Transform currentTarget;
+
+	public Transform blockParent;
+
     private LayoutPos currentBlockPos=LayoutPos.START;
 
 	public class BlockDescription
@@ -300,6 +303,7 @@ public class BlockLayout : MonoBehaviour {
         {
             currentTarget=null;
         }
+		newObj.transform.parent = blockParent;
         return curLength;
     }
 }
