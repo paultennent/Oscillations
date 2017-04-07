@@ -24,8 +24,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Rides/Shuttlecock-City.unity
   - enabled: 1
-    path: Assets/Rides/Shuttlecock-City-Static.unity
-  - enabled: 1
     path: Assets/Rides/HighRoller-City-tiled.unity
   - enabled: 1
+    path: Assets/Rides/Shuttlecock-City-Static.unity
+  - enabled: 1
     path: Assets/Rides/Walker-city.unity
+  - enabled: 1
+    path: Assets/Rides/Jellyfish-tiled.unity
