@@ -98,38 +98,38 @@ public class WalkerCamMover : AbstractGameEffects
             body.position-=offset;
             
             // terrain bits
-            RaycastHit hitLock,hitOther;
-            // the fixed foot has to be on the ground - if not then drop everything down
-            Physics.Raycast(lockFoot.position+new Vector3(0,100,0),-Vector3.up,out hitLock);
-            if(hitLock.distance>100)
-            {
-                float moveDistance=hitLock.distance-100;
-                // max move speed = 1m per second
-                if(moveDistance<Time.deltaTime)
-                {
-                    moveDistance=Time.deltaTime;
-                }
-                body.position-=new Vector3(0,moveDistance,0);
-            }
+            //RaycastHit hitLock,hitOther;
+            //// the fixed foot has to be on the ground - if not then drop everything down
+            //Physics.Raycast(lockFoot.position+new Vector3(0,100,0),-Vector3.up,out hitLock);
+            //if(hitLock.distance>100)
+            //{
+            //    float moveDistance=hitLock.distance-100;
+            //    // max move speed = 1m per second
+            //    if(moveDistance<Time.deltaTime)
+            //    {
+            //        moveDistance=Time.deltaTime;
+            //    }
+            //    body.position-=new Vector3(0,moveDistance,0);
+            //}
             // if the moving foot is about to go through the scenery, then tilt more so it doesn't hit
-            Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
-            for(int c=0;c<50 && hitOther.distance<100;c++)
-            {
-                if(lockFoot==leftFoot)
-                {
-                    rockExtra+=1f;
-                }else
-                {
-                    rockExtra-=1f;
-                }
-                rockAngle=rockExtra+-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
-                body.eulerAngles=new Vector3(0, yRot, rockAngle);
-                leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
-                rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
-                offset = lockFoot.position-footPos;
-                body.position-=offset;
-                Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
-            }
+            //Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
+            //for(int c=0;c<50 && hitOther.distance<100;c++)
+            //{
+            //    if(lockFoot==leftFoot)
+            //    {
+            //        rockExtra+=1f;
+            //    }else
+            //    {
+            //        rockExtra-=1f;
+            //    }
+            //    rockAngle=rockExtra+-Mathf.Cos(Mathf.Deg2Rad*swingPhase*90.0f)*rockMultiplier*30.0f;
+            //    body.eulerAngles=new Vector3(0, yRot, rockAngle);
+            //    leftHip.localEulerAngles=new Vector3(0,swingAngle*strideMultiplier,rockAngle);
+            //    rightHip.localEulerAngles=new Vector3(0,-swingAngle*strideMultiplier,rockAngle);
+            //    offset = lockFoot.position-footPos;
+            //    body.position-=offset;
+            //    Physics.Raycast(otherFoot.position+new Vector3(0,100,0),-Vector3.up,out hitOther);
+            //}
 /*            RaycastHit hitThis,hitOther;
             // now raycast down from high above each foot (robot is in ignore raycast layer)
             Physics.Raycast(lockFoot.position+new Vector3(0,100,0),-Vector3.up,out hitThis);

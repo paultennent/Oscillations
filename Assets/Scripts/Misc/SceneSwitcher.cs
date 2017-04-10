@@ -23,6 +23,10 @@ public class SceneSwitcher : MonoBehaviour {
 	private float savedTrackAngle;
 	private float savedRadiusLoop;
 
+	void Awake()
+	{
+		DontDestroyOnLoad(transform.gameObject);
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -31,13 +35,13 @@ public class SceneSwitcher : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonUp("Tap"))
-		{
-			if ((Time.time - lastTapTime) < 1.0f) {
-				On=!On;
-			}
-			lastTapTime = Time.time;
-		}
+		//if(Input.GetButtonUp("Tap"))
+		//{
+		//	if ((Time.time - lastTapTime) < 1.0f) {
+		//		On=!On;
+		//	}
+		//	lastTapTime = Time.time;
+		//}
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 		{
 			SceneManager.LoadScene ("Menu");
