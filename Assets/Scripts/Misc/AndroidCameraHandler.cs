@@ -33,11 +33,12 @@ public class AndroidCameraHandler: MonoBehaviour
     {
         CODETYPE_ALL=0,
         CODETYPE_EAN13=32,
+        CODETYPE_EAN8 = 64,
         CODETYPE_QR_CODE=265,
         CODETYPE_ISBN=3
     };
     
-    public CodeType acceptBarcodeTypes=CodeType.CODETYPE_ALL;
+    public CodeType acceptBarcodeTypes=CodeType.CODETYPE_EAN8;
     string detectedCode="";
     
     public string getCurrentSwing(){return currentSwing;}
