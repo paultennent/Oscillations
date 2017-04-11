@@ -33,6 +33,8 @@ ModelImporter:
     100050: Block_high_04
     100052: block_low01
     100054: block_low02
+    100056: block_low004
+    100058: block_low03
     400000: Block_end
     400002: Block_high01
     400004: Block_high02
@@ -61,6 +63,8 @@ ModelImporter:
     400050: Block_high_04
     400052: block_low01
     400054: block_low02
+    400056: block_low004
+    400058: block_low03
     2300000: Block_end
     2300002: Block_high01
     2300004: Block_high02
@@ -87,6 +91,8 @@ ModelImporter:
     2300046: Block_high_04
     2300048: block_low01
     2300050: block_low02
+    2300052: block_low004
+    2300054: block_low03
     3300000: Block_end
     3300002: Block_high01
     3300004: Block_high02
@@ -113,6 +119,8 @@ ModelImporter:
     3300046: Block_high_04
     3300048: block_low01
     3300050: block_low02
+    3300052: block_low004
+    3300054: block_low03
     4300000: Block_high02
     4300002: RoadC031_MeshPart0
     4300004: RoadC031_MeshPart1
@@ -139,6 +147,8 @@ ModelImporter:
     4300046: Block_high_04
     4300048: block_low01
     4300050: block_low02
+    4300052: block_low03
+    4300054: block_low004
     7400000: Take 001
     9500000: //RootNode
   materials:

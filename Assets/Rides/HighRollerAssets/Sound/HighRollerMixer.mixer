@@ -25,14 +25,16 @@ AudioMixerController:
     name: MixLow
   - guid: de63d25441f6c427c85fba495d6eee8a
     name: MixMid
+  - guid: 25746c811873c10479bbf171abc66c41
+    name: MixStart
+  - guid: d1eba94e780534498b8ae6d5af917efe
+    name: OtherEnvBeach
+  - guid: 4ff81237e31054dcd9f977e34bf5a093
+    name: OtherEnvPark
   - guid: f9b35197deaf6496189bfa08e6bb3cb1
     name: SwingBack
   - guid: 645cb6903be7649fa8325e550ce72921
     name: SwingForward
-  - guid: d1eba94e780534498b8ae6d5af917efe
-    name: WindowsFlap
-  - guid: 4ff81237e31054dcd9f977e34bf5a093
-    name: WindowsShortwave
   m_AudioMixerGroupViews:
   - guids:
     - 4cfc0eb80ab334cf9969eabf4f468c59
@@ -50,6 +52,7 @@ AudioMixerController:
     - e491f7c168a7b43978d13ac878f81776
     - ac9d0b7765b2a48f297011ed02222f3d
     - 6d06148e943be4b1f98bdbf80f680455
+    - a88bac2faf77e5f4da8b6d42078418d1
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500003}
@@ -140,7 +143,7 @@ AudioMixerGroupController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: WindowsFlap
+  m_Name: OtherEnvBeach
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: ac9d0b7765b2a48f297011ed02222f3d
   m_Children: []
@@ -180,9 +183,10 @@ AudioMixerGroupController:
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 7b863f777a4d044cc8804a361df8054f
   m_Children:
-  - {fileID: 243481339068855748}
-  - {fileID: 243407592913541134}
+  - {fileID: 243652603839776416}
   - {fileID: 243466564560448964}
+  - {fileID: 243407592913541134}
+  - {fileID: 243481339068855748}
   m_Volume: 871a391fb2db14b0aa987c7d2b31b290
   m_Pitch: 371ed643e4e534092a4fd42aec140728
   m_Effects:
@@ -247,7 +251,7 @@ AudioMixerGroupController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: WindowsShortwave
+  m_Name: OtherEnvPark
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 6d06148e943be4b1f98bdbf80f680455
   m_Children: []
@@ -255,6 +259,23 @@ AudioMixerGroupController:
   m_Pitch: 73fe21b5e24414b66a82de108225ac9a
   m_Effects:
   - {fileID: 244071977208967812}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!243 &243652603839776416
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: MixStart
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: a88bac2faf77e5f4da8b6d42078418d1
+  m_Children: []
+  m_Volume: 25746c811873c10479bbf171abc66c41
+  m_Pitch: 376eeae407efbc84f899202919d57003
+  m_Effects:
+  - {fileID: 244186853890945914}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -336,7 +357,7 @@ AudioMixerGroupController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Windows
+  m_Name: OtherEnv
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: b580e25a458014c6388cc1e79572d730
   m_Children:
@@ -398,6 +419,19 @@ AudioMixerEffectController:
   m_EffectID: 55abd42ad11974c73b77a9c49c8dfccb
   m_EffectName: Attenuation
   m_MixLevel: d2d837fc04adb46988a0d49d18f05625
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244186853890945914
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: e4a8509a860dcd046a856c443edbbe1a
+  m_EffectName: Attenuation
+  m_MixLevel: 350bdf428a664b94fb9998853e275acf
   m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0

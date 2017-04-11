@@ -12,22 +12,22 @@ public class HighRollerAudioController : MonoBehaviour {
 	public AudioMixerGroup[] MixMixers;
 	public AudioMixerGroup[] SwingMixers;
 	public AudioMixerGroup[] BuildingsMixers;
-	public AudioMixerGroup[] WindowsMixers;
+	public AudioMixerGroup[] OtherEnvMixers;
 
 	public AudioClip[] MixClips;
 	public AudioClip[] SwingClips;
 	public AudioClip[] BuildingsClips;
-	public AudioClip[] WindowsClips;
+	public AudioClip[] OtherEnvClips;
 
 	private float[] MixStartLevels;
 	private float[] SwingStartLevels;
 	private float[] BuildingsStartLevels;
-	private float[] WindowsStartLevels;
+	private float[] OtherEnvStartLevels;
 
 	private List<AudioSource> MixSources;
 	private List<AudioSource> SwingSources;
 	private List<AudioSource> BuildingSources;
-	private List<AudioSource> WindowsSources;
+	private List<AudioSource> OtherEnvSources;
 
 	private float maxAngle = 45f;
 	private float dbsilence = -80f;
@@ -44,27 +44,27 @@ public class HighRollerAudioController : MonoBehaviour {
 		MixSources = new List<AudioSource>();
 		SwingSources = new List<AudioSource>();
 		BuildingSources = new List<AudioSource>();
-		WindowsSources = new List<AudioSource>();
+		OtherEnvSources = new List<AudioSource>();
 
 		setupAudioSources(MixClips,MixMixers, MixSources);
 		setupAudioSources(SwingClips,SwingMixers, SwingSources);
 		setupAudioSources(BuildingsClips,BuildingsMixers, BuildingSources);
-		setupAudioSources(WindowsClips,WindowsMixers, WindowsSources);
+		setupAudioSources(OtherEnvClips,OtherEnvMixers, OtherEnvSources);
 
 		MixStartLevels = captureStartVals(MixMixers);
 		SwingStartLevels = captureStartVals(SwingMixers);
 		BuildingsStartLevels = captureStartVals(BuildingsMixers);
-		WindowsStartLevels = captureStartVals(WindowsMixers);
+		OtherEnvStartLevels = captureStartVals(OtherEnvMixers);
 
 		zeroMixers(MixMixers, dbsilence);
 		zeroMixers(SwingMixers, dbsilence);
 		zeroMixers(BuildingsMixers, dbsilence);
-		zeroMixers(WindowsMixers, dbsilence);
+		zeroMixers(OtherEnvMixers, dbsilence);
 
 		startSources(MixSources);
 		startSources(SwingSources);
 		startSources(BuildingSources);
-		startSources(WindowsSources);
+		startSources(OtherEnvSources);
 	}
 	
 	// Update is called once per frame
@@ -78,7 +78,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		updateMixMixers(MixMixers, MixStartLevels, curTilePos, 5f);
 		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 5f, 0.1f);
 		updateBuildingMixers(BuildingsMixers, BuildingsStartLevels, curTilePos, BuildingSources, 1f);
-
+        updateOtherEnvMixers(OtherEnvMixers, OtherEnvStartLevels, curTilePos, 5f);
 
 
 	}
@@ -171,33 +171,64 @@ public class HighRollerAudioController : MonoBehaviour {
 	{
 		//lerps the mixers values to the next block states
 
-		float[] current = new float[3];
+		float[] current = new float[4];
 		mixers[0].audioMixer.GetFloat(mixers[0].name, out current[0]);
 		mixers[1].audioMixer.GetFloat(mixers[1].name, out current[1]);
 		mixers[2].audioMixer.GetFloat(mixers[2].name, out current[2]);
+		mixers[3].audioMixer.GetFloat(mixers[3].name, out current[3]);
 
-		float[] targets = new float[3];
+		float[] targets = new float[4];
 
-		if (pos == BlockLayout.LayoutPos.PARKSTART || pos == BlockLayout.LayoutPos.PARKREST || pos == BlockLayout.LayoutPos.PARKEND || pos == BlockLayout.LayoutPos.START || pos == BlockLayout.LayoutPos.END)
+		if (pos == BlockLayout.LayoutPos.START || pos == BlockLayout.LayoutPos.END)
 		{
-			targets = new float[] { dbsilence, dbsilence, startVals[2] };
+			targets = new float[] { startVals[0], dbsilence, dbsilence, dbsilence };
+		}
+		if (pos == BlockLayout.LayoutPos.PARKSTART || pos == BlockLayout.LayoutPos.PARKREST || pos == BlockLayout.LayoutPos.PARKEND || pos == BlockLayout.LayoutPos.LOW1 || pos == BlockLayout.LayoutPos.LOW2)
+		{
+			targets = new float[] { startVals[0], startVals[1], dbsilence, dbsilence };
 		}
 		else if (pos == BlockLayout.LayoutPos.MID1 || pos == BlockLayout.LayoutPos.MID2)
 		{
-			targets = new float[] { dbsilence, startVals[1], startVals[2] };
+			targets = new float[] { startVals[0], startVals[1], startVals[2], dbsilence };
 		}
 		else if (pos == BlockLayout.LayoutPos.HIGH1 || pos == BlockLayout.LayoutPos.HIGH2)
 		{
-			targets = new float[] { startVals[0], startVals[1], startVals[2] };
+			targets = new float[] { startVals[0], startVals[1], startVals[2], startVals[3] };
 		}
 		else if (pos == BlockLayout.LayoutPos.FINISHED)
 		{
-			targets = new float[] { dbsilence, dbsilence, dbsilence };
+			targets = new float[] { dbsilence, dbsilence, dbsilence, dbsilence };
 		}
 
 		mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0],targets[0],mixRate * Time.deltaTime));
 		mixers[1].audioMixer.SetFloat(mixers[1].name, Mathf.Lerp(current[1], targets[1], mixRate * Time.deltaTime));
 		mixers[2].audioMixer.SetFloat(mixers[2].name, Mathf.Lerp(current[2], targets[2], mixRate * Time.deltaTime));
+		mixers[3].audioMixer.SetFloat(mixers[3].name, Mathf.Lerp(current[3], targets[3], mixRate* Time.deltaTime));
+	}
+
+	private void updateOtherEnvMixers(AudioMixerGroup[] mixers, float[] startVals, BlockLayout.LayoutPos pos, float mixRate)
+	{
+		float[] current = new float[2];
+		mixers[0].audioMixer.GetFloat(mixers[0].name, out current[0]);
+		mixers[1].audioMixer.GetFloat(mixers[1].name, out current[1]);
+
+		float[] targets = new float[2];
+
+		if (pos == BlockLayout.LayoutPos.PARKSTART || pos == BlockLayout.LayoutPos.PARKREST || pos == BlockLayout.LayoutPos.PARKEND)
+		{
+			targets = new float[] { dbsilence, startVals[1] };
+		}
+		else if (pos == BlockLayout.LayoutPos.BEACH1)
+		{
+			targets = new float[] { startVals[0], dbsilence };
+		}
+		else
+		{
+			targets = new float[] { dbsilence, dbsilence };
+		}
+
+		mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0],targets[0],mixRate* Time.deltaTime));
+		mixers[1].audioMixer.SetFloat(mixers[1].name, Mathf.Lerp(current[1], targets[1], mixRate* Time.deltaTime));
 	}
 
 	private void updateBuildingMixers(AudioMixerGroup[] mixers, float[] startVals, BlockLayout.LayoutPos pos, List<AudioSource> sources, float mixRate)
