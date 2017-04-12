@@ -291,9 +291,14 @@ public class BlockLayout : MonoBehaviour {
 
 		//tiles are also not z-centred!!!
 
-		Vector3 size = newObj.GetComponent<Renderer>().bounds.size;
+        
+        newObj.transform.position=new Vector3(newObj.transform.position.x,newObj.transform.position.y,0);
+        Bounds objBounds=newObj.GetComponent<Renderer>().bounds;
+        Vector3 size=objBounds.size;        
+        newObj.transform.position=new Vector3(newObj.transform.position.x,newObj.transform.position.y,curLength+objBounds.size.z*0.5f-objBounds.center.z);
 
-		newObj.transform.position=new Vector3(obj.transform.localPosition.x,obj.transform.localPosition.y,curLength);
+//        newObj.transform.position=new Vector3(localPos.x,localPos.y,curLength) + new Vector3(0,0,objBounds.size.z*0.5f-objBounds.center.z  );
+//		newObj.transform.position=new Vector3(obj.transform.localPosition.x,obj.transform.localPosition.y,curLength);
 
 		BlockDescription newBlock=new BlockDescription();
 		newBlock.zMin = curLength;
@@ -310,7 +315,7 @@ public class BlockLayout : MonoBehaviour {
         {
             currentTarget=null;
         }
-		newObj.transform.parent = blockParent;
+//		newObj.transform.parent = blockParent;
         return curLength;
     }
 }
