@@ -17,6 +17,7 @@ class BuildApk
     
      static void PerformBuild ()
      {
+        AssetDatabase.Refresh();
         Debug.Log("woooo!");
         string targetAPK=GetArg("-targetPath");
         string[] scenes = { "Assets/Rides/Menu.unity", "Assets/Rides/HighRoller-City-tiled.unity","Assets/Rides/Shuttlecock-City-Static.unity"};
