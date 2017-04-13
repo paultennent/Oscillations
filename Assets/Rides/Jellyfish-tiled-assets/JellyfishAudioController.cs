@@ -57,8 +57,8 @@ public class JellyfishAudioController : MonoBehaviour {
 	void Update () {
 		updateSwingSounds (camMover.getSwingQuadrant (),SwingMixers,SwingStartLevels,10f);
 		LayerLayout.LayoutPos curTilePos = LayerLayout.GetLayerLayout ().GetBlockAt (cam.transform.position.y);
-		updateMixMixers (MixMixers,MixStartLevels,curTilePos,1f);
-		updateVoidMixers (VoidMixers,VoidStartLevels,5f);
+		updateMixMixers (MixMixers,MixStartLevels,curTilePos,0.1f);
+		updateVoidMixers (VoidMixers,VoidStartLevels,0.5f);
 	}
 
 	private void startSources(List<AudioSource> mysources){
@@ -90,6 +90,7 @@ public class JellyfishAudioController : MonoBehaviour {
 			source.dopplerLevel = 0f;
 			source.outputAudioMixerGroup = mixers[i];
 			source.clip = clips[i];
+			source.loop = true;
 			if (alternatePans) {
 				if (i % 2 == 0) {
 					source.panStereo = -1f;

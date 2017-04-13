@@ -19,7 +19,7 @@ RenderSettings:
   m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 0
-  m_LinearFogEnd: 800
+  m_LinearFogEnd: 1000
   m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.6911765, g: 0.6911765, b: 0.6911765, a: 1}
   m_AmbientGroundColor: {r: 0.29411763, g: 0.29411763, b: 0.29411763, a: 1}
@@ -4364,7 +4364,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 1500
+  far clip plane: 1200
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -6632,6 +6632,7 @@ MonoBehaviour:
   BuildingsMixers:
   - {fileID: 243053825918075110, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
   - {fileID: 243856764071544240, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
+  - {fileID: 243605362866240314, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
   OtherEnvMixers:
   - {fileID: 243280992454179668, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
   - {fileID: 243519364242426494, guid: f728b94b300134a93a09a78d7227e53e, type: 2}
@@ -6646,6 +6647,7 @@ MonoBehaviour:
   BuildingsClips:
   - {fileID: 8300000, guid: 06987dd86dccdfa418e9dbfeefc53f62, type: 3}
   - {fileID: 8300000, guid: 6aacf16742b70d34b81d4c92178ab9aa, type: 3}
+  - {fileID: 8300000, guid: e1fdf49374028614584b0d3b9e381b1d, type: 3}
   OtherEnvClips:
   - {fileID: 8300000, guid: 6df8870e2d9060649819545bbc86f77d, type: 3}
   - {fileID: 8300000, guid: f6202870a6890ca41a1d302699d67e48, type: 3}
@@ -7615,7 +7617,7 @@ MonoBehaviour:
   - {fileID: 1480856173}
   parkEndBlock: {fileID: 1600517355}
   endBlock: {fileID: 1050188973}
-  drawForward: 1000
+  drawForward: 1500
   viewpoint: {fileID: 1959593109}
   currentTarget: {fileID: 0}
   blockParent: {fileID: 1819073809}
@@ -7656,7 +7658,7 @@ MonoBehaviour:
   speed: 1
   seatDrop: 1.5
   manual: 0
-  angVelscaler: 50
+  angVelscaler: 75
   dragConstant: 0.005
   wheels:
   - {fileID: 1189277521}
@@ -7693,7 +7695,7 @@ MonoBehaviour:
   applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
-  forceSineOnMobile: 0
+  forceSineOnMobile: 1
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
@@ -7727,7 +7729,9 @@ MonoBehaviour:
     type: 2}
   viewPoint: {fileID: 1959593109}
   planeParent: {fileID: 1222732644}
-  frequency: 0.001
+  minHeight: 100
+  maxHeight: 500
+  frequency: 0.01
 --- !u!1 &1819073808
 GameObject:
   m_ObjectHideFlags: 0
@@ -8536,6 +8540,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431d33f268e3e4359b66961b9c0d1b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedMin: 100
+  speedMax: 500
 --- !u!64 &1998624230
 MeshCollider:
   m_ObjectHideFlags: 0

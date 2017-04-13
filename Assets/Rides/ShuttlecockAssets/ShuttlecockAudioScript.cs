@@ -118,9 +118,9 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 	private int getNextJumpSound(){
 		int myVal = 0;
 		if (scccm.isInTraining ()) {
-			myVal = Random.Range(0,2);
+			myVal = Random.Range(0,1);
 		} else {
-			myVal = Random.Range (2, 5);
+			myVal = Random.Range (1, 5);
 		}
 		return myVal;
 	}

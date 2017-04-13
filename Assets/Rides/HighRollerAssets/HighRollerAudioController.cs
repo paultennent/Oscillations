@@ -51,6 +51,9 @@ public class HighRollerAudioController : MonoBehaviour {
 		setupAudioSources(BuildingsClips,BuildingsMixers, BuildingSources);
 		setupAudioSources(OtherEnvClips,OtherEnvMixers, OtherEnvSources);
 
+		//pan the beach
+		OtherEnvSources[0].panStereo = -1.0f;
+
 		MixStartLevels = captureStartVals(MixMixers);
 		SwingStartLevels = captureStartVals(SwingMixers);
 		BuildingsStartLevels = captureStartVals(BuildingsMixers);
@@ -65,6 +68,8 @@ public class HighRollerAudioController : MonoBehaviour {
 		startSources(SwingSources);
 		startSources(BuildingSources);
 		startSources(OtherEnvSources);
+
+
 	}
 	
 	// Update is called once per frame
@@ -75,8 +80,8 @@ public class HighRollerAudioController : MonoBehaviour {
 
 		doRaycasting();
 
-		updateMixMixers(MixMixers, MixStartLevels, curTilePos, 5f);
-		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 5f, 0.1f);
+		updateMixMixers(MixMixers, MixStartLevels, curTilePos, 0.5f);
+		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 2.5f, 0.1f, swingAngle);
 		updateBuildingMixers(BuildingsMixers, BuildingsStartLevels, curTilePos, BuildingSources, 1f);
         updateOtherEnvMixers(OtherEnvMixers, OtherEnvStartLevels, curTilePos, 5f);
 
@@ -131,7 +136,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		}
 	}
 
-	private void updateSwingSounds(int swingQuadrant, AudioMixerGroup[] mixers, float[] startVals, float mixRate, float mixRateSlow)
+	private void updateSwingSounds(int swingQuadrant, AudioMixerGroup[] mixers, float[] startVals, float mixRate, float mixRateSlow, float swingAngle)
 	{
 		//this one is a bit odd as it depends on where we do the impulse - assuming forward motion for now.
 		//will have to change the quadrant values if we switch back to backwards for the impelling
@@ -144,8 +149,8 @@ public class HighRollerAudioController : MonoBehaviour {
 		//now forward (this is where we change the qaadrant vals)
 		if (swingQuadrant == 1 || swingQuadrant == 2)
 		{
-			targets[0] = startVals[0];
-			targets[1] = startVals[1];
+			targets[0] = Mathf.Clamp(Remap(swingAngle, -45, 45, dbsilence, startVals [0]),dbsilence,startVals[0]);
+			targets[1] = Mathf.Clamp(Remap(swingAngle, -45, 45, dbsilence, startVals [1]),dbsilence,startVals[1]);
 		}else{
 			targets[0] = dbsilence;
 			targets[1] = dbsilence;
@@ -235,11 +240,15 @@ public class HighRollerAudioController : MonoBehaviour {
 	{
 		//lerps the mixers values to the next block states
 
-		float[] current = new float[2];
+		float[] current = new float[3];
 		mixers[0].audioMixer.GetFloat(mixers[0].name, out current[0]);
 		mixers[1].audioMixer.GetFloat(mixers[1].name, out current[1]);
+		mixers[2].audioMixer.GetFloat(mixers[2].name, out current[2]);
+
+		print (current[2]);
 
 		float[] targets = new float[2];
+
 
 		if (leftDist < 0 && rightDist < 0)
 		{
@@ -261,32 +270,48 @@ public class HighRollerAudioController : MonoBehaviour {
 			}
 			else if (pos == BlockLayout.LayoutPos.FINISHED || pos == BlockLayout.LayoutPos.PARKSTART || pos == BlockLayout.LayoutPos.PARKREST || pos == BlockLayout.LayoutPos.PARKEND)
 			{
-				targets = new float[] { dbsilence, dbsilence, dbsilence };
+				targets = new float[] { dbsilence, dbsilence};
 			}
 		}
 
-		setPanning(sources,mixRate);
-
+		float flap = 0f;
+		bool didMiss = setPanning(sources,mixRate);
+		if (didMiss) {
+			//print (Remap (camMover.speed, 0, 100, dbsilence, startVals [2]));
+			flap = Mathf.Clamp(Remap(camMover.speed,0,50,dbsilence,startVals[2]),dbsilence,startVals[2]);
+			//print (flap);
+		} else {
+			flap = dbsilence;
+		}
+			
 		mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0], targets[0], mixRate * Time.deltaTime));
 		mixers[1].audioMixer.SetFloat(mixers[1].name, Mathf.Lerp(current[1], targets[1], mixRate * Time.deltaTime));
+
+		print (flap);
+		mixers[2].audioMixer.SetFloat(mixers[2].name, Mathf.Lerp(current[2], flap, mixRate * Time.deltaTime));
+
 	}
 
-	private void setPanning(List<AudioSource> sources, float mixRate)
+	private bool setPanning(List<AudioSource> sources, float mixRate)
 	{
+		bool didMiss = false;
 		float panVal = 0f;
 		if (leftDist < 0 && rightDist < 0)
 		{
 			//nothing at all - reset pan to even
 			panVal = 0f;
+			didMiss = true;
 		}
 		else if (leftDist >= 0 && rightDist < 0)
 		{
 			//nothing on the right - pan hard left
-			panVal = -1.0f;
+			panVal = 1.0f;
+			didMiss = true;
 		}
 		else if (leftDist < 0 && rightDist >= 0)
 		{
-			panVal = 1.0f;
+			panVal = -1.0f;
+			didMiss = true;
 		}
 		else
 		{
@@ -294,12 +319,19 @@ public class HighRollerAudioController : MonoBehaviour {
 			float scaledLeft = Remap(Mathf.Clamp(leftDist, 0, maxBuildingDistanceForPan), 0, maxBuildingDistanceForPan, 1f, 0f);
 			float scaledright = Remap(Mathf.Clamp(rightDist, 0, maxBuildingDistanceForPan), 0, maxBuildingDistanceForPan, 1f, 0f);
 			panVal = -scaledLeft + scaledright;
+			didMiss = false;
 		}
 		//now do the panning
 		foreach (AudioSource s in sources)
 		{
 			s.panStereo = Mathf.Lerp(s.panStereo, panVal, mixRate);
 		}
+
+		sources[0].panStereo = Mathf.Lerp(sources[0].panStereo, panVal, mixRate);
+		sources[1].panStereo = Mathf.Lerp(sources[1].panStereo, panVal, mixRate);
+		sources[2].panStereo = Mathf.Lerp(sources[2].panStereo, -panVal, mixRate * 10f);
+
+		return didMiss;
 
 	}
 

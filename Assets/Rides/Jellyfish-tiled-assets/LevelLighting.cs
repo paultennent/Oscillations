@@ -6,9 +6,11 @@ public class LevelLighting : MonoBehaviour {
 
     Color targetFogColour;
     float targetFogDistance;
+	float targetFogDensity;
     
     public float changeSpeed=0.05f;
     public float distanceChangeSpeed=3f;
+	public float densityChangeSpeed=0.0001f;
 
     public Color initialFogColour;
     public Color caveFogColour;
@@ -20,10 +22,12 @@ public class LevelLighting : MonoBehaviour {
 	void Start () {
            targetFogColour=RenderSettings.fogColor;
            targetFogDistance=RenderSettings.fogEndDistance;
+			targetFogDensity = RenderSettings.fogDensity;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
         Camera cam = Camera.main;
         
         LayerLayout l= LayerLayout.GetLayerLayout();
@@ -38,6 +42,7 @@ public class LevelLighting : MonoBehaviour {
                 break;
             case LayerLayout.LayoutPos.CAVE_TOP:
                 targetFogColour=Color.Lerp(caveFogColour,midFogColour,0.4f);
+				targetFogDensity=0.01f;
                 break;
             case LayerLayout.LayoutPos.MID_BASE:
                 targetFogColour=Color.Lerp(caveFogColour,midFogColour,0.7f);
@@ -46,6 +51,7 @@ public class LevelLighting : MonoBehaviour {
             case LayerLayout.LayoutPos.MID_TOP:
                 targetFogColour=midFogColour;
                 targetFogDistance=500f;
+				targetFogDensity=0.002f;
                 break;
             case LayerLayout.LayoutPos.CORAL:
             case LayerLayout.LayoutPos.FINISHED:
@@ -88,6 +94,17 @@ public class LevelLighting : MonoBehaviour {
             distance=Mathf.Max(targetFogDistance,distance-Time.deltaTime*distanceChangeSpeed);
         }
         RenderSettings.fogEndDistance=distance;
+
+		float density = RenderSettings.fogDensity;
+		if(density<targetFogDensity)
+		{
+			density=Mathf.Min(targetFogDensity,density+Time.deltaTime*densityChangeSpeed);
+		}else if(density>targetFogDensity)
+		{
+			density=Mathf.Max(targetFogDensity,density-Time.deltaTime*densityChangeSpeed);
+		}
+		RenderSettings.fogDensity=density;
+
         if(cam.farClipPlane<distance+10f)
         {
             cam.farClipPlane=distance+10f;

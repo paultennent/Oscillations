@@ -15,6 +15,7 @@ public class SealifeSpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mySpawner = new GameObject ().transform;
+		bubbleparent = GameObject.Find ("FishParent").transform;
 	}
 
 	// Update is called once per frame

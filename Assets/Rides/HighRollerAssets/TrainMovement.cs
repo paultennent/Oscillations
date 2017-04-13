@@ -26,6 +26,11 @@ public class TrainMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (transform.position.z < 0) {
+			speed = -Mathf.Abs (speed);
+		}
+
 		if (Vector3.Distance(transform.position,player.transform.position) < 1000  || autoStart)
 		{
 			moving = true;

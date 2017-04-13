@@ -541,6 +541,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &119087833 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -564,6 +566,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &124587504
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,6 +626,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &129343491
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +738,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &154195573
 Prefab:
   m_ObjectHideFlags: 0
@@ -1076,6 +1084,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &260264270 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 8a0f7109701e24ce78c03b4ccd3a987f,
@@ -1099,6 +1109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 1
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!82 &260264275
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1118,9 +1130,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 0
+  DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 1000
+  MaxDistance: 250
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -1201,7 +1213,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 0
   MinDistance: 1
-  MaxDistance: 1000
+  MaxDistance: 250
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -1224,7 +1236,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -1514,6 +1526,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!4 &289738354 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4559515565046954, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -1639,6 +1653,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 1
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!82 &295113857
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1658,9 +1674,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 0
+  DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 1000
+  MaxDistance: 250
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -1743,6 +1759,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &302259702 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -1766,6 +1784,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &303989350
 Prefab:
   m_ObjectHideFlags: 0
@@ -1856,6 +1876,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &319395606
 Prefab:
   m_ObjectHideFlags: 0
@@ -2012,6 +2034,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &367932423 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -2035,6 +2059,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &368225537
 Prefab:
   m_ObjectHideFlags: 0
@@ -2391,6 +2417,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &451782507
 GameObject:
   m_ObjectHideFlags: 0
@@ -2442,6 +2470,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!43 &462510682
 Mesh:
   m_ObjectHideFlags: 0
@@ -2800,6 +2830,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &500319265
 GameObject:
   m_ObjectHideFlags: 0
@@ -2892,6 +2924,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &513713508 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -2915,6 +2949,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &514589728
 Prefab:
   m_ObjectHideFlags: 0
@@ -3005,6 +3041,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &521027324
 Prefab:
   m_ObjectHideFlags: 0
@@ -3095,6 +3133,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &524162552 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -3118,6 +3158,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &561684042
 GameObject:
   m_ObjectHideFlags: 0
@@ -3623,6 +3665,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &621664809
 GameObject:
   m_ObjectHideFlags: 0
@@ -3811,6 +3855,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &651756706 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -3834,6 +3880,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &656465957
 Prefab:
   m_ObjectHideFlags: 0
@@ -3987,6 +4035,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &667119514
 GameObject:
   m_ObjectHideFlags: 0
@@ -4054,24 +4104,24 @@ MonoBehaviour:
   directionalMixerStartVals: []
   mixMixerStartVals: []
   swingSounds:
-  - {fileID: 8300000, guid: c4d4deca5aa594d7fa53dfd16467d92b, type: 3}
-  - {fileID: 8300000, guid: ad5d07b801acf471d97e88c31e5bef62, type: 3}
-  - {fileID: 8300000, guid: 6afba420f2a2343af8fd6bbe2c725bbb, type: 3}
+  - {fileID: 8300000, guid: 1c0b678d2fa50463db939dcd23ecdc58, type: 3}
+  - {fileID: 8300000, guid: b59e1c827f3b74bb39d4b14de97d253c, type: 3}
+  - {fileID: 8300000, guid: f252fa76eccd84f29ad1710315397330, type: 3}
   jumpSounds:
-  - {fileID: 8300000, guid: cd16a5aa5dbc34d35b6db153372d0ee4, type: 3}
-  - {fileID: 8300000, guid: 144c19742b95b4977a1de5ab3d905949, type: 3}
-  - {fileID: 8300000, guid: 0d5dadca1ddff4374befe67a69a02846, type: 3}
-  - {fileID: 8300000, guid: d72c3e1c4f150431784c7ecba14228f3, type: 3}
-  - {fileID: 8300000, guid: 39180380a6a70465980f54479112dc56, type: 3}
+  - {fileID: 8300000, guid: f6966c6dbc2054923a819079e5433cd4, type: 3}
+  - {fileID: 8300000, guid: 3b69b80437a974d51962fbbf65c29d2c, type: 3}
+  - {fileID: 8300000, guid: 5c5b91ca87a6942a49c3f22a2a6b1b2f, type: 3}
+  - {fileID: 8300000, guid: 6ebba76350b6c44b18f0a5d363116719, type: 3}
+  - {fileID: 8300000, guid: 8de1214ae742248abb914ec55ed4d6e6, type: 3}
   directional:
-  - {fileID: 8300000, guid: 7e19d2523f5b44a6db4c1d3829187413, type: 3}
-  - {fileID: 8300000, guid: e98b3b3d81bd4451d9e9f4778376bed1, type: 3}
-  - {fileID: 8300000, guid: 5c75a28eaa89c4481ad37c8cc27e5365, type: 3}
-  - {fileID: 8300000, guid: f02b613b8619a4b20bbf4764b7e4a85d, type: 3}
+  - {fileID: 8300000, guid: 8213ea4625b8a41a4b4cc361adba84d8, type: 3}
+  - {fileID: 8300000, guid: 8213ea4625b8a41a4b4cc361adba84d8, type: 3}
+  - {fileID: 8300000, guid: 2df10deea8bd5432599dbda86277115d, type: 3}
+  - {fileID: 8300000, guid: dc74affaad5634513bacaada5838ee40, type: 3}
   mix:
-  - {fileID: 8300000, guid: e835833719b0a4873864527055871c92, type: 3}
-  - {fileID: 8300000, guid: 033921a5961b746c69f0d9e41069ce97, type: 3}
-  - {fileID: 8300000, guid: 033921a5961b746c69f0d9e41069ce97, type: 3}
+  - {fileID: 8300000, guid: 143da4274abeb4d8982234cf8fb064a6, type: 3}
+  - {fileID: 8300000, guid: 6b45c3c8a4fd8419fb20c4a640a4c0d0, type: 3}
+  - {fileID: 8300000, guid: 6b45c3c8a4fd8419fb20c4a640a4c0d0, type: 3}
 --- !u!1 &669912856 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 8a0f7109701e24ce78c03b4ccd3a987f,
@@ -4095,6 +4145,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 1
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!82 &669912861
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4114,9 +4166,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 0
+  DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 1000
+  MaxDistance: 250
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -4266,6 +4318,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &707240473
 GameObject:
   m_ObjectHideFlags: 0
@@ -4859,6 +4913,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!4 &828656095 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 294605c97b35cde4ea6e37e4da2c921c, type: 3}
@@ -4886,6 +4942,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &843072791
 GameObject:
   m_ObjectHideFlags: 0
@@ -5146,6 +5204,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &878434235
 Prefab:
   m_ObjectHideFlags: 0
@@ -6105,6 +6165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1021388837
 GameObject:
   m_ObjectHideFlags: 0
@@ -6118,6 +6180,8 @@ GameObject:
   - component: {fileID: 1021388839}
   - component: {fileID: 1021388838}
   - component: {fileID: 1021388843}
+  - component: {fileID: 1021388845}
+  - component: {fileID: 1021388844}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6213,6 +6277,255 @@ AudioListener:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1021388837}
   m_Enabled: 1
+--- !u!114 &1021388844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1021388837}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66c5a3b888f31242899415e778d4804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controlAntialiasing: 0
+  enableAntialiasing: 0
+  antialiasing:
+    method: 0
+    fxaaSettings:
+      preset: 0
+    taaSettings:
+      jitterSpread: 0
+      sharpen: 0
+      stationaryBlending: 0
+      motionBlending: 0
+  controlAmbientOcclusion: 0
+  enableAmbientOcclusion: 0
+  ambientOcclusion:
+    intensity: 0
+    radius: 0
+    sampleCount: 0
+    downsampling: 0
+    forceForwardCompatibility: 0
+    ambientOnly: 0
+    highPrecision: 0
+  controlScreenSpaceReflection: 0
+  enableScreenSpaceReflection: 0
+  screenSpaceReflection:
+    reflection:
+      blendType: 0
+      reflectionQuality: 0
+      maxDistance: 0
+      iterationCount: 0
+      stepSize: 0
+      widthModifier: 0
+      reflectionBlur: 0
+      reflectBackfaces: 0
+    intensity:
+      reflectionMultiplier: 0
+      fadeDistance: 0
+      fresnelFade: 0
+      fresnelFadePower: 0
+    screenEdgeMask:
+      intensity: 0
+  controlDepthOfField: 1
+  enableDepthOfField: 0
+  depthOfField:
+    focusDistance: 0
+    aperture: 0
+    focalLength: 0
+    useCameraFov: 0
+    kernelSize: 0
+  controlMotionBlur: 0
+  enableMotionBlur: 0
+  motionBlur:
+    shutterAngle: 0
+    sampleCount: 0
+    frameBlending: 0
+  controlEyeAdaptation: 0
+  enableEyeAdaptation: 0
+  eyeAdaptation:
+    lowPercent: 0
+    highPercent: 0
+    minLuminance: 0
+    maxLuminance: 0
+    exposureCompensation: 0
+    adaptationType: 0
+    speedUp: 0
+    speedDown: 0
+    logMin: 0
+    logMax: 0
+  controlBloom: 0
+  enableBloom: 0
+  bloom:
+    bloom:
+      intensity: 0
+      threshold: 0
+      softKnee: 0
+      radius: 0
+      antiFlicker: 0
+    lensDirt:
+      texture: {fileID: 0}
+      intensity: 0
+  controlColorGrading: 0
+  enableColorGrading: 0
+  colorGrading:
+    tonemapping:
+      tonemapper: 0
+      neutralBlackIn: 0
+      neutralWhiteIn: 0
+      neutralBlackOut: 0
+      neutralWhiteOut: 0
+      neutralWhiteLevel: 0
+      neutralWhiteClip: 0
+    basic:
+      postExposure: 0
+      temperature: 0
+      tint: 0
+      hueShift: 0
+      saturation: 0
+      contrast: 0
+    channelMixer:
+      red: {x: 0, y: 0, z: 0}
+      green: {x: 0, y: 0, z: 0}
+      blue: {x: 0, y: 0, z: 0}
+      currentEditingChannel: 0
+    colorWheels:
+      mode: 0
+      log:
+        slope: {r: 0, g: 0, b: 0, a: 0}
+        power: {r: 0, g: 0, b: 0, a: 0}
+        offset: {r: 0, g: 0, b: 0, a: 0}
+      linear:
+        lift: {r: 0, g: 0, b: 0, a: 0}
+        gamma: {r: 0, g: 0, b: 0, a: 0}
+        gain: {r: 0, g: 0, b: 0, a: 0}
+    curves:
+      master:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      red:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      green:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      blue:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      hueVShue:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      hueVSsat:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      satVSsat:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      lumVSsat:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Loop: 0
+        m_ZeroValue: 0
+        m_Range: 0
+      e_CurrentEditingCurve: 0
+      e_CurveY: 0
+      e_CurveR: 0
+      e_CurveG: 0
+      e_CurveB: 0
+  controlUserLut: 0
+  enableUserLut: 0
+  userLut:
+    lut: {fileID: 0}
+    contribution: 0
+  controlChromaticAberration: 0
+  enableChromaticAberration: 0
+  chromaticAberration:
+    spectralTexture: {fileID: 0}
+    intensity: 0
+  controlGrain: 0
+  enableGrain: 0
+  grain:
+    colored: 0
+    intensity: 0
+    size: 0
+    luminanceContribution: 0
+  controlVignette: 0
+  enableVignette: 0
+  vignette:
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    center: {x: 0, y: 0}
+    intensity: 0
+    smoothness: 0
+    roundness: 0
+    mask: {fileID: 0}
+    opacity: 0
+--- !u!114 &1021388845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1021388837}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: fd98dd047f86bcb4780bd427c11f79a8, type: 2}
 --- !u!1 &1023571647
 GameObject:
   m_ObjectHideFlags: 0
@@ -6323,6 +6636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!4 &1057243977 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 294605c97b35cde4ea6e37e4da2c921c, type: 3}
@@ -6417,6 +6732,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1068163608
 GameObject:
   m_ObjectHideFlags: 0
@@ -6509,6 +6826,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1150142362 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -6532,6 +6851,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1175045583
 GameObject:
   m_ObjectHideFlags: 0
@@ -6583,6 +6904,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1213910789
 GameObject:
   m_ObjectHideFlags: 0
@@ -8063,6 +8386,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 1
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!82 &1398265787
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8082,9 +8407,9 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 0
+  DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 1000
+  MaxDistance: 250
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -8167,6 +8492,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &1409823770
 Prefab:
   m_ObjectHideFlags: 0
@@ -8936,6 +9263,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &1529416393
 Prefab:
   m_ObjectHideFlags: 0
@@ -9093,6 +9422,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1556358520 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -9116,6 +9447,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1557782313 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -9139,6 +9472,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1569073390
 GameObject:
   m_ObjectHideFlags: 0
@@ -9644,6 +9979,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1670035074
 GameObject:
   m_ObjectHideFlags: 0
@@ -9759,7 +10096,7 @@ MonoBehaviour:
   applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
-  forceSineOnMobile: 0
+  forceSineOnMobile: 1
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
@@ -9893,6 +10230,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &1725186871
 Prefab:
   m_ObjectHideFlags: 0
@@ -10140,6 +10479,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1759996904 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -10163,6 +10504,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1771885452 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -10186,6 +10529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1799945661
 GameObject:
   m_ObjectHideFlags: 0
@@ -10290,6 +10635,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &1843661585
 Prefab:
   m_ObjectHideFlags: 0
@@ -10461,6 +10808,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1850726337 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 4a7fc273286824db8a58bc438d86b455,
@@ -10484,6 +10833,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &1854715067
 Prefab:
   m_ObjectHideFlags: 0
@@ -10574,6 +10925,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1884801318
 GameObject:
   m_ObjectHideFlags: 0
@@ -11092,6 +11445,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &1940064792
 GameObject:
   m_ObjectHideFlags: 0
@@ -11622,6 +11977,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &2057289375
 Prefab:
   m_ObjectHideFlags: 0
@@ -11712,6 +12069,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1001 &2079531980
 Prefab:
   m_ObjectHideFlags: 0
@@ -11809,6 +12168,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
+  useAltAxis: 0
+  invert: 0
 --- !u!1 &2130400124
 GameObject:
   m_ObjectHideFlags: 0
