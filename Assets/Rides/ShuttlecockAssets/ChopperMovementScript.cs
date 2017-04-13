@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaneMovescript : MonoBehaviour {
+public class ChopperMovementScript : MonoBehaviour {
 
-	public float speedMin = 100f;
-	public float speedMax = 500f;
+	public float speedMin = 30;
+	public float speedMax = 50f;
 	float speed = 100;
 	Transform viewPoint;
 
 	// Use this for initialization
 	void Start () {
-		viewPoint = GameObject.Find ("Centre").transform;
+		viewPoint = GameObject.Find ("TrackingPoint").transform;
 		speed = Random.Range (speedMin, speedMax);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		transform.Translate(Vector3.down * Time.deltaTime * speed);

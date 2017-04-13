@@ -8,6 +8,9 @@ public class PlaneSpawner : MonoBehaviour {
 	public Transform viewPoint;
 	public Transform planeParent;
 
+	public float minHeight = 100f;
+	public float maxHeight = 500f;
+
 	public float frequency = 0.001f;
 
 

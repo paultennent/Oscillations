@@ -56,6 +56,10 @@ public class AbstractGameEffects : MonoBehaviour {
 	//public bool fading = false;
 	//public Canvas killer;
 
+	public float getSessionTime(){
+		return sessionTime;
+	}
+
 
 	// Use this for initialization
 	public void Start () {
