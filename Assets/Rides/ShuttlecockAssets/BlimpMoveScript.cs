@@ -8,6 +8,9 @@ public class BlimpMoveScript : MonoBehaviour {
 	public float minSpeed = 1f;
 	public float maxSpeed = 5f;
 
+	public bool useAltAxis = false;
+	public bool invert = false;
+
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +19,14 @@ public class BlimpMoveScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate(Vector3.down * Time.deltaTime * speed);
+		if (useAltAxis) {
+			if (invert) {
+				transform.Translate (-Vector3.right * Time.deltaTime * speed);
+			} else {
+				transform.Translate (Vector3.right * Time.deltaTime * speed);
+			}
+		} else {
+			transform.Translate (Vector3.down * Time.deltaTime * speed);
+		}
 	}
 }
