@@ -158,7 +158,7 @@ public class LayerLayout : MonoBehaviour {
 		case LayoutPos.CAVE_RPT:
             theBlock=caveRepeats[Random.Range(0,caveRepeats.Length-1)];
             yOffsetScale=.9f;
-            if(fractionThrough>0.4 || Input.GetKeyDown("n"))
+            if(fractionThrough>0.2 || Input.GetKeyDown("n"))
             {
                 nextBlockPos=LayoutPos.CAVE_TOP;
             }
@@ -174,7 +174,7 @@ public class LayerLayout : MonoBehaviour {
         break;
 		case LayoutPos.MID_RPT:
             theBlock=midRepeats[Random.Range(0,midRepeats.Length-1)];
-            if(fractionThrough>0.6f || Input.GetKeyDown("n"))
+            if(fractionThrough>0.4f || Input.GetKeyDown("n"))
             {
                 nextBlockPos=LayoutPos.MID_TOP;
             }
@@ -186,9 +186,9 @@ public class LayerLayout : MonoBehaviour {
         case LayoutPos.CORAL:
             theBlock=corals[Random.Range(0,corals.Length-1)];
             yOffsetScale=0.3f;
-            if(fractionThrough>0.8f || Input.GetKeyDown("n"))
+            if(fractionThrough>0.9f || Input.GetKeyDown("n"))
             {
-                nextBlockPos=LayoutPos.END;
+                nextBlockPos=LayoutPos.FINISHED;
             }
         break;
         case LayoutPos.END:

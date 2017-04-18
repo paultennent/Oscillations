@@ -15,12 +15,14 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
-  - guid: 82a32c30a99d340dbaa93b50b8481901
-    name: MixShallow
+  - guid: 23eebde09198548f5a009bdd529e4f65
+    name: Master
   - guid: 52b6060d9380f496da6f0685b9b93f0e
     name: MixDeep
   - guid: 2fbfa7f219b5e4d15874da114c915cd8
     name: MixMid
+  - guid: 82a32c30a99d340dbaa93b50b8481901
+    name: MixShallow
   - guid: 803187a7a2197431f96f98f5b098e951
     name: SwingBack
   - guid: 22d882cb79f674df78d5267fdcfcd777

@@ -6,16 +6,29 @@ public class SealifeSpawner : MonoBehaviour {
 
 	public GameObject[] lifeprefabs;
 	Transform mySpawner;
-	public float sizeMin = 0.5f;
-	public float sizeMax = 1.5f;
+
 	public float range = 100f;
 	public float rateDivisor = 100f;
 	public Transform bubbleparent;
+
+	private GameObject[] weightedPrefabs;
 
 	// Use this for initialization
 	void Start () {
 		mySpawner = new GameObject ().transform;
 		bubbleparent = GameObject.Find ("FishParent").transform;
+		int count = 0;
+		for (int i = lifeprefabs.Length; i > 0; i--) {
+			count += i;
+		}
+		weightedPrefabs = new GameObject[count];
+		int counter = 0;
+		for(int j = 0;j< lifeprefabs.Length;j++){
+			for (int i = 0; i <= j; i++) {
+				weightedPrefabs [counter] = lifeprefabs [j];
+				counter++;
+			}
+		}
 	}
 
 	// Update is called once per frame
@@ -34,10 +47,12 @@ public class SealifeSpawner : MonoBehaviour {
 		mySpawner.localEulerAngles = new Vector3(0,ang,0);
 		mySpawner.Translate (Vector3.forward * range);
 
-		GameObject bubble = Instantiate (lifeprefabs[Random.Range(0,lifeprefabs.Length)],mySpawner.transform.position,Quaternion.identity);
-		bubble.transform.localEulerAngles = new Vector3(Random.Range (0f, 360f),Random.Range (0f, 360f),Random.Range (0f, 360f));
+		GameObject bubble = Instantiate (weightedPrefabs[Random.Range(0,weightedPrefabs.Length)],mySpawner.transform.position,Quaternion.identity);
+		bubble.transform.localEulerAngles = new Vector3(Random.Range (-90f, 90f),Random.Range (0f, 360f),Random.Range (-5f, 5f));
 
-		bubble.transform.localScale = bubble.transform.localScale * Random.Range (sizeMin, sizeMax);
+
 		bubble.transform.parent = bubbleparent;
 	}
+
+
 }

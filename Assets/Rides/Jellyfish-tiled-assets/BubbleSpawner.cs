@@ -28,7 +28,7 @@ public class BubbleSpawner : MonoBehaviour {
 	private void spawnBubble(){
 		mySpawner.position = new Vector3(transform.position.x,transform.position.y+spawnYoffset,transform.position.z);
 		float ang = Random.Range (0f, 360f);
-		float dist = Random.Range (2f, range);
+		float dist = Random.Range (5f, range);
 		mySpawner.localEulerAngles = new Vector3(0,ang,0);
 		mySpawner.Translate (Vector3.forward * range);
 

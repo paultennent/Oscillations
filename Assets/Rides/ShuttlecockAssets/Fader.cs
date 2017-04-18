@@ -11,6 +11,7 @@ public class Fader : MonoBehaviour {
     float fadeEndTime=0f;
 
     Image img;
+	public Color fadeColour = Color.black;
     
 	// Use this for initialization
 	void Start () {
@@ -32,7 +33,7 @@ public class Fader : MonoBehaviour {
                 float divisor=fadeEndTime-fadeStartTime;
                 alpha=(Time.time-fadeStartTime)/divisor;
             }
-            img.color=new Color(0,0,0,alpha);
+			img.color=new Color(fadeColour.r,fadeColour.g,fadeColour.b,alpha);
         }
 	}
     
@@ -40,7 +41,7 @@ public class Fader : MonoBehaviour {
     {        
         if(globalAccess!=null)
         {
-            globalAccess.img.color=new Color(0,0,0,0);
+			globalAccess.img.color=new Color(0f,0f,0f,0f);
             globalAccess.GetComponent<Canvas>().enabled=true;
             if(endTime!=Time.time)
             {

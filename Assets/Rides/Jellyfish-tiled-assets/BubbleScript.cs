@@ -18,8 +18,8 @@ public class BubbleScript : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter(Collider c){
-		print ("Collision");
+	void OnCollisionEnter(Collision collision){
+		print ("Bubble Collision");
 		Destroy (gameObject,0);
 	}
 }

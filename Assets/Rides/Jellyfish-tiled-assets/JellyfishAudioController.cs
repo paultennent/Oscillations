@@ -30,6 +30,8 @@ public class JellyfishAudioController : MonoBehaviour {
 
 	private float raycastMaxDistance = 100f;
 
+	public AudioMixerGroup masterMixer;
+
 	// Use this for initialization
 	void Start () {
 		MixSources = new List<AudioSource>();
@@ -59,6 +61,12 @@ public class JellyfishAudioController : MonoBehaviour {
 		LayerLayout.LayoutPos curTilePos = LayerLayout.GetLayerLayout ().GetBlockAt (cam.transform.position.y);
 		updateMixMixers (MixMixers,MixStartLevels,curTilePos,0.1f);
 		updateVoidMixers (VoidMixers,VoidStartLevels,0.5f);
+
+		if (Fader.IsFading()) {
+			float cur = 0f;
+			masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+			masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1f/camMover.fadeTime) * Time.deltaTime));
+		}
 	}
 
 	private void startSources(List<AudioSource> mysources){
