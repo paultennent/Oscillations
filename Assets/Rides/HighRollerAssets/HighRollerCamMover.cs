@@ -28,11 +28,14 @@ public class HighRollerCamMover : AbstractGameEffects {
     private float introTime=5f;
     private float outtroTime=10f;
     private float outtroSwingTime=5f;
+
+    private float accelVal;
     
 	// Use this for initialization
 	void Start () {
         base.Start();
-	}
+        FadeSphereScript.doFadeIn(5f, Color.black);
+    }
 
     // Update is called once per frame
     void Update()
@@ -43,7 +46,6 @@ public class HighRollerCamMover : AbstractGameEffects {
         {
             foundInitialPos=true;
             initialViewpointPos=viewpoint.transform.position;
-            print("Initial pos:"+initialViewpointPos);
         }
         
         if(!inSession)return;
@@ -85,9 +87,9 @@ public class HighRollerCamMover : AbstractGameEffects {
                 viewpoint.transform.position=Vector3.Lerp(viewpoint.transform.position,targetPoint,1 - (offsetTime-outtroSwingTime)/(outtroTime-outtroSwingTime));                
             }else
             {
-                if (!Fader.IsFading())
+                if (!FadeSphereScript.isFading())
                 {
-                    Fader.DoFade(Time.time + 5f);
+                    FadeSphereScript.doFadeOut(5f, Color.black);
                 }
                 inCooldown = true;
                 viewpoint.transform.position=targetPoint;
@@ -112,21 +114,26 @@ public class HighRollerCamMover : AbstractGameEffects {
     }
 
 	private float getAccelerationNow(){
-		float totalAcc = 0;
-		if (swingQuadrant == impelQuadrant) {
-			//print ("impelling:"+swingAngVel+":"+speed);
-			if (sessionTime < climaxTime)
-			{
-				//cubic for first half
-				totalAcc = -swingAngVel * angVelscaler * (climaxRatio * climaxRatio * climaxRatio);
-			}
-			else
-			{
-				//squared for second half
-				totalAcc = -swingAngVel * angVelscaler * (climaxRatio * climaxRatio);
-			}
-		}
-        if(speed<0)
+        float totalAcc = 0f;
+        if (swingQuadrant == impelQuadrant)
+        {
+            if (sessionTime < climaxTime)
+            {
+                //first half
+                //accelVal = Remap(climaxRatio, 0f, 1f, 0.001f, 100f);
+                accelVal = (climaxRatio * climaxRatio * climaxRatio) ;
+            }
+            else
+            {
+                //second half
+                //accelVal = Remap(climaxRatio, 0f, 1f, 100f, 0.001f);
+                accelVal = (climaxRatio * climaxRatio);
+            }
+
+            totalAcc = -swingAngVel * angVelscaler * accelVal;
+        }
+
+        if (speed<0)
         {
             totalAcc += (speed * speed) * dragConstant;
         }else
@@ -140,4 +147,9 @@ public class HighRollerCamMover : AbstractGameEffects {
 	{
 		return launched && !inCooldown;
 	}
+
+    private float Remap(float val, float OldMin, float OldMax, float NewMin, float NewMax)
+    {
+        return (((val - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin;
+    }
 }

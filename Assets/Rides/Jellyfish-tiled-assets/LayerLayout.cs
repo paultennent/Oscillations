@@ -46,6 +46,8 @@ public class LayerLayout : MonoBehaviour
 
     private LayoutPos currentBlockPos = LayoutPos.START;
 
+    private bool dirFlip = true;
+
     public class BlockDescription
     {
         public LayoutPos type;
@@ -234,7 +236,14 @@ public class LayerLayout : MonoBehaviour
         Bounds objBounds = newObj.GetComponent<Renderer>().bounds;
         Vector3 size = objBounds.size;
         //print(newObj.name + ":" + size + ":" + curLength + objBounds.center);
-        newObj.transform.position = new Vector3(0, curLength, 0) - objBounds.center + new Vector3(0, objBounds.size.y * 0.5f, 0);
+        if (dirFlip) { 
+            newObj.transform.position = new Vector3(0, curLength, 0) - objBounds.center + new Vector3(0, objBounds.size.y * 0.5f, 0);
+        }
+        else
+        {
+            newObj.transform.position = new Vector3(0.1f, curLength, 0.1f) - objBounds.center + new Vector3(0, objBounds.size.y * 0.5f, 0);
+        }
+        dirFlip = !dirFlip;
 
         ///do a z rotation - not on start
         if (objType != LayoutPos.START)

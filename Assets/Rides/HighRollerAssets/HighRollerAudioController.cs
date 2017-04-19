@@ -39,7 +39,7 @@ public class HighRollerAudioController : MonoBehaviour {
 	private float maxBuildingDistanceForPan = 25f;
 
     public AudioMixerGroup masterMixer;
-    private float fadeInDuration = 2f;
+    private float fadeInDuration = 5f;
     private bool fadingIn = false;
     private bool fadingOut = false;
 
@@ -83,7 +83,7 @@ public class HighRollerAudioController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Fader.IsFading())
+        if (FadeSphereScript.isFading())
         {
             if (!fadingOut)
             {
@@ -98,7 +98,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		doRaycasting();
 
 		updateMixMixers(MixMixers, MixStartLevels, curTilePos, 1f);
-		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 10f, 0.05f, swingAngle);
+		updateSwingSounds(swingQuadrant, SwingMixers, SwingStartLevels, 5f, 0.05f, swingAngle);
 		updateBuildingMixers(BuildingsMixers, BuildingsStartLevels, curTilePos, BuildingSources, 1f);
         updateOtherEnvMixers(OtherEnvMixers, OtherEnvStartLevels, curTilePos, 5f);
 
@@ -163,31 +163,24 @@ public class HighRollerAudioController : MonoBehaviour {
 		float[] targets = new float[2];
 
 		//now forward (this is where we change the qaadrant vals)
-		if (swingQuadrant == 1 || swingQuadrant == 2)
+		if (swingQuadrant == camMover.impelQuadrant)
 		{
 			targets[0] = Mathf.Clamp(Remap(swingAngle, 45f, -45f, dbsilence, startVals [0]),dbsilence,startVals[0]);
 			//targets[1] = Mathf.Clamp(Remap(swingAngle, 45f, -45f, -30f, startVals [1]),-30f,startVals[1]);
 		}else{
 			targets[0] = dbsilence;
-			//targets[1] = dbsilence;
 		}
 
 		if (!camMover.isMoving())
 		{
 			targets[0] = dbsilence;
-			//targets[1] = dbsilence;
 		}
 
+        //wheel noise based on speed instead of swinging
         targets[1] = Mathf.Clamp(Remap(camMover.speed, 0f, 200f, -25f, startVals[0]), dbsilence, startVals[0]);
 
         mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0], targets[0], mixRate * Time.deltaTime));
         mixers[1].audioMixer.SetFloat(mixers[1].name, Mathf.Lerp(current[1], targets[1], mixRate * Time.deltaTime));
-        //if (swingQuadrant == 0 || swingQuadrant == 3) {
-        //	mixers [1].audioMixer.SetFloat (mixers [1].name, Mathf.Lerp (current [1], targets [1], mixRateSlow * Time.deltaTime));
-        //} else {
-        //	mixers [1].audioMixer.SetFloat (mixers [1].name, Mathf.Lerp (current [1], targets [1], mixRate * Time.deltaTime));
-        //}
-
 
     }
 

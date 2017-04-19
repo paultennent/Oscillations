@@ -33,8 +33,8 @@ public class EditorMouseLook : MonoBehaviour {
 	{
 
         #if !UNITY_EDITOR
-            Cursor.visible = false;
-        //return
+            //Cursor.visible = false;
+            return;
         #endif
         if(!Input.GetMouseButton(0))return;
 
