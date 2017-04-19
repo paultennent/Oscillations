@@ -12,6 +12,8 @@ public class HighRollerCamMover : AbstractGameEffects {
 
 	public float angVelscaler = 10f;
 	public float dragConstant = 0.01f;
+    
+    public int impelQuadrant=1;
 
 	public GameObject[] wheels;
 	public GameObject[] wheelviewpoints;
@@ -19,6 +21,7 @@ public class HighRollerCamMover : AbstractGameEffects {
 
     
     private Vector3 initialViewpointPos;
+    private bool foundInitialPos=false;
     private bool launched=false;
 	private bool inCooldown = false;
 
@@ -29,13 +32,19 @@ public class HighRollerCamMover : AbstractGameEffects {
 	// Use this for initialization
 	void Start () {
         base.Start();
-        initialViewpointPos=viewpoint.transform.position;
 	}
 
     // Update is called once per frame
     void Update()
     {
+
         base.Update();
+        if(!foundInitialPos)
+        {
+            foundInitialPos=true;
+            initialViewpointPos=viewpoint.transform.position;
+            print("Initial pos:"+initialViewpointPos);
+        }
         
         if(!inSession)return;
 
@@ -49,8 +58,9 @@ public class HighRollerCamMover : AbstractGameEffects {
             Quaternion rotation=Quaternion.Euler(-swingAngle,0,0);
             Vector3 rotationOffset=rotation*Vector3.up*-seatDrop;
             Vector3 seatPoint=topPoint+rotationOffset;
-            Vector3 onlyFwdBackPoint=new Vector3(seatPoint.x*2f,topPoint.y,seatPoint.z);
+            Vector3 onlyFwdBackPoint=new Vector3(seatPoint.x,topPoint.y,seatPoint.z);
             
+//            viewpoint.transform.position=Vector3.Lerp(seatPoint,onlyFwdBackPoint,1f);
             viewpoint.transform.position=Vector3.Lerp(seatPoint,onlyFwdBackPoint,offsetTime/10f);
             
             speed = speed + (getAccelerationNow () * Time.deltaTime);
@@ -103,7 +113,7 @@ public class HighRollerCamMover : AbstractGameEffects {
 
 	private float getAccelerationNow(){
 		float totalAcc = 0;
-		if (swingQuadrant == 1) {
+		if (swingQuadrant == impelQuadrant) {
 			//print ("impelling:"+swingAngVel+":"+speed);
 			if (sessionTime < climaxTime)
 			{
