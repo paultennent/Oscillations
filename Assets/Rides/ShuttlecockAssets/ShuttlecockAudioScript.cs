@@ -36,11 +36,17 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 	private List<AudioSource> mixSources;
 
 	private float fadeInDuration = 5f;
+    private bool fadingIn = false;
+    private bool fadingOut = false;
 
-	// Use this for initialization
-	void Start () {
+    public AudioMixerGroup masterMixer;
 
-		swingBase.zeroCrossingEvent.AddListener(OnZeroCross);
+    // Use this for initialization
+    void Start () {
+
+        masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
+
+        swingBase.zeroCrossingEvent.AddListener(OnZeroCross);
 
 		swingSources = new List<AudioSource>();
 		jumpSources = new List<AudioSource>();
@@ -67,6 +73,8 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 		startSources(directionalSources);
 		startSources(mixSources);
 
+        StartCoroutine(fadeIn());
+
 	}
 
 	private void OnZeroCross()
@@ -76,12 +84,16 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (scccm.isInOuttro ()) {
-			fadeZeroMixers (swingSoundsMixer, 0.05f);
-			fadeZeroMixers (jumpSoundsMixer, 0.05f);
-			fadeZeroMixers (directionalMixer, 0.05f);
-			fadeZeroMixers (mixMixer, 0.05f);
-		} else {
+
+        if (Fader.IsFading())
+        {
+            if (!fadingOut)
+            {
+                StartCoroutine(fadeOut());
+            }
+        }
+        
+        
 			float swingAngle = swingBase.getSwingAngle ();
 			//clamp the bugger so we don't have issues
 			swingAngle = Mathf.Clamp (swingAngle, -maxAngle, maxAngle);
@@ -93,14 +105,7 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 #else
 		updateDirectionalSounds(InputTracking.GetLocalRotation(VRNode.Head).eulerAngles.y, directionalMixer, directionalMixerStartVals, minValueForDirectionalSounds, 5f);    
 #endif    
-			if (scccm.getSessionTime () < fadeInDuration) {
-				fadeLimitMixers (swingSoundsMixer);
-				fadeLimitMixers (jumpSoundsMixer);
-				fadeLimitMixers (directionalMixer);
-				fadeLimitMixers (mixMixer);
-			}
 	
-		}
 	}
 
 	private void fadeLimitMixers(AudioMixerGroup[] mixers){
@@ -113,9 +118,41 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 			}
 		}
 	}
-		
 
-	private int getNextJumpSound(){
+    private IEnumerator fadeIn()
+    {
+        fadingIn = true;
+        float cur = 0f;
+        masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+        while (cur < -0.01f)
+        {
+            masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, 0f, (1/fadeInDuration) * Time.deltaTime));
+            masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+            yield return null;
+        }
+        masterMixer.audioMixer.SetFloat(masterMixer.name, 0f);
+        fadingIn = false;
+        yield break;
+    }
+
+    private IEnumerator fadeOut()
+    {
+        fadingOut = true;
+        float cur = 0f;
+        masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+        while (cur > dbsilence+0.01f)
+        {
+            masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1 / fadeInDuration) * Time.deltaTime));
+            masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+            yield return null;
+        }
+        masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
+        fadingOut = false;
+        yield break;
+    }
+
+
+    private int getNextJumpSound(){
 		int myVal = 0;
 		if (scccm.isInTraining ()) {
 			myVal = Random.Range(0,1);

@@ -16,6 +16,7 @@ public class TrainMovement : MonoBehaviour {
 		speed = Random.Range(150f, 250f);
 		if (autoStart) {
 			speed = 50f;
+            moving = true;
 		}
 		float exist = Random.Range(0f, 1f);
 		if (chanceOfExistence < exist & !autoStart)
@@ -27,11 +28,11 @@ public class TrainMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (transform.position.z < 0) {
-			speed = -Mathf.Abs (speed);
+		if (transform.position.z < player.transform.position.z-4500f && autoStart) {
+            speed = -500f;
 		}
 
-		if (Vector3.Distance(transform.position,player.transform.position) < 1000  || autoStart)
+		if ((transform.position.z - player.transform.position.z) < 750f)
 		{
 			moving = true;
 		}

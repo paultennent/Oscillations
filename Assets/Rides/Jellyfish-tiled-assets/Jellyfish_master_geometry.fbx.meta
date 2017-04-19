@@ -11670,6 +11670,23 @@ ModelImporter:
     4304508: coral_03
     4304510: coral_04
     4304512: coral_01
+    6400000: Cave_repeat_001
+    6400002: Cave_repeat_bio_001
+    6400004: Cave_top
+    6400006: Cave_top_bio
+    6400008: coral_01
+    6400010: coral_02
+    6400012: coral_03
+    6400014: coral_04
+    6400016: finish
+    6400018: Mid_base
+    6400020: Mid_base_bio
+    6400022: Mid_tile_001
+    6400024: Mid_tile_bio_001
+    6400026: Mid_top_001
+    6400028: Mid_top_bio_001
+    6400030: Start
+    6400032: Start_bio
     7400000: Take 001
     9500000: //RootNode
   materials:
@@ -11682,6 +11699,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -11698,7 +11717,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0

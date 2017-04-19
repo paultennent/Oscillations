@@ -75,7 +75,11 @@ public class HighRollerCamMover : AbstractGameEffects {
                 viewpoint.transform.position=Vector3.Lerp(viewpoint.transform.position,targetPoint,1 - (offsetTime-outtroSwingTime)/(outtroTime-outtroSwingTime));                
             }else
             {
-				inCooldown = true;
+                if (!Fader.IsFading())
+                {
+                    Fader.DoFade(Time.time + 5f);
+                }
+                inCooldown = true;
                 viewpoint.transform.position=targetPoint;
             }
         }        

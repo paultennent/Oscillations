@@ -32,12 +32,13 @@ public class EditorMouseLook : MonoBehaviour {
 	void Update ()
 	{
 
-		#if !UNITY_EDITOR
-		return;
-		#endif
+        #if !UNITY_EDITOR
+            Cursor.visible = false;
+        //return
+        #endif
 
 
-		if (axes == RotationAxes.MouseXAndY)
+        if (axes == RotationAxes.MouseXAndY)
 		{			
 			rotAverageY = 0f;
 			rotAverageX = 0f;

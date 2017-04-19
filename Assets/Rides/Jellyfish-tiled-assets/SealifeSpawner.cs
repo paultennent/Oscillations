@@ -48,7 +48,7 @@ public class SealifeSpawner : MonoBehaviour {
 		mySpawner.Translate (Vector3.forward * range);
 
 		GameObject bubble = Instantiate (weightedPrefabs[Random.Range(0,weightedPrefabs.Length)],mySpawner.transform.position,Quaternion.identity);
-		bubble.transform.localEulerAngles = new Vector3(Random.Range (-90f, 90f),Random.Range (0f, 360f),Random.Range (-5f, 5f));
+		bubble.transform.localEulerAngles = new Vector3(Random.Range (-45f, 45f),Random.Range (0f, 360f),Random.Range (-5f, 5f));
 
 
 		bubble.transform.parent = bubbleparent;

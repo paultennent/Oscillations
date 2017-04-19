@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 public class WakerAudioController : MonoBehaviour {
 
 	public SwingBase swingBase;
-	public WalkerCamMover scccm;
+	public WalkerCityCamMover scccm;
 	public Transform cam;
 
 	public AudioMixerGroup[] swingSoundsMixer;
@@ -100,6 +100,7 @@ public class WakerAudioController : MonoBehaviour {
 			source.dopplerLevel = 0f;
 			source.outputAudioMixerGroup = mixers[i];
 			source.clip = clips[i];
+            source.loop = true;
 			if (alternatePans) {
 				if (i % 2 == 0) {
 					source.panStereo = -1f;
@@ -148,12 +149,35 @@ public class WakerAudioController : MonoBehaviour {
 		swingAngle = Mathf.Clamp (scccm.getSwingQuadrant(), -maxAngle, maxAngle);
 		updateMixSounds (mixMixer, mixMixerStartVals, 5f);
 
+        turning = scccm.isTurning();
+
 		if(!turning){
 			updateSwingSounds (scccm.getSwingQuadrant(), swingSoundsMixer, swingSoundsMixerStartVals, 10f);
-		}else{
-			updateTurnSoundMixer (swingAngle, turnSoundsMixer, turnSoundsMixerStartVals, curJumpSound, 5f);
 		}
+		updateTurnSoundMixer (swingAngle, turnSoundsMixer, turnSoundsMixerStartVals, curJumpSound, 5f);
+		
+
+        updateWaterSounds(waterMixer, waterMixerStartVals, 5f);
 	}
+
+    private void updateWaterSounds(AudioMixerGroup[] mixers, float[] startVals, float mixRate)
+    {
+        float[] current = new float[1];
+        mixers[0].audioMixer.GetFloat(mixers[0].name, out current[0]);
+
+        float[] targets = new float[1];
+
+        if (scccm.cam.position.y < 0f)
+        {
+            targets[0] = startVals[0];
+        }
+        else
+        {
+            targets[0] = dbsilence;
+        }
+
+        mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0], targets[0], mixRate * Time.deltaTime));
+    }
 
 	private void updateSwingSounds(int swingQuadrant, AudioMixerGroup[] mixers, float[] startVals, float mixRate)
 	{
@@ -196,23 +220,40 @@ public class WakerAudioController : MonoBehaviour {
 		}
 	}
 
-	private void updateTurnSoundMixer(float swingAngle, AudioMixerGroup[] mixers, float[] startVals, int chosenJump, float mixRate)
-	{
-		float[] current = new float[mixers.Length];
-		for(int i=0;i<mixers.Length;i++){
-			mixers[i].audioMixer.GetFloat(mixers[i].name, out current[i]);
-		}
+    private void updateTurnSoundMixer(float swingAngle, AudioMixerGroup[] mixers, float[] startVals, int chosenJump, float mixRate)
+    {
 
-		float val = Remap(Mathf.Abs(swingAngle), 0, maxAngle, dbsilence, startVals[chosenJump]);
+        float[] current = new float[mixers.Length];
+        for (int i = 0; i < mixers.Length; i++)
+        {
+            mixers[i].audioMixer.GetFloat(mixers[i].name, out current[i]);
+        }
 
-		for (int i = 0; i < mixers.Length; i++) {
-			if (i == chosenJump) {
-				mixers [i].audioMixer.SetFloat (mixers [i].name, Mathf.Lerp (current[i], val, mixRate * Time.deltaTime));
-			} else {
-				mixers [i].audioMixer.SetFloat (mixers [i].name, Mathf.Lerp (current[i], dbsilence, mixRate * Time.deltaTime));
-			}
-		}
-	}
+        if (turning)
+        {
+
+            float val = Remap(Mathf.Abs(swingAngle), -maxAngle, maxAngle, dbsilence, startVals[chosenJump]);
+
+            for (int i = 0; i < mixers.Length; i++)
+            {
+                if (i == chosenJump)
+                {
+                    mixers[i].audioMixer.SetFloat(mixers[i].name, Mathf.Lerp(current[i], val, mixRate * Time.deltaTime));
+                }
+                else
+                {
+                    mixers[i].audioMixer.SetFloat(mixers[i].name, Mathf.Lerp(current[i], dbsilence, mixRate * Time.deltaTime));
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < mixers.Length; i++)
+            {
+                mixers[i].audioMixer.SetFloat(mixers[i].name, Mathf.Lerp(current[i], dbsilence, mixRate * Time.deltaTime));
+            }
+        }
+    }
 
 	private void updateGrowthSounds(AudioMixerGroup[] mixers, float[] startVals, float mixRate){
 		float[] current = new float[mixers.Length];

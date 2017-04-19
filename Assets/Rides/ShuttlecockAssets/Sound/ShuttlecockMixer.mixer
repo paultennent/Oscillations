@@ -23,16 +23,18 @@ AudioMixerController:
     name: DirLeft
   - guid: 4192e74a1c2fd4b468c788d730e5e100
     name: DirRight
-  - guid: ff1625a9ead080840a1c647fd49ab9c7
-    name: JumpMain3
   - guid: c27c3878504694841bcadf9f1902f59d
     name: JumpMain1
   - guid: 75f924c4b9e2884498a10db0d86573f6
     name: JumpMain2
+  - guid: ff1625a9ead080840a1c647fd49ab9c7
+    name: JumpMain3
   - guid: 95882269d1c9172429c65b7e4ba3422d
     name: JumpPre1
   - guid: 61911d44b192e2f4b8e00e8aa379d024
     name: JumpPre2
+  - guid: 35bf1185bb1cf4980a34e77e477f5401
+    name: Master
   - guid: 7cfc5b7c822723344b6408e509424e57
     name: MixBack
   - guid: af632528d5ef7a64683ef715fcc4a119

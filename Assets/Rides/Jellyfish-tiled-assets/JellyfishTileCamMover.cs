@@ -27,18 +27,21 @@ public class JellyfishTileCamMover : AbstractGameEffects  {
 	private float introTime=5f;
 
 	public float seatDrop=1.5f;
+
+    float minCurheight = 0f;
     
 	// Use this for initialization
 	void Start () {
         base.Start();
         initialPosition=pivot.transform.position;
+        minCurheight = pivot.transform.position.y;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         base.Update();
 
-		if(countUp && (offsetTime<introTime || (offsetTime<introTime*2f && !launched)) )
+		if(sessionTime<introTime || !launched)
 		{
 			// intro period - slowly reduce the amount of up and down movement
 			// and reduce it to just fwd/back movement
@@ -73,12 +76,12 @@ public class JellyfishTileCamMover : AbstractGameEffects  {
         curHeight=curHeight+yVelocity*Time.deltaTime;
 		if(curHeight<0 & !infiniteFall)
         {
-            curHeight=0;
+            curHeight= minCurheight;
             yVelocity=0;
         }
         pivot.transform.position=initialPosition+new Vector3(0,curHeight,0);
 
-		print (sessionTime + ":" + sessionLength);
+		//print (sessionTime + ":" + sessionLength);
 		if (sessionTime > (sessionLength - fadeTime)) {
 			//print ("Should be fading");
 			if(!Fader.IsFading())

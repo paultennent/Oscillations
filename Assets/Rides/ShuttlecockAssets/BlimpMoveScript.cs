@@ -26,7 +26,14 @@ public class BlimpMoveScript : MonoBehaviour {
 				transform.Translate (Vector3.right * Time.deltaTime * speed);
 			}
 		} else {
-			transform.Translate (Vector3.down * Time.deltaTime * speed);
+            if (invert)
+            {
+                transform.Translate(Vector3.up * Time.deltaTime * speed);
+            }
+            else
+            {
+                transform.Translate(Vector3.down * Time.deltaTime * speed);
+            }
 		}
 	}
 }

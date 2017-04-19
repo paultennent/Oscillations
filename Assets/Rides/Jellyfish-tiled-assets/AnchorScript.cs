@@ -6,18 +6,32 @@ public class AnchorScript : MonoBehaviour {
 
 	// Use this for initialization
 	Transform player;
-	float speed;
+    float speed;
+    float xOffset;
 
-	void Start () {
+    float x;
+    float z;
+
+    void Start () {
 
 		speed = 200f;
 
+        xOffset = Random.Range(50f, 70f);
+
+        if(Random.Range(0f,1f) > 0.5f)
+        {
+            xOffset = -xOffset;
+        }
+
 		player = GameObject.Find ("CameraMover").transform;
-		transform.position = new Vector3 (player.position.x+30f, transform.position.y, player.position.z+25f);
+        x = player.position.x + xOffset;
+        z = player.position.z + 25f;
+
+        transform.position = new Vector3 (x, transform.position.y, z);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = new Vector3 (player.position.x+30f, transform.position.y-(speed*Time.deltaTime), player.position.z+25f);
+		transform.position = new Vector3 (x, transform.position.y-(speed*Time.deltaTime), z);
 	}
 }

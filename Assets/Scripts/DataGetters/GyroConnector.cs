@@ -15,9 +15,10 @@ using UnityEngine.VR;
 public class GyroConnector  
 {
     const int MIN_PACKET_SIZE=24;
+    float timeLastPoll = 0;
 #if REMOTE_SERVER
     const int MAX_PACKET_SIZE=24;
-    float timeLastPoll=0;
+    
     IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("10.154.163.192"),2323);
 #else
     const int MAX_PACKET_SIZE=32;

@@ -235,7 +235,7 @@ namespace rcCore
                     if (srcRenderer.lightmapIndex >= 0)
                     {
                         if (srcRenderer.lightmapIndex < LightmapSettings.lightmaps.Length)
-                            tex = LightmapSettings.lightmaps[srcRenderer.lightmapIndex].lightmapLight;
+                            tex = LightmapSettings.lightmaps[srcRenderer.lightmapIndex].lightmapColor;
                     }
                     else if (srcRenderer.sharedMaterial != null)
                     {
