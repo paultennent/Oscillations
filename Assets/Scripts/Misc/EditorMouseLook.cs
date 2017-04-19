@@ -36,6 +36,7 @@ public class EditorMouseLook : MonoBehaviour {
             Cursor.visible = false;
         //return
         #endif
+        if(!Input.GetMouseButton(0))return;
 
 
         if (axes == RotationAxes.MouseXAndY)
