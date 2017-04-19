@@ -315,7 +315,8 @@ public class BlockLayout : MonoBehaviour {
         {
             currentTarget=null;
         }
-//		newObj.transform.parent = blockParent;
+
+        newObj.transform.parent = blockParent;
         return curLength;
     }
 }

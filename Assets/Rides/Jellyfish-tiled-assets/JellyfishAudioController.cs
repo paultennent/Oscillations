@@ -62,7 +62,7 @@ public class JellyfishAudioController : MonoBehaviour {
 		updateMixMixers (MixMixers,MixStartLevels,curTilePos,0.1f);
 		updateVoidMixers (VoidMixers,VoidStartLevels,0.5f);
 
-		if (Fader.IsFading()) {
+		if (FadeSphereScript.isFading()) {
 			float cur = 0f;
 			masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
 			masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1f/camMover.fadeTime) * Time.deltaTime));
