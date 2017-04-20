@@ -51,6 +51,8 @@ public class AbstractGameEffects : MonoBehaviour {
 
     public float pauseStartTime = 0f;
 
+	public bool disableStatusFlasher = true;
+
     //stuff from equations script
     float gravity = 9.8f;
 
@@ -63,9 +65,6 @@ public class AbstractGameEffects : MonoBehaviour {
     float phone_sensor_radius = 1.55f;
     float centre_of_gravity_radius = 1.25f; //depends on max_sensor_G_reading_in_z_axis_as_crosses_mid_point which we don't have - using approx for now
     float rider_eye_radius = 1f;
-
-    public float beta;
-    public float omega;
 
     //brendan's shopping list
     public Dictionary<string, float> shopping;
@@ -125,6 +124,7 @@ public class AbstractGameEffects : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void Update () {
+		
         if (statusFlasher==null)
         {
             statusFlasher=  AndroidCameraHandler.GetInstance();
@@ -295,39 +295,34 @@ public class AbstractGameEffects : MonoBehaviour {
         //print("phase:"+swingPhase+",quadrant:"+swingQuadrant+",angVel:"+swingAngVel);
         
         // set status flashlight
-        if(statusFlasher)
-        {
-            switch(swingData.getConnectionState())
-            {
-               case AbstractDataReader.CONNECTION_PARTIAL:
-                   statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ONE);
-                   break;
-               case AbstractDataReader.CONNECTION_NONE:
-                   statusFlasher.setFlashPattern(statusFlasher.FLASH_DISCONNECT_ALL);            
-                   break;
-               default:
+		if (!disableStatusFlasher) {
+			if (statusFlasher) {
+				switch (swingData.getConnectionState ()) {
+				case AbstractDataReader.CONNECTION_PARTIAL:
+					statusFlasher.setFlashPattern (statusFlasher.FLASH_DISCONNECT_ONE);
+					break;
+				case AbstractDataReader.CONNECTION_NONE:
+					statusFlasher.setFlashPattern (statusFlasher.FLASH_DISCONNECT_ALL);            
+					break;
+				default:
                    // connected ok
-                   {
-                       if(inSession)
-                       {
-                           if(timeLeftInGame<=0)
-                           {
-                               statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHED);
-                           }else if(timeLeftInGame<10)
-                           {
-                               statusFlasher.setFlashPattern(statusFlasher.FLASH_FINISHING);
-                           }else
-                           {
-                               statusFlasher.setFlashPattern(statusFlasher.FLASH_RUNNING);
-                           }
-                       }else
-                       {
-                           statusFlasher.setFlashPattern(null);
-                       }                        
-                   }
-                   break;
-            }
-        }
+					{
+						if (inSession) {
+							if (timeLeftInGame <= 0) {
+								statusFlasher.setFlashPattern (statusFlasher.FLASH_FINISHED);
+							} else if (timeLeftInGame < 10) {
+								statusFlasher.setFlashPattern (statusFlasher.FLASH_FINISHING);
+							} else {
+								statusFlasher.setFlashPattern (statusFlasher.FLASH_RUNNING);
+							}
+						} else {
+							statusFlasher.setFlashPattern (null);
+						}                        
+					}
+					break;
+				}
+			}
+		}
 
         swingPeriod = swingCycleTime;
         halfSwingPeriod = swingPeriod / 2f;

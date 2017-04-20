@@ -69,6 +69,7 @@ public class WalkerCityCamMover : AbstractGameEffects {
         //look at the first position
         vp.LookAt(path[curTargetWaypoint].position);
         swingBase.zeroCrossingEvent.AddListener(zeroCrossing);
+		FadeSphereScript.doFadeIn (5f, Color.black);
 
     }
     void zeroCrossing()
@@ -116,6 +117,12 @@ public class WalkerCityCamMover : AbstractGameEffects {
             curTargetWaypoint++;
             readyToTurn = false;
             turnListening = false;
+			if (curTargetWaypoint >= path.Length) {
+				if(!FadeSphereScript.isFading()){
+					FadeSphereScript.doFadeOut (5f, Color.black);
+				}
+			}
+
         }
         else
         {
@@ -129,8 +136,12 @@ public class WalkerCityCamMover : AbstractGameEffects {
         if (turning)
         {
             //print("Turning");
+			if (curTargetWaypoint >= path.Length) {
+				return;
+			}
+
             Quaternion targetRotation = Quaternion.LookRotation(path[curTargetWaypoint].position - vp.position);
-            vp.rotation = Quaternion.Slerp(vp.rotation, targetRotation, turnDuratiuon * Time.deltaTime);
+            vp.rotation = Quaternion.Slerp(vp.rotation, targetRotation, turnDuratiuon * Time.deltaTime * 1.5f);
             float angle = Vector3.Angle((path[curTargetWaypoint].position - vp.position), vp.forward);
             if (angle < 0.1f)
             {
@@ -151,7 +162,7 @@ public class WalkerCityCamMover : AbstractGameEffects {
             //print("Moving towards " + path[curTargetWaypoint].name);
             //vp.transform.LookAt(path[curTargetWaypoint].position);
             vp.localEulerAngles = new Vector3(vp.localEulerAngles.x, vp.localEulerAngles.y, swingAngle / 2f);
-            vp.Translate(Vector3.forward * Time.deltaTime * (legDuration));
+            vp.Translate(Vector3.forward * Time.deltaTime * (legDuration * 1.5f));
 
             float yPos = vp.position.y - Remap(Mathf.Abs(swingAngle), 0, 45, 0, vp.position.y/2f);
 

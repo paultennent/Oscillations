@@ -628,7 +628,7 @@ MonoBehaviour:
   applyInverseSwingTransform: 0
   debug: 0
   sineWave: 1
-  forceSineOnMobile: 1
+  forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:

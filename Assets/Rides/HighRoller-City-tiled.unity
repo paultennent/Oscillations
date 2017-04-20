@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.95703024, g: 0.76171917, b: 0.6049804, a: 1}
+  m_IndirectSpecularColor: {r: 0.95703024, g: 0.76171917, b: 0.60449165, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -7832,6 +7832,8 @@ MonoBehaviour:
   countUp: 1
   maxSessions: 1
   pauseStartTime: 0
+  beta: 0
+  omega: 0
   viewpoint: {fileID: 1959593108}
   speed: 1
   seatDrop: 1.5
@@ -7874,7 +7876,7 @@ MonoBehaviour:
   applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
-  forceSineOnMobile: 1
+  forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:

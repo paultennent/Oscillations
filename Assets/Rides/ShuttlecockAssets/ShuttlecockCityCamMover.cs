@@ -114,6 +114,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             seatDistance=seat.localPosition.y;
             print(seatDistance);
         }
+		FadeSphereScript.doFadeIn(5f,Color.black);
 	}
 	
 	// Update is called once per frame
@@ -161,8 +162,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     inIntro=false;
                     return;
                 }
-
-                Fader.EndFade();
+					
                 inOutro=false;
                 outroStartTime=0f;
                 inIntro=true;
@@ -213,9 +213,9 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                         timeLeft=Mathf.Max(10f-(Time.time-outroStartTime),0);
                     }
                     float ratio=1f-.1f*timeLeft;
-                    if(!Fader.IsFading())
+                    if(!FadeSphereScript.isFading())
                     {
-                        Fader.DoFade(Time.time+timeLeft);
+						FadeSphereScript.doFadeOut(5f,Color.black);
                     }
                     // now manually fix seat transform position and rotation
                     float realSwingY=Mathf.Cos(swingAngle*Mathf.Deg2Rad) * seatDistance;
