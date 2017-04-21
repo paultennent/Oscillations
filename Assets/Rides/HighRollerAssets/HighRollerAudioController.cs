@@ -75,21 +75,21 @@ public class HighRollerAudioController : MonoBehaviour {
 		startSources(BuildingSources);
 		startSources(OtherEnvSources);
 
-        masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
-        StartCoroutine(fadeIn());
+        //masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
+        //StartCoroutine(fadeIn());
 
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (FadeSphereScript.isFading())
-        {
-            if (!fadingOut)
-            {
-                StartCoroutine(fadeOut());
-            }
-        }
+        //if (FadeSphereScript.isFading())
+        //{
+        //    if (!fadingOut)
+        //    {
+        //        StartCoroutine(fadeOut());
+        //    }
+        //}
 
         float swingAngle = swingBase.getSwingAngle();
 		int swingQuadrant = camMover.getSwingQuadrant();
@@ -366,11 +366,10 @@ public class HighRollerAudioController : MonoBehaviour {
     private IEnumerator fadeIn()
     {
         fadingIn = true;
-        float cur = 0f;
-        masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+        float cur = -80f;
         while (cur < -0.01f)
         {
-            masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, 0f, (1 / fadeInDuration) * Time.deltaTime));
+			masterMixer.audioMixer.SetFloat(masterMixer.name, cur + 1f);
             masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
             yield return null;
         }

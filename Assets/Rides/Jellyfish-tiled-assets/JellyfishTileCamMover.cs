@@ -113,7 +113,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
                 //print ("Should be fading");
                 if (!FadeSphereScript.isFading())
                 {
-                    FadeSphereScript.doFadeOut(fadeTime, Color.white);
+					FadeSphereScript.doFadeOut(fadeTime, Color.black);
                 }
             }
 

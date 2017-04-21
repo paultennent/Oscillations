@@ -59,14 +59,14 @@ public class JellyfishAudioController : MonoBehaviour {
 	void Update () {
 		updateSwingSounds (camMover.getSwingQuadrant (),SwingMixers,SwingStartLevels,10f);
 		LayerLayout.LayoutPos curTilePos = LayerLayout.GetLayerLayout ().GetBlockAt (cam.transform.position.y);
-		updateMixMixers (MixMixers,MixStartLevels,curTilePos,0.1f);
+		updateMixMixers (MixMixers,MixStartLevels,curTilePos,0.5f);
 		updateVoidMixers (VoidMixers,VoidStartLevels,0.5f);
 
-		if (FadeSphereScript.isFading()) {
-			float cur = 0f;
-			masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
-			masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1f/camMover.fadeTime) * Time.deltaTime));
-		}
+		//if (FadeSphereScript.isFadingOut()) {
+		//	float cur = 0f;
+	//		masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+	//		masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1f/camMover.fadeTime) * Time.deltaTime));
+	//	}
 	}
 
 	private void startSources(List<AudioSource> mysources){

@@ -44,10 +44,13 @@ public class WalkerCityCamMover : AbstractGameEffects
 
     private float growthFactor = 1.25f;
 
+	private float h2 = 1f;
+	private float gf2 = 10f;
+
     private float stepRateMultiplier = 1.5f;
 
     private float maxTurnPerSwing = 15f;
-    public float closeEnough = 10f;
+    public float closeEnough = 15f;
 
     private float myheight = 1f;
     private bool completedTurn = true;
@@ -146,9 +149,6 @@ public class WalkerCityCamMover : AbstractGameEffects
             }
         }
 
-        closeEnough = 5f + (2f * climaxRatio);
-        stepRateMultiplier = swingCycleTime / 2f;
-
         //handle water stuff
         if (cam.position.y >= 0)
         {
@@ -184,6 +184,9 @@ public class WalkerCityCamMover : AbstractGameEffects
                 {
                     swingStartTime = Time.time;
                     yDrop = 0f;
+					stepRateMultiplier = 1.6f;//myheight / 10f;
+
+					print ("Height:" + myheight + ", Multiplier:" + stepRateMultiplier); 
 
                     if (leftStep)
                     {
@@ -218,75 +221,66 @@ public class WalkerCityCamMover : AbstractGameEffects
         {
             if (!turning)
             {
+				//closeEnough = 5f + yDrop;
 
                 if (distToNextWP() < closeEnough)
                 {
                     reachedWaypoint = true;
                 }
                 //we're moving forward
-                if (swingQuadrant == 0 || swingQuadrant == 3)
-                {
-                    if (swingStartTime == -1f)
-                    {
-                        //this is stuff we do once at the beginning of each cycle (starting from the back)
-                        completedTurn = true;
-                        growSwitch = false;
-                        if (curTargetWaypoint < 5)
-                        {
-                            myheight = myheight * growthFactor;
-                        }
-                        else
-                        {
-                            myheight = myheight / (growthFactor * 4);
-                        }
-                        swingStartTime = Time.time;
-                        yDrop = 0f;
-                        if (leftStep)
-                        {
-                            targetTiltAngle = swingAngle / 2f;
-                        }
-                        else
-                        {
-                            targetTiltAngle = -swingAngle / 2f;
-                        }
-                        leftStep = !leftStep;
-                        if (reachedWaypoint)
-                        {
-                            //we're ready to tun here
-                            turning = true;
-                            curTargetWaypoint++;
-                            reachedWaypoint = false;
-                            return;
-                        }
-                    }
-                    if (swingQuadrant == 3)
-                    {
-                        //in the first forward quadrant we're arcing down
-                        float curYDrop = ((myheight) * Mathf.Sin(swingAngle * Mathf.Deg2Rad));
-                        yDrop += curYDrop * Time.deltaTime;
-                        if (!reachedWaypoint)
-                        {
-                            vp.Translate(new Vector3(0f, curYDrop, swingAngVel * stepRateMultiplier) * Time.deltaTime);
-                        }
-                        else
-                        {
-                            vp.Translate(new Vector3(0f, curYDrop, 0f) * Time.deltaTime);
-                        }
-                    }
-                    else
-                    {
-                        //second forward quadrant is pretty straight
-                        if (!reachedWaypoint)
-                        {
-                            vp.Translate(new Vector3(0f, 0f, swingAngVel * stepRateMultiplier) * Time.deltaTime);
-                        }
-                        else
-                        {
-                            vp.Translate(new Vector3(0f, 0f, 0f) * Time.deltaTime);
-                        }
-                    }
-                    vp.Rotate(new Vector3(0f, 0f, targetTiltAngle / (swingCycleTime / 2f)) * Time.deltaTime);
-                }
+				if (swingQuadrant == 0 || swingQuadrant == 3) {
+					if (swingStartTime == -1f) {
+						//this is stuff we do once at the beginning of each cycle (starting from the back)
+						completedTurn = true;
+						growSwitch = false;
+						if (curTargetWaypoint < 5) {
+							myheight = myheight * growthFactor;
+							h2 = h2 * gf2;
+						} else {
+							myheight = myheight / (growthFactor * 4);
+							h2 = h2 * gf2;
+						}
+						swingStartTime = Time.time;
+						yDrop = 0f;
+						stepRateMultiplier = 1.6f;//myheight / 10f;
+
+						print ("Height:" + myheight + ", Multiplier:" + stepRateMultiplier); 
+
+						if (leftStep) {
+							targetTiltAngle = swingAngle / 4f;
+						} else {
+							targetTiltAngle = -swingAngle / 4f;
+						}
+						leftStep = !leftStep;
+						if (reachedWaypoint) {
+							//we're ready to tun here
+							turning = true;
+							curTargetWaypoint++;
+							reachedWaypoint = false;
+							return;
+						}
+					}
+					if (swingQuadrant == 3) {
+						//in the first forward quadrant we're arcing down
+						float curYDrop = ((myheight/2f) * Mathf.Sin (swingAngle * Mathf.Deg2Rad));
+						yDrop += curYDrop * Time.deltaTime;
+						if (!reachedWaypoint) {
+							vp.Translate (new Vector3 (0f, curYDrop, swingAngVel * stepRateMultiplier) * Time.deltaTime);
+						} else {
+							vp.Translate (new Vector3 (0f, curYDrop, 0f) * Time.deltaTime);
+						}
+					} else {
+						//second forward quadrant is pretty straight
+						if (!reachedWaypoint) {
+							vp.Translate (new Vector3 (0f, 0f, swingAngVel * stepRateMultiplier) * Time.deltaTime);
+						} else {
+							vp.Translate (new Vector3 (0f, 0f, 0f) * Time.deltaTime);
+						}
+					}
+					vp.Rotate(new Vector3(0f, 0f, targetTiltAngle / (swingCycleTime / 2f)) * Time.deltaTime);
+					//float myang = Mathf.Sin ((swingPhase * Mathf.Deg2Rad + 45)) * targetTiltAngle;
+					//vp.localEulerAngles = new Vector3 (vp.localEulerAngles.x, vp.localEulerAngles.y, myang);
+				}
                 else
                 {
                     //now we're going backwards so we want to slowly grow back up to height
@@ -298,7 +292,11 @@ public class WalkerCityCamMover : AbstractGameEffects
                             growSwitch = true;
                         }
                         swingStartTime = -1f;
-                        vp.Translate(new Vector3(0f, (-yDrop / (swingCycleTime / 2f)) * growthFactor, 0f) * Time.deltaTime);
+						if (!reachedWaypoint) {
+							vp.Translate (new Vector3 (0f, (-yDrop / (swingCycleTime / 2f)) * growthFactor, -(swingAngVel * stepRateMultiplier) / 3f) * Time.deltaTime);
+						} else {
+							vp.Translate (new Vector3 (0f, (-yDrop / (swingCycleTime / 2f)) * growthFactor, 0f) * Time.deltaTime);
+						}
                         vp.Rotate(new Vector3(0f, 0f, -targetTiltAngle / (swingCycleTime / 2f)) * Time.deltaTime);
                     }
                 }

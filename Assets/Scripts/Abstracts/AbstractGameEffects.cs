@@ -232,7 +232,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 {
                     swingPhase=Mathf.Max(0,Mathf.Min(swingAngle/swingAmplitude,1));
                 }
-                if(swingAngle<highAngle-0.1f)
+                if(swingAngle<highAngle-5f)
                 {
                     swingQuadrant=1;
                     swingAmplitude=highAngle;
@@ -261,7 +261,7 @@ public class AbstractGameEffects : MonoBehaviour {
                 {
                     swingPhase=2+Mathf.Max(0,Mathf.Min(-swingAngle/swingAmplitude,1));
                 }
-                if(swingAngle>lowAngle+0.1f)
+                if(swingAngle>lowAngle+5f)
                 {
                     swingQuadrant=3;
                     swingAmplitude=-lowAngle;

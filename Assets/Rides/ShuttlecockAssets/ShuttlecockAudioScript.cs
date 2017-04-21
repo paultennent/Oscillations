@@ -44,7 +44,7 @@ public class ShuttlecockAudioScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
+        //masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
 
         swingBase.zeroCrossingEvent.AddListener(OnZeroCross);
 
@@ -73,7 +73,7 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 		startSources(directionalSources);
 		startSources(mixSources);
 
-        StartCoroutine(fadeIn());
+        //StartCoroutine(fadeIn());
 
 	}
 
@@ -85,13 +85,13 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Fader.IsFading())
-        {
-            if (!fadingOut)
-            {
-                StartCoroutine(fadeOut());
-            }
-        }
+//		if (FadeSphereScript.isFadingOut())
+//        {
+//            if (!fadingOut)
+//            {
+//                StartCoroutine(fadeOut());
+//            }
+//        }
         
         
 			float swingAngle = swingBase.getSwingAngle ();

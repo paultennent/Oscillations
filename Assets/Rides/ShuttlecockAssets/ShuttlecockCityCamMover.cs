@@ -262,7 +262,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 }
                 // maybe we landed just slightly earlier in swing cycle than predicted, avoid
                 // a double jump
-                if(targetTime<0.3f)
+                if(targetTime<0.5f)
                 {
 					targetTime += swingCycleTime / 2f;
                 }
