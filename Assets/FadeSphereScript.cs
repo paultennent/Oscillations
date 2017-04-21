@@ -7,6 +7,7 @@ public class FadeSphereScript : MonoBehaviour {
     static FadeSphereScript globalAccess;
 
     public bool fading = false;
+    public bool fadingOut = false;
 
 	// Use this for initialization
 	void Start () {
@@ -22,12 +23,18 @@ public class FadeSphereScript : MonoBehaviour {
         return globalAccess.fading;
     }
 
+    public static bool isFadingOut()
+    {
+        return globalAccess.fadingOut;
+    }
+
     static IEnumerator fadeOut(float t, Color fadeColour)
     {
         Material mat = globalAccess.GetComponent<Renderer>().material;
         if (!globalAccess.fading)
         {
             globalAccess.fading = true;
+            globalAccess.fadingOut = true;
             float fadeStartTime = Time.time;
             while (Time.time < fadeStartTime + t)
             {

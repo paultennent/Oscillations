@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Rides/Pachinko.unity
     guid: f55f078d77af21349bb4d65555507a35
   - enabled: 0
-    path: Assets/Rides/Walker.unity
+    path: Assets/Rides/walker.unity
     guid: bf1ab8d7b989948c9bffb0aeb6bea611
   - enabled: 0
     path: Assets/Rides/Oscillate.unity

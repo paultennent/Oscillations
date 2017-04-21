@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WalkerCityCamMover : AbstractGameEffects {
+public class WalkerCityCamMover : AbstractGameEffects
+{
 
     public Transform[] path;
 
@@ -11,7 +12,6 @@ public class WalkerCityCamMover : AbstractGameEffects {
     int curTargetWaypoint;
     bool turning = false;
     public Transform vp;
-    private float growthfactor = 30f;
 
     public Transform cam;
 
@@ -30,145 +30,304 @@ public class WalkerCityCamMover : AbstractGameEffects {
     private bool turnListening = false;
     private bool goListening = false;
 
+    private bool launched = false;
+    private float introTime = 8f;
+    private Vector3 initialPosition;
+
+    public float seatDrop = 1.5f;
+    private float swingStartTime;
+
+    private float yDrop = 0f;
+
+    private float targetTiltAngle = 0f;
+    private bool leftStep = true;
+
+    private float growthFactor = 1.25f;
+
+    private float stepRateMultiplier = 1.5f;
+
+    private float maxTurnPerSwing = 15f;
+    public float closeEnough = 10f;
+
+    private float myheight = 1f;
+    private bool completedTurn = true;
+
+    private bool reachedWaypoint = false;
+
+    public Material underWaterSky;
+    public Material overwaterSky;
+
+    private bool envSwitch = false;
+    private bool inOutro = false;
+
+    private float outroStartTime = 0f;
+
+    public WakerAudioController audioController;
+    private bool growSwitch = false;
+
+    private bool fadedIn = false;
+
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         base.Start();
         theSwingBase = GetComponent<SwingBase>();
-        legDuration = sessionLength / path.Length+1;
+        legDuration = sessionLength / path.Length + 1;
         turnDuratiuon = legDuration / path.Length;
         curTargetWaypoint = 1;
 
-
-        //set waypoint heights
-        float height = 0;
-        for (int i = 0; i < path.Length; i++)
-        {
-            if (i < 6)
-            {
-                height = height + growthfactor;
-            }else if(i == 6)
-            {
-                height = 0f - growthfactor;
-            }
-            else if (i == 7)
-            {
-                height = 5f;
-            }
-            else if (i == 8)
-            {
-                height = 5f + growthfactor;
-            }
-            else
-            {
-                height = 1.5f;
-            }
-            path[i].position = new Vector3(path[i].position.x, height, path[i].position.z);
-        }
+        initialPosition = vp.position;
 
         //look at the first position
         vp.LookAt(path[curTargetWaypoint].position);
-        swingBase.zeroCrossingEvent.AddListener(zeroCrossing);
-		FadeSphereScript.doFadeIn (5f, Color.black);
+        
 
-    }
-    void zeroCrossing()
-    {
-        if (turnListening)
-        {
-            readyToTurn = true;
-        }
-        else if(goListening){
-            readyToGo = true;
-        }
     }
 
     public bool isTurning()
     {
         return turning;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    private float distToNextWP()
+    {
+        float dist = Vector2.Distance(new Vector2(vp.position.x, vp.position.z), new Vector2(path[curTargetWaypoint].position.x, path[curTargetWaypoint].position.z));
+        return dist;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (!fadedIn)
+        {
+            FadeSphereScript.doFadeIn(5f, Color.black);
+            fadedIn = true;
+        }
         base.Update();
 
-        if(cam.position.y >= 0)
+        if (curTargetWaypoint >= path.Length)
         {
-            waterBody.GetComponent<Renderer>().enabled = false;
-            RenderSettings.fogColor = overwaterFog;
-            RenderSettings.fogEndDistance = overwateFogEnd;
-        }
-        else
-        {
-            waterBody.GetComponent<Renderer>().enabled = true;
-            RenderSettings.fogColor = underwaterFog;
-            RenderSettings.fogEndDistance = underwateFogEnd;
-        }
-
-        if(curTargetWaypoint >= path.Length)
-        {
-            return;
-        }
-
-        if (readyToTurn)
-        {
-            print("Ready to turn");
-            turning = true;
-            curTargetWaypoint++;
-            readyToTurn = false;
-            turnListening = false;
-			if (curTargetWaypoint >= path.Length) {
-				if(!FadeSphereScript.isFading()){
-					FadeSphereScript.doFadeOut (5f, Color.black);
-				}
-			}
-
-        }
-        else
-        {
-            if (Vector3.Distance(vp.position, path[curTargetWaypoint].position) < 1f)
+            //we're at the end.
+            //lerp to the correct position and rotation
+            if (!inOutro)
             {
-                readyToTurn = false;
-                turnListening = true;
-            }
-        }
-
-        if (turning)
-        {
-            //print("Turning");
-			if (curTargetWaypoint >= path.Length) {
-				return;
-			}
-
-            Quaternion targetRotation = Quaternion.LookRotation(path[curTargetWaypoint].position - vp.position);
-            vp.rotation = Quaternion.Slerp(vp.rotation, targetRotation, turnDuratiuon * Time.deltaTime * 1.5f);
-            float angle = Vector3.Angle((path[curTargetWaypoint].position - vp.position), vp.forward);
-            if (angle < 0.1f)
-            {
-                vp.LookAt(path[curTargetWaypoint].position);
-                if (readyToGo)
+                if (Vector3.Distance(vp.position, path[path.Length - 1].position) < 0.1f)
                 {
-                    turning = false;
+                    vp.position = path[path.Length - 1].position;
+                    inOutro = true;
+                    outroStartTime = Time.time;
+                    return;
                 }
                 else
                 {
-                    readyToGo = false;
-                    goListening = true;
+                    vp.position = Vector3.Lerp(vp.position, path[path.Length - 1].position, Time.deltaTime * 3f);
+                    vp.rotation = Quaternion.Slerp(vp.rotation, path[path.Length - 1].rotation, Time.deltaTime * 15f);
+                    return;
                 }
+            }
+            else
+            {
+                if (Time.time > outroStartTime + 5f)
+                {
+                    if (!FadeSphereScript.isFading())
+                    {
+                        FadeSphereScript.doFadeOut(5f, Color.black);
+                    }
+                }
+                print("Doing outro swinging");
+                Vector3 endPos = vp.position;
+                Vector3 topPoint = endPos + Vector3.up * seatDrop;
+                Quaternion rotation = Quaternion.Euler(-swingAngle, 0, 0);
+                Vector3 rotationOffset = rotation * Vector3.up * -seatDrop;
+                Vector3 targetPoint = rotationOffset + topPoint;
+                return;
+            }
+        }
+
+        closeEnough = 5f + (2f * climaxRatio);
+        stepRateMultiplier = swingCycleTime / 2f;
+
+        //handle water stuff
+        if (cam.position.y >= 0)
+        {
+            if (!envSwitch)
+            {
+                //waterBody.GetComponent<Renderer>().enabled = false;
+                RenderSettings.fogColor = overwaterFog;
+                RenderSettings.fogEndDistance = overwateFogEnd;
+                RenderSettings.skybox = overwaterSky;
+                audioController.goAboveWater();
+                envSwitch = true;
             }
         }
         else
         {
-            //print("Moving towards " + path[curTargetWaypoint].name);
-            //vp.transform.LookAt(path[curTargetWaypoint].position);
-            vp.localEulerAngles = new Vector3(vp.localEulerAngles.x, vp.localEulerAngles.y, swingAngle / 2f);
-            vp.Translate(Vector3.forward * Time.deltaTime * (legDuration * 1.5f));
-
-            float yPos = vp.position.y - Remap(Mathf.Abs(swingAngle), 0, 45, 0, vp.position.y/2f);
-
-            cam.position = new Vector3(vp.position.x, yPos, vp.position.z);
+            if (envSwitch)
+            {
+                //waterBody.GetComponent<Renderer>().enabled = true;
+                RenderSettings.fogColor = underwaterFog;
+                RenderSettings.fogEndDistance = underwateFogEnd;
+                RenderSettings.skybox = underWaterSky;
+                audioController.goUnderWater();
+                envSwitch = false;
+            }
         }
-	}
+
+        //intro - still gather the angles as if we were stepping
+        if (sessionTime < introTime || !launched)
+        {
+            if (swingQuadrant == 0 || swingQuadrant == 3)
+            {
+                if (swingStartTime == -1f)
+                {
+                    swingStartTime = Time.time;
+                    yDrop = 0f;
+
+                    if (leftStep)
+                    {
+                        targetTiltAngle = swingAngle / 2f;
+                    }
+                    else
+                    {
+                        targetTiltAngle = -swingAngle / 2f;
+                    }
+                    leftStep = !leftStep;
+                }
+            }
+            else
+            {
+                swingStartTime = -1f;
+            }
+            Vector3 topPoint = initialPosition + Vector3.up * seatDrop;
+            Quaternion rotation = Quaternion.Euler(-swingAngle, 0, 0);
+            Vector3 rotationOffset = rotation * Vector3.up * -seatDrop;
+            Vector3 seatPoint = topPoint + rotationOffset;
+            Vector3 onlyFwdBackPoint = new Vector3(seatPoint.x, topPoint.y, seatPoint.z);
+
+            vp.transform.position = Vector3.Lerp(seatPoint, onlyFwdBackPoint, offsetTime / 10f);
+
+            if (offsetTime > introTime && swingQuadrant == 3)
+            {
+                launched = true;
+            }
+
+        }
+        else
+        {
+            if (!turning)
+            {
+
+                if (distToNextWP() < closeEnough)
+                {
+                    reachedWaypoint = true;
+                }
+                //we're moving forward
+                if (swingQuadrant == 0 || swingQuadrant == 3)
+                {
+                    if (swingStartTime == -1f)
+                    {
+                        //this is stuff we do once at the beginning of each cycle (starting from the back)
+                        completedTurn = true;
+                        growSwitch = false;
+                        if (curTargetWaypoint < 5)
+                        {
+                            myheight = myheight * growthFactor;
+                        }
+                        else
+                        {
+                            myheight = myheight / (growthFactor * 4);
+                        }
+                        swingStartTime = Time.time;
+                        yDrop = 0f;
+                        if (leftStep)
+                        {
+                            targetTiltAngle = swingAngle / 2f;
+                        }
+                        else
+                        {
+                            targetTiltAngle = -swingAngle / 2f;
+                        }
+                        leftStep = !leftStep;
+                        if (reachedWaypoint)
+                        {
+                            //we're ready to tun here
+                            turning = true;
+                            curTargetWaypoint++;
+                            reachedWaypoint = false;
+                            return;
+                        }
+                    }
+                    if (swingQuadrant == 3)
+                    {
+                        //in the first forward quadrant we're arcing down
+                        float curYDrop = ((myheight) * Mathf.Sin(swingAngle * Mathf.Deg2Rad));
+                        yDrop += curYDrop * Time.deltaTime;
+                        if (!reachedWaypoint)
+                        {
+                            vp.Translate(new Vector3(0f, curYDrop, swingAngVel * stepRateMultiplier) * Time.deltaTime);
+                        }
+                        else
+                        {
+                            vp.Translate(new Vector3(0f, curYDrop, 0f) * Time.deltaTime);
+                        }
+                    }
+                    else
+                    {
+                        //second forward quadrant is pretty straight
+                        if (!reachedWaypoint)
+                        {
+                            vp.Translate(new Vector3(0f, 0f, swingAngVel * stepRateMultiplier) * Time.deltaTime);
+                        }
+                        else
+                        {
+                            vp.Translate(new Vector3(0f, 0f, 0f) * Time.deltaTime);
+                        }
+                    }
+                    vp.Rotate(new Vector3(0f, 0f, targetTiltAngle / (swingCycleTime / 2f)) * Time.deltaTime);
+                }
+                else
+                {
+                    //now we're going backwards so we want to slowly grow back up to height
+                    if (completedTurn)
+                    {
+                        if (!growSwitch)
+                        {
+                            audioController.grow();
+                            growSwitch = true;
+                        }
+                        swingStartTime = -1f;
+                        vp.Translate(new Vector3(0f, (-yDrop / (swingCycleTime / 2f)) * growthFactor, 0f) * Time.deltaTime);
+                        vp.Rotate(new Vector3(0f, 0f, -targetTiltAngle / (swingCycleTime / 2f)) * Time.deltaTime);
+                    }
+                }
+            }
+            else
+            {
+                //only turn on the back swings
+                if (swingQuadrant == 3 || swingQuadrant == 1 || swingQuadrant == 2)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(path[curTargetWaypoint].position - vp.position);
+
+                    float rotationSpeed = maxTurnPerSwing / (swingCycleTime / 2f);
+                    float angle = Quaternion.Angle(vp.rotation, targetRotation);
+                    float timeToComplete = angle / rotationSpeed;
+                    float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
+                    vp.rotation = Quaternion.Slerp(vp.rotation, targetRotation, donePercentage);
+                    float curAngle = Vector3.Angle((path[curTargetWaypoint].position - vp.position), vp.forward);
+                    if (curAngle < 0.1f)
+                    {
+                        vp.rotation = targetRotation;
+                        turning = false;
+                        completedTurn = false;
+                        swingStartTime = -1f;
+                    }
+
+                }
+            }
+        }
+    }
 
     private float Remap(float val, float OldMin, float OldMax, float NewMin, float NewMax)
     {

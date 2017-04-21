@@ -193,9 +193,9 @@ public class LayerLayout : MonoBehaviour
                 break;
             case LayoutPos.CORAL:
                 theBlock = corals[Random.Range(0, corals.Length - 1)];
-                //yOffsetScale=0.3f;
+                yOffsetScale=0.3f;
                 //maybe lower these so they're more densely packed?
-                yOffsetScale = 0.1f;
+                //yOffsetScale = 0.1f;
 
                 if (fractionThrough > 0.9f || Input.GetKeyDown("n"))
                 {

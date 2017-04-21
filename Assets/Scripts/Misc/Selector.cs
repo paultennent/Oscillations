@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class Selector : MonoBehaviour {
 
     public GameObject crosshair;
+    public Text loadText;
     Vector3[] corners=new Vector3[4];
 
 
@@ -38,6 +39,7 @@ public class Selector : MonoBehaviour {
                 print (raycastResults [0].gameObject.name);
                 if (Input.GetButtonUp ("Tap")) {
                     SceneManager.LoadScene (raycastResults [0].gameObject.name);
+                    loadText.enabled = true;
                 }
             }
 		} else {

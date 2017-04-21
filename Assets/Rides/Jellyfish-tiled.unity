@@ -559,8 +559,7 @@ MonoBehaviour:
   countUp: 1
   maxSessions: 1
   pauseStartTime: 0
-  beta: 0
-  omega: 0
+  disableStatusFlasher: 1
   velocityDragConstant: 0.1
   upforceConstant: 0.01
   gravityConstant: 30
@@ -570,7 +569,7 @@ MonoBehaviour:
   infiniteFall: 0
   seatDrop: 1.5
   startBubble: {fileID: 1997125728}
-  SwapAngle: 1
+  SwapAngle: 0
 --- !u!114 &655742585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1074,7 +1073,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1500
+  far clip plane: 500
   field of view: 60
   orthographic: 0
   orthographic size: 5

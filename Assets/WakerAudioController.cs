@@ -42,8 +42,14 @@ public class WakerAudioController : MonoBehaviour {
 	private bool growing = false;
 	private bool shrinking = false;
 
-	// Use this for initialization
-	void Start () {
+    private bool fadingOut = false;
+
+    public AudioMixerGroup masterMixer;
+
+    public AudioClip[] ExtraGrowthSounds;
+
+    // Use this for initialization
+    void Start () {
 
 		swingBase.zeroCrossingEvent.AddListener(OnZeroCross);
 
@@ -53,11 +59,11 @@ public class WakerAudioController : MonoBehaviour {
 		mixSources = new List<AudioSource>();
 		growthSources = new List<AudioSource>();
 
-		setupAudioSources(swingSounds,swingSoundsMixer, swingSources, true);
-		setupAudioSources(turnSounds,turnSoundsMixer, turnSources, false);
-		setupAudioSources(waterSounds,waterMixer, waterSources, false);
-		setupAudioSources(mix,mixMixer, mixSources, false);
-		setupAudioSources(growthSounds,growthMixer, growthSources, false);
+		setupAudioSources(swingSounds,swingSoundsMixer, swingSources, true, false);
+		setupAudioSources(turnSounds,turnSoundsMixer, turnSources, false, true);
+		setupAudioSources(waterSounds,waterMixer, waterSources, false, false);
+		setupAudioSources(mix,mixMixer, mixSources, false, false);
+		setupAudioSources(growthSounds,growthMixer, growthSources, false, false);
 
 		swingSoundsMixerStartVals = captureStartVals(swingSoundsMixer);
 		turnSoundsMixerStartVals = captureStartVals(turnSoundsMixer);
@@ -67,15 +73,15 @@ public class WakerAudioController : MonoBehaviour {
 
 		zeroMixers(swingSoundsMixer, dbsilence);
 		zeroMixers(turnSoundsMixer, dbsilence);
-		zeroMixers(waterMixer, dbsilence);
 		zeroMixers(mixMixer, dbsilence);
-		zeroMixers(growthMixer, dbsilence);
 
-		startSources(swingSources);
-		startSources(turnSources);
-		startSources(waterSources);
-		startSources(mixSources);
-		startSources(growthSources);
+        //specially zero the water
+        waterMixer[0].audioMixer.SetFloat(waterMixer[0].name, dbsilence);
+
+        startSources(swingSources, false);
+		startSources(turnSources, false);
+		startSources(waterSources, true);
+		startSources(mixSources, false);
 
 	}
 
@@ -90,7 +96,22 @@ public class WakerAudioController : MonoBehaviour {
 		return myVal;
 	}
 
-	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers, List<AudioSource> sources, bool alternatePans)
+    public void goUnderWater()
+    {
+        waterSources[1].Play();
+    }
+
+    public void goAboveWater()
+    {
+        waterSources[2].Play();
+    }
+
+    public void grow()
+    {
+        growthSources[0].PlayOneShot(ExtraGrowthSounds[Random.Range(0, ExtraGrowthSounds.Length)]);
+    }
+
+	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers, List<AudioSource> sources, bool alternatePans, bool loop)
 	{
 		for (int i = 0; i < clips.Length; i++)
 		{
@@ -100,7 +121,7 @@ public class WakerAudioController : MonoBehaviour {
 			source.dopplerLevel = 0f;
 			source.outputAudioMixerGroup = mixers[i];
 			source.clip = clips[i];
-            source.loop = true;
+            source.loop = loop;
 			if (alternatePans) {
 				if (i % 2 == 0) {
 					source.panStereo = -1f;
@@ -136,27 +157,44 @@ public class WakerAudioController : MonoBehaviour {
 		return (((val - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin;
 	}
 
-	private void startSources(List<AudioSource> mysources){
-		foreach(AudioSource source in mysources){
-			source.Play();
-		}
+    private void startSources(List<AudioSource> mysources, bool oneonly){
+        if (oneonly)
+        {
+            mysources[0].Play();
+        }
+        else
+        {
+            foreach (AudioSource source in mysources)
+            {
+                source.Play();
+            }
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		float swingAngle = swingBase.getSwingAngle ();
+
+        if (FadeSphereScript.isFadingOut())
+        {
+            if (!fadingOut)
+            {
+                StartCoroutine(fadeOut());
+            }
+        }
+
+        float swingAngle = swingBase.getSwingAngle ();
 		//clamp the bugger so we don't have issues
 		swingAngle = Mathf.Clamp (scccm.getSwingQuadrant(), -maxAngle, maxAngle);
 		updateMixSounds (mixMixer, mixMixerStartVals, 5f);
 
         turning = scccm.isTurning();
 
-		if(!turning){
-			updateSwingSounds (scccm.getSwingQuadrant(), swingSoundsMixer, swingSoundsMixerStartVals, 10f);
-		}
-		updateTurnSoundMixer (swingAngle, turnSoundsMixer, turnSoundsMixerStartVals, curJumpSound, 5f);
-		
+        if (!turning)
+        {
+            updateSwingSounds(scccm.getSwingQuadrant(), swingSoundsMixer, swingSoundsMixerStartVals, 10f);
+        }
 
+        updateTurnSoundMixer(swingAngle, turnSoundsMixer, turnSoundsMixerStartVals, curJumpSound, 10f);
         updateWaterSounds(waterMixer, waterMixerStartVals, 5f);
 	}
 
@@ -231,14 +269,11 @@ public class WakerAudioController : MonoBehaviour {
 
         if (turning)
         {
-
-            float val = Remap(Mathf.Abs(swingAngle), -maxAngle, maxAngle, dbsilence, startVals[chosenJump]);
-
             for (int i = 0; i < mixers.Length; i++)
             {
                 if (i == chosenJump)
                 {
-                    mixers[i].audioMixer.SetFloat(mixers[i].name, Mathf.Lerp(current[i], val, mixRate * Time.deltaTime));
+                    mixers[i].audioMixer.SetFloat(mixers[i].name, Mathf.Lerp(current[i], startVals[i], mixRate * Time.deltaTime));
                 }
                 else
                 {
@@ -255,26 +290,19 @@ public class WakerAudioController : MonoBehaviour {
         }
     }
 
-	private void updateGrowthSounds(AudioMixerGroup[] mixers, float[] startVals, float mixRate){
-		float[] current = new float[mixers.Length];
-		for(int i=0;i<mixers.Length;i++){
-			mixers[i].audioMixer.GetFloat(mixers[i].name, out current[i]);
-		}
-		float[] targets = new float[mixers.Length];
-		if (growing) {
-			targets [0] = startVals [0];
-		} else {
-			targets [0] = dbsilence;
-		}
-
-		if (shrinking) {
-			targets [1] = startVals [1];
-		} else {
-			targets [1] = dbsilence;
-		}
-
-		for (int i = 0; i < mixers.Length; i++) {
-			mixers [i].audioMixer.SetFloat (mixers [i].name, Mathf.Lerp (current[i], targets[i], mixRate * Time.deltaTime));
-		}
-	}
+    private IEnumerator fadeOut()
+    {
+        fadingOut = true;
+        float cur = 0f;
+        masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+        while (cur > dbsilence + 0.01f)
+        {
+            masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1 / 5f) * Time.deltaTime));
+            masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
+            yield return null;
+        }
+        masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
+        fadingOut = false;
+        yield break;
+    }
 }
