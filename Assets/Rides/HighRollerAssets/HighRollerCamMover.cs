@@ -30,11 +30,11 @@ public class HighRollerCamMover : AbstractGameEffects {
     private float outtroSwingTime=5f;
 
     private float accelVal;
+    private bool fadedIn = false;
     
 	// Use this for initialization
 	void Start () {
         base.Start();
-        FadeSphereScript.doFadeIn(5f, Color.black);
     }
 
     // Update is called once per frame
@@ -42,7 +42,14 @@ public class HighRollerCamMover : AbstractGameEffects {
     {
 
         base.Update();
-        if(!foundInitialPos)
+
+        if (!fadedIn)
+        {
+            FadeSphereScript.doFadeIn(5f, Color.black);
+            fadedIn = true;
+        }
+
+        if (!foundInitialPos)
         {
             foundInitialPos=true;
             initialViewpointPos=viewpoint.transform.position;

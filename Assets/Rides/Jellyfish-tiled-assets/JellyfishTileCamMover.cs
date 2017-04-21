@@ -35,6 +35,8 @@ public class JellyfishTileCamMover : AbstractGameEffects
 
     public bool SwapAngle = true;
 
+    private bool fadedIn = false;
+
     // Use this for initialization
     void Start()
     {
@@ -48,6 +50,12 @@ public class JellyfishTileCamMover : AbstractGameEffects
     void Update()
     {
         base.Update();
+
+        if (!fadedIn)
+        {
+            FadeSphereScript.doFadeIn(5f, Color.black);
+            fadedIn = true;
+        }
 
         //doDifferentRotation - I think this wants removing...
         if (SwapAngle)

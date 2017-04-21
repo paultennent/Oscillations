@@ -77,6 +77,8 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     private Transform[] travelPathPoints;
     private int travelPathSegment=0;
 
+    private bool fadedIn = false;
+
 	public bool isInIntro(){
 		return inIntro;
 	}
@@ -114,11 +116,17 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             seatDistance=seat.localPosition.y;
             print(seatDistance);
         }
-		FadeSphereScript.doFadeIn(5f,Color.black);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (!fadedIn)
+        {
+            FadeSphereScript.doFadeIn(5f, Color.black);
+            fadedIn = true;
+        }
+
         base.Update();
         bool newQuadrant=false;
         if(swingQuadrant!=lastQuadrant)
