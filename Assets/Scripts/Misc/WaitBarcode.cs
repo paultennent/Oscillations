@@ -98,7 +98,7 @@ public class WaitBarcode : MonoBehaviour {
     }
     bool IsSwingBarcode(string code)
     {
-        if(code[0]>='1')return true;
+        if(code[0]=='1')return true;
         return false;
     }
     

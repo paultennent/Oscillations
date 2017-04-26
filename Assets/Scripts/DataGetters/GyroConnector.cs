@@ -79,8 +79,7 @@ public class GyroConnector
             timeLastPacket = Time.time;
 		}
 	}
-
-
+    
 	public void pause(bool bPause)
 	{
 		if (bPause) {
@@ -107,6 +106,7 @@ public class GyroConnector
         activity.Call<bool>("stopService",intent); 
 #endif
     }	
+    
     // java is big endian, these are some conversion helpers
     
     byte[] conversionBuf4={0,0,0,0};
@@ -117,12 +117,12 @@ public class GyroConnector
         {
             Array.Copy(input,offset,conversionBuf4,0,4);
             Array.Reverse(conversionBuf4);
-            return BitConverter.ToSingle(conversionBuf4,0);
-        }else
-        {
+            return BitConverter.ToSingle(conversionBuf4,0);             
+        }else{
             return BitConverter.ToSingle(input,offset);
         }
     }
+
 	int getBigEndianInt32(byte[]input,int offset)
     {
         if(BitConverter.IsLittleEndian)
@@ -193,7 +193,7 @@ public class GyroConnector
         // receive everything 
         // send it out as fast as possible with zero missing frames
         
-    	while(receiver.Available>=MIN_PACKET_SIZE)
+    	while(receiver!=null && receiver.Available>=MIN_PACKET_SIZE)
         {
             int len=receiver.ReceiveFrom(receiveBytes,ref remoteIpEndPoint);
             if(len>=MIN_PACKET_SIZE)

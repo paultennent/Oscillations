@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MagicReader : AbstractDataReader {
 
@@ -14,9 +15,17 @@ public class MagicReader : AbstractDataReader {
 	private long mTimestamp=0L;
 
 	private int sameDataCount = 0;
+    private int resetCount=0;
 	private float lastAng = 0;
+    
+    private int restartCount=0;
 
     public bool useAccelerometer=false;
+    
+    public float getConnectionState()
+    {
+        return gc.mConnectionState;
+    }
     
 	public float getAngle(){
 		return mAngle;
@@ -60,6 +69,17 @@ public class MagicReader : AbstractDataReader {
         {
             gc = new GyroConnector();
             gc.init ();
+        }else
+        {
+            if(SceneManager.GetActiveScene().name.IndexOf("Menu")!=-1)
+            {
+                // if we've gone back to the menu scene then reset the reader connection
+                // just in case anything has gone bad (or we've got latency from somewhere)
+                gc.stop();
+                resetCount=500;
+                sameDataCount=0;
+            }
+
         }
 	}
 	
@@ -94,7 +114,23 @@ public class MagicReader : AbstractDataReader {
 		if (lastAng == mAngle) {
 			sameDataCount += 1;
 		} else {
-			//sameDataCount = 0;
+			sameDataCount = 0;
 		}
+        // same data for 1 second - restart the connection
+        if(resetCount==0 && sameDataCount>480)
+        {
+            gc.stop();
+            resetCount=500;
+            sameDataCount=0;
+        }
+        if(resetCount>0)
+        {
+            resetCount-=1;
+            sameDataCount=0;
+        }
+        if(resetCount==450)
+        {
+            gc.doConnection();
+        }
 	}
 }

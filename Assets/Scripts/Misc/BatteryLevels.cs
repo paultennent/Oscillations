@@ -10,6 +10,8 @@ public class BatteryLevels : MonoBehaviour {
 	public Text headsetDisplay;
 	public Text swingDisplay;
 	public Text fps;
+	public Text swingAngle;
+	public Text connectionState;
 
 	private bool visible = false;
 
@@ -37,6 +39,8 @@ public class BatteryLevels : MonoBehaviour {
 			headsetDisplay.text = "Headset Battery: " + (int) (mr.getLocalBatteryLevel () * 100f) + "%";
 			swingDisplay.text = "Swing Battery: " + (int) (mr.getRemoteBatteryLevel () * 100f) + "%";
 			fps.text = "Framerate:" + ((int)(1.0f / Time.deltaTime));
+            swingAngle.text= "Swing angle: "+mr.getAngle();
+            connectionState.text="Connection state: "+mr.getConnectionState();
 		}
 	}
 }
