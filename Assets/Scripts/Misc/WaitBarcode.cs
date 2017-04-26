@@ -9,6 +9,8 @@ public class WaitBarcode : MonoBehaviour {
     AndroidCameraHandler barcodeReader=null;
     bool active=true;
    
+    bool hasSwingCode=false;
+   
     public GameObject mTextObject;
     Text mText;
 	// Use this for initialization
@@ -22,6 +24,7 @@ public class WaitBarcode : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        
         if(barcodeReader==null)
         {
             // first call - get barcode
@@ -36,10 +39,10 @@ public class WaitBarcode : MonoBehaviour {
             if(mText && barcodeReader.getCurrentSwing()==null)
             {
                 // no swing yet, ask for that
-                mText.text="SCAN SWING BARCODE";
+                mText.text="SCAN \nSWING\n BARCODE";
             }else
             {
-                mText.text="SCAN \nA RIDER \nBARCODE";
+                mText.text="SCAN \nA RIDER OR SWING\nBARCODE";
             }
             string code=barcodeReader.getDetectedCode();
             if(Input.GetKeyDown("x"))
@@ -71,19 +74,20 @@ public class WaitBarcode : MonoBehaviour {
                         transform.parent=null;
                         active=false;
                         print("Found user:"+code);
+                        barcodeReader.stopCodeCapture();
                     }else if(IsSwingBarcode(code))
                     {
                         barcodeReader.stopCodeCapture();
                         barcodeReader.connectToSwing(code);
                         // found a swing, need to pair to this swing
-                        // but stick in the same UI
+                        // but stick in the same UI for rider code capture
                         print("Found swing:"+code);
                         r.OnNewSwing(code);
-                        barcodeReader.initCodeCapture();                        
+                        barcodeReader.clearDetectedCode();
+                        hasSwingCode=true;
                     }
                 }                                
             }
-            barcodeReader.clearDetectedCode();
         }
 	}
     

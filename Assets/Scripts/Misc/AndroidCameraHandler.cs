@@ -138,73 +138,59 @@ public class AndroidCameraHandler: MonoBehaviour
         }
     };
     
-    // barcode scanning objects
-    CodeProcessor mProcessor=null;
-    AndroidJavaObject mCodeCam=null;
-    AndroidJavaObject mCodeDetector=null;
+    // barcode scanning objects    
+    AndroidJavaObject mBarcodeReader;
     
     public void initCodeCapture()
     {
-        isScanningCode=true;
-        detectedCode="";
-//CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barCodeDetector)
-//                .setFacing(CameraSource.CAMERA_FACING_BACK)
-//                .setRequestedPreviewSize(1600, 1024)
-//                .setRequestedFps(15.0f);
-        #if UNITY_ANDROID && !UNITY_EDITOR
-        print("barcode: make processor");
-        mProcessor=new CodeProcessor(this);
-        print("barcode: get activity");
-//        AndroidJavaObject context=new AndroidJavaClass("android.content.Context").CallStatic<AndroidJavaObject>("getApplicationContext");
-        AndroidJavaObject context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
-        print("barcode:begin");
-//        BarcodeDetector barCodeDetector = new BarcodeDetector.Builder(context).build();
-        AndroidJavaObject codeBuilder=new AndroidJavaObject("com.google.android.gms.vision.barcode.BarcodeDetector$Builder",context);
-        print("barcode:builder "+codeBuilder);
-        // only look for EAN13 barcodes (and ISBN for now so we can test on books)
-//        codeBuilder.Call<AndroidJavaObject>("setBarcodeFormats",32|3);
-        codeBuilder.Call<AndroidJavaObject>("setBarcodeFormats",(int)acceptBarcodeTypes);
-        mCodeDetector=codeBuilder.Call<AndroidJavaObject>("build");
-        print("barcode:detector "+mCodeDetector);
-        //mCodeDetector.setProcessor(something);
-        mCodeDetector.Call("setProcessor",mProcessor);
-//        AndroidJavaObject codeDectector
+        if(!isScanningCode)
+        {
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            isScanningCode=true;
+            detectedCode="";
+            AndroidJavaObject context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+            mBarcodeReader=new AndroidJavaObject("com.mrl.flashcamerasource.BarcodeReader");
+            bool readingOk=mBarcodeReader.Call<bool>("startReading",context);
+            print("Barcode start:"+readingOk);
+            #endif
+        }
         
-        // our custom camera source which supports flash on
-        AndroidJavaObject camBuilder=new AndroidJavaObject("com.mrl.flashcamerasource.CameraSource$Builder",context,mCodeDetector);
-        camBuilder.Call<AndroidJavaObject>("setFacing",0);
-        camBuilder.Call<AndroidJavaObject>("setRequestedFps",15.0f);
-        camBuilder.Call<AndroidJavaObject>("setFocusMode","continuous-picture");
-        camBuilder.Call<AndroidJavaObject>("setFlashMode","torch");
-        print("barcode:cambuilder"+camBuilder);
-        mCodeCam = camBuilder.Call<AndroidJavaObject>("build");
-        print("barcode:mCodeCam"+mCodeCam);
-        mCodeCam.Call<AndroidJavaObject>("start");
-        #endif
     }
 
     public void stopCodeCapture()
     {
         if(isScanningCode)
         {
-            
             isScanningCode=false;
-            if(mCodeCam!=null)
+            if(mBarcodeReader!=null)
             {
-                mCodeCam.Call("release");                
-                mCodeCam=null;
+                print("Stop reading barcode");
+                mBarcodeReader.Call("stopReading");                
+                mBarcodeReader=null;
             }
         }
     }
     
     public string getDetectedCode()
     {
-        return detectedCode;
+        if(mBarcodeReader==null)
+        {
+            initCodeCapture();
+            return null;
+        }
+        return mBarcodeReader.Call<string>("getDetectedCode");
     }
     
     public void clearDetectedCode()
     {
-        detectedCode="";
+        print("Clear barcode");
+        string code=getDetectedCode();
+        if(code!=null && code.Length>0)
+        {
+            print("Clearing code:"+code);
+            stopCodeCapture();
+            initCodeCapture();
+        }
     }
 
     public bool connectToSwing(string code)
@@ -218,11 +204,6 @@ public class AndroidCameraHandler: MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        string str=getDetectedCode();
-        if(str!=null && str.Length>0)
-        {
-            stopCodeCapture();
-        }
         if(flashPattern!=null && flashPattern.Length>0)
         {
             currentTime+=Time.deltaTime;        

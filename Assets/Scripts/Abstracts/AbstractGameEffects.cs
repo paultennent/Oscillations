@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class AbstractGameEffects : MonoBehaviour {
-
 	static AbstractGameEffects s_Singleton;
 	public static AbstractGameEffects GetSingleton()
 	{
@@ -19,10 +18,14 @@ public class AbstractGameEffects : MonoBehaviour {
 	protected Transform viewPoint;
     protected AndroidCameraHandler statusFlasher;
 
-	protected float swingAngle;
-	protected float sessionTime;
-	protected bool inSession;
-    protected float lastAngle;
+    [System.NonSerialized ,HideInInspector]
+	public float swingAngle;
+    [System.NonSerialized ,HideInInspector]
+	public float sessionTime;
+    [System.NonSerialized ,HideInInspector]
+	public bool inSession;
+    [System.NonSerialized ,HideInInspector]
+    public float lastAngle;
 
     
     public float debugTimeOffset=0f;
@@ -31,7 +34,8 @@ public class AbstractGameEffects : MonoBehaviour {
 	public bool dontcycle = false;
 	public float climaxRatio = 0f;
     public float pauseEndTime= 10.0f;
-	protected float offsetTime;
+    [System.NonSerialized ,HideInInspector]
+	public float offsetTime;
     public bool countUp=true;
     
     protected float swingPhase=0;

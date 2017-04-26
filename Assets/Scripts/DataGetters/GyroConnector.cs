@@ -102,12 +102,9 @@ public class GyroConnector
 
         activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-        Debug.Log("woo:1"+activity);
         intent = new AndroidJavaObject("android.content.Intent");
-        Debug.Log("woo:2"+intent);
         intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
-        Debug.Log("woo:3"+intent);
-        activity.Call<AndroidJavaObject>("stopService",intent); 
+        activity.Call<bool>("stopService",intent); 
 #endif
     }	
     // java is big endian, these are some conversion helpers

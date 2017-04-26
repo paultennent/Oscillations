@@ -1,5 +1,7 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 class BuildApk
 {
     private static string GetArg(string name)
@@ -18,12 +20,19 @@ class BuildApk
      static void PerformBuild ()
      {
         AssetDatabase.Refresh();
-        Debug.Log("woooo!");
         string targetAPK=GetArg("-targetPath");
-        string[] scenes = { "Assets/Rides/Menu.unity", "Assets/Rides/HighRoller-City-tiled.unity","Assets/Rides/Shuttlecock-City-Static.unity"};
-        Debug.Log("Building Oscillate to path: "+targetAPK+".\nScenes:"+scenes);
+        
+        Debug.Log("Building Oscillate to path: "+targetAPK+".\nScenes:");
+        List<string> scenes=new List<string>();
+        for(int c=0;c<20;c++)
+        {
+            string name = SceneUtility.GetScenePathByBuildIndex(c);                           
+            if(name==null || name.Length==0)break;
+            scenes.Add(name);
+            Debug.Log(name);
+        }
         BuildPlayerOptions options = new BuildPlayerOptions();
-        options.scenes=scenes;
+        options.scenes=scenes.ToArray();
         options.locationPathName=targetAPK;
         options.target=BuildTarget.Android;
         options.options=BuildOptions.None;

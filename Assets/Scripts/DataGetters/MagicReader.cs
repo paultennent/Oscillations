@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MagicReader : AbstractDataReader {
 
-	private GyroConnector gc;
+	private static GyroConnector gc;
 
 	private float mAngle = 0f;
 	private float mAngularVelocity=0f;
@@ -55,8 +55,12 @@ public class MagicReader : AbstractDataReader {
 
 	// Use this for initialization
 	void Start () {
-		gc = new GyroConnector();
-		gc.init ();
+        // only one gyroconnector ever - won't get deleted during the scene switch
+        if(gc==null)
+        {
+            gc = new GyroConnector();
+            gc.init ();
+        }
 	}
 	
 	// Update is called once per frame
