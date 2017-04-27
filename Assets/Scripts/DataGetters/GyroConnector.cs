@@ -180,7 +180,10 @@ public class GyroConnector
             byte[] launchPacket={1,2,3,4};
 			try
 			{
-	            receiver.SendTo(launchPacket,serverEndPoint);
+                if(receiver!=null)
+                {
+                    receiver.SendTo(launchPacket,serverEndPoint);
+                }
 			}catch(SocketException e)
 			{
 			}

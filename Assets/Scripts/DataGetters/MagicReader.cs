@@ -22,7 +22,7 @@ public class MagicReader : AbstractDataReader {
 
     public bool useAccelerometer=false;
     
-    public float getConnectionState()
+    public int getConnectionState()
     {
         return gc.mConnectionState;
     }
