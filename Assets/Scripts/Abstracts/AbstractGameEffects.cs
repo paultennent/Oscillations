@@ -9,6 +9,8 @@ public class AbstractGameEffects : MonoBehaviour {
 	{
 		return s_Singleton;
 	}
+    
+    PhaseEstimator phaseEstimator=new PhaseEstimator();
 
 	protected AbstractDataReader swingData;
 	protected SessionManager sessionManager;
@@ -54,6 +56,8 @@ public class AbstractGameEffects : MonoBehaviour {
 	protected bool suppressEffects;
 
     public float pauseStartTime = 0f;
+    
+    public bool usePLLPhaseEstimation=false;
 
 	public bool disableStatusFlasher = true;
 
@@ -219,75 +223,87 @@ public class AbstractGameEffects : MonoBehaviour {
             lowAngle = 0;
         }
         // calculate position of swing in full cycle
-        // NOTE: right now there is no smoothing of anything, it relies on input data being quite smooth?
-        // Note2: could just get quadrant from accelerometer processing
-//    protected float swingPhase;
-//    protected float swingAmplitude;
-//    protected int swingQuadrant
-        // what quadrant of the swing are we in:
-        // phase = 0: 0 -> +1, 1: +1 -> 0, 2: 0 -> -1, 3: -1 -> 0
-        switch(swingQuadrant)
+        
+        if(usePLLPhaseEstimation)
         {
-            case 0:
-                if(swingAmplitude==0)
-                {
-                    swingPhase=0.5f;
-                }else
-                {
-                    swingPhase=Mathf.Max(0,Mathf.Min(swingAngle/swingAmplitude,1));
-                }
-                if(swingAngle<highAngle-5f)
-                {
-                    swingQuadrant=1;
-                    swingAmplitude=highAngle;
-                    updateCycleTimes(1);
-                }
-                break;
-            case 1:
-                if(swingAmplitude==0)
-                {
-                    swingPhase=1.5f;
-                }else
-                {
-                    swingPhase=2-Mathf.Max(0,Mathf.Min(swingAngle/swingAmplitude,1));
-                }
-                if(swingAngle<0f)
-                {
-                    swingQuadrant=2;
-                    updateCycleTimes(2);
-                }
-                break;
-            case 2:
-                if(swingAmplitude==0)
-                {
-                    swingPhase=2.5f;
-                }else
-                {
-                    swingPhase=2+Mathf.Max(0,Mathf.Min(-swingAngle/swingAmplitude,1));
-                }
-                if(swingAngle>lowAngle+5f)
-                {
-                    swingQuadrant=3;
-                    swingAmplitude=-lowAngle;
-                    updateCycleTimes(3);
-                }
-                break;
-            case 3:
-                if(swingAmplitude==0)
-                {
-                    swingPhase=3.5f;
-                }else
-                {
-                    swingPhase=4-Mathf.Max(0,Mathf.Min(-swingAngle/swingAmplitude,1));
-                }
-                if(swingAngle>0f)
-                {
-                    swingQuadrant=0;
-                    updateCycleTimes(0);
-                }
-                break;
+            phaseEstimator.onAngle(swingAngle);
+            phaseEstimator.getSwingPhaseAndQuadrant(out swingPhase,out swingQuadrant,out swingAmplitude, out swingCycleTime);
+        }else
+        {
+            // NOTE: right now there is no smoothing of anything, it relies on input data being quite smooth?
+            // Note2: could just get quadrant from accelerometer processing
+    //    protected float swingPhase;
+    //    protected float swingAmplitude;
+    //    protected int swingQuadrant
+            // what quadrant of the swing are we in:
+            // phase = 0: 0 -> +1, 1: +1 -> 0, 2: 0 -> -1, 3: -1 -> 0
+            switch(swingQuadrant)
+            {
+                case 0:
+                    if(swingAmplitude==0)
+                    {
+                        swingPhase=0.5f;
+                    }else
+                    {
+                        swingPhase=Mathf.Max(0,Mathf.Min(swingAngle/swingAmplitude,1));
+                    }
+                    if(swingAngle<highAngle-10f)
+                    {
+                        swingQuadrant=1;
+                        swingAmplitude=highAngle;
+                        updateCycleTimes(1);
+                    }
+                    break;
+                case 1:
+                    if(swingAmplitude==0)
+                    {
+                        swingPhase=1.5f;
+                    }else
+                    {
+                        swingPhase=2-Mathf.Max(0,Mathf.Min(swingAngle/swingAmplitude,1));
+                    }
+                    if(swingAngle<0f)
+                    {
+                        swingQuadrant=2;
+                        updateCycleTimes(2);
+                    }
+                    break;
+                case 2:
+                    if(swingAmplitude==0)
+                    {
+                        swingPhase=2.5f;
+                    }else
+                    {
+                        swingPhase=2+Mathf.Max(0,Mathf.Min(-swingAngle/swingAmplitude,1));
+                    }
+                    if(swingAngle>lowAngle+10f)
+                    {
+                        swingQuadrant=3;
+                        swingAmplitude=-lowAngle;
+                        updateCycleTimes(3);
+                    }
+                    break;
+                case 3:
+                    if(swingAmplitude==0)
+                    {
+                        swingPhase=3.5f;
+                    }else
+                    {
+                        swingPhase=4-Mathf.Max(0,Mathf.Min(-swingAngle/swingAmplitude,1));
+                    }
+                    if(swingAngle>0f)
+                    {
+                        swingQuadrant=0;
+                        updateCycleTimes(0);
+                    }
+                    break;
+            }
+            //print("["+swingQuadrant+"] angle:"+swingAngle+"\t"+swingAmplitude);
+            swingPhase = MapASin (swingPhase);
         }
-		swingPhase = MapASin (swingPhase);
+
+
+
         if(Time.deltaTime>0)
         {
             swingAngVel=(swingAngle-lastAngle)/Time.deltaTime;

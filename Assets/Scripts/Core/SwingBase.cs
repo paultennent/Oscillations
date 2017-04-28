@@ -85,7 +85,8 @@ public class SwingBase : MonoBehaviour {
 		if (!sineWave) {
 			swingAngle = Gxyz [1];
 		} else {
-			swingAngle = Mathf.Sin(Time.time * 2) * sineAmplitude;
+			swingAngle = (Mathf.Sin(Time.time * 2)) * sineAmplitude ;
+//			swingAngle = (Mathf.Sin(Time.time * 2)+Random.Range(-.1f,.1f)) * sineAmplitude ;
 		}
 		
 //		swingAngle=errorFilter.addValue (time, Gxyz [1], Gaccel [2]);

@@ -14,7 +14,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 
     public GameObject cage;
 	public Transform currentPos;
-	public float gravity=9.81f;
+	public float jumpGravity=9.81f;
     public float dt = 0.01f;
     public bool showCast=false;
     public bool showPointObjects=false;
@@ -28,7 +28,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     
     // for jumping, we create a height map in a line in the direction we want to jump
     // by using downwards raycasts
-    // then we calculate which gravity based trajectory to a point on the other side of the 'road' 
+    // then we calculate which jumpGravity based trajectory to a point on the other side of the 'road' 
     // will a)hit something, b)get us there in closest to the target total distance
     const int MAP_POINTS=100;
     class HeightMapDescriptor
@@ -96,6 +96,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 	// Use this for initialization
 	void Start () {
         base.Start();
+        usePLLPhaseEstimation=true;
         endMarker=new GameObject();
         endMarker.name="endmarker";
         roadMarker=new GameObject();
@@ -255,8 +256,22 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     // make sure we're calculating from end of last trajectory 
                     currentPos.position= currentTrajectory[currentTrajectory.Count-1];
                 }
-                // set target time if 
-                if(targetEndTime>0 && targetEndTime>Time.time)
+                float timeToPhase4=(4f-swingPhase)*(swingCycleTime/4f);
+                targetTime=timeToPhase4;
+                if(targetTime<swingCycleTime/4f)
+                {
+                    targetTime+=swingCycleTime/2f;
+                }else if(targetTime>(3f* swingCycleTime/4f))
+                {
+                    targetTime-=swingCycleTime/2f;
+                }
+                
+//                targetTime=swingCycleTime/2f;
+                print(targetTime);
+                // if we're 
+                
+                // set target time 
+/*                if(targetEndTime>0 && targetEndTime>Time.time)
                 {
                     targetTime = targetEndTime- Time.time;
                 }
@@ -265,7 +280,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 if(targetTime<0.5f)
                 {
 					targetTime += swingCycleTime / 2f;
-                }
+                }*/
                 // if we're coming to the end, zoom to the final point instead
                 if((!countUp && offsetTime-targetTime<10f) || outroNext)
                 {
@@ -375,7 +390,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         roadCentre=tFrom.position;
         jumpAngle=tFrom.localRotation.eulerAngles.y;
         roadWidth=tFrom.localScale.x;
-        gravity=9.8f*tFrom.localScale.z;
+        jumpGravity=9.8f*tFrom.localScale.z;
         // distance along road of tTo
         float distanceSegment = (tTo.position-tFrom.position).magnitude;
         // distance along road of currentPos
@@ -475,7 +490,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         }
         mapDesc.heightMap[0]=startPos.y;
         mapDesc.heightMap[mapDesc.numPoints-1]=endPos.y;
-        print(endPos.y+":"+startPos.y);
+        //print(endPos.y+":"+startPos.y);
         mapDesc.isTopFloor[mapDesc.numPoints-1]=true;
         CalculateHeightMapTrajectories(mapDesc,0,distance,targetTime);
         float finalScale=mapDesc.gravityMults[mapDesc.numPoints-1];
@@ -484,7 +499,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         trajectoryIndex=0;
     }
     
-    // calculate how close to gravity each trajectory is (and what distance it is)
+    // calculate how close to jumpGravity each trajectory is (and what distance it is)
     private void CalculateHeightMapTrajectories(HeightMapDescriptor mapDesc, float roadDistance,float distance, float targetTime)
     {
         float[] heights=mapDesc.heightMap;
@@ -510,7 +525,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             trajectoryLengths[c]=-1;
         }
 
-        // calculate closest to gravity trajectory to this point
+        // calculate closest to jumpGravity trajectory to this point
         // with the exception that we must go 10m(minJumpUp) higher than the final point, as
         // otherwise it looks bad that you don't drop in on it
         for(int c=startPoint;c<numPoints;c++)
@@ -536,7 +551,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             // yMax = iY + (iV*iV/g) - .5*g*(iV/g)*(iV/g) 
             // 
             
-            // first calculate for correct gravity trajectory
+            // first calculate for correct jumpGravity trajectory
             // then check if it (a) goes high enough, (b) hits any points
             float initialUpVelocity = 0f;
             float topTime= 0f;
@@ -549,9 +564,9 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 {
                     finalScale+=0.1f;
                     float scaledTime=targetTime*finalScale;
-                    initialUpVelocity = (distanceUp + .5f*gravity*scaledTime*scaledTime)/scaledTime;
-                    topTime = initialUpVelocity/gravity;
-                    topPoint=heightStart + (initialUpVelocity*topTime) - .5f*gravity * (topTime*topTime);
+                    initialUpVelocity = (distanceUp + .5f*jumpGravity*scaledTime*scaledTime)/scaledTime;
+                    topTime = initialUpVelocity/jumpGravity;
+                    topPoint=heightStart + (initialUpVelocity*topTime) - .5f*jumpGravity * (topTime*topTime);
                 }
             }
             // make sure it goes over buildings
@@ -564,14 +579,14 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     while(checkHit)
                     {
                         float thisT=stepTime*(float)d;
-                        float thisY=heightStart+ initialUpVelocity*thisT - .5f*gravity*(thisT*thisT);
+                        float thisY=heightStart+ initialUpVelocity*thisT - .5f*jumpGravity*(thisT*thisT);
                         if(d!=0 && heights[d]>thisY && finalScale<500f) 
                         {
                             // make the scale such that this doesn't hit here
                             finalScale+=.1f;
                             scaledTime=targetTime*finalScale;
                             stepTime=scaledTime/(float)c;
-                            initialUpVelocity = (distanceUp + .5f*gravity*scaledTime*scaledTime)/scaledTime;
+                            initialUpVelocity = (distanceUp + .5f*jumpGravity*scaledTime*scaledTime)/scaledTime;
                         }else
                         {
                             checkHit=false;
@@ -597,7 +612,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     ox=x;
                     oy=y;
                     x+=stepMove;
-                    dy-=stepTime*gravity;
+                    dy-=stepTime*jumpGravity;
                     y+=stepTime*dy;
                     trajectoryLength+=Mathf.Sqrt((ox-x)*(ox-x)+(oy-y)*(oy-y));                                                                
                 }            
@@ -617,7 +632,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             float scaledY=y;
             
             upVelocities[c]=initialUpVelocity;
-            // calculate closest to natural gravity trajectory to this point
+            // calculate closest to natural jumpGravity trajectory to this point
             // scaling vertically if it will hit a building
             // also mess with the scale at the top point if it isn't high enough
             
@@ -629,7 +644,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             for(int d=0;d<c;d++)
             {
                 y+=upVelocity*stepTime;
-                upVelocity-=stepTime*gravity;
+                upVelocity-=stepTime*jumpGravity;
                 baselineY+=baselineStep;
                 scaledY=(y-baselineY)*finalScale+baselineY;
                 float compareHeight=heights[d];
@@ -640,14 +655,14 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 }
                 if(compareHeight!=-1 && y<compareHeight && y>baselineY)
                 {
-                    // need to scale us bigger or else we'll hit a building -i.e. breaks gravity
+                    // need to scale us bigger or else we'll hit a building -i.e. breaks jumpGravity
                     float scaleNeeded=(compareHeight-baselineY)/(y-baselineY);
                     finalScale=Mathf.Max(scaleNeeded,finalScale);
                 }
                 lastVel=upVelocity;
             }
             // make path look nice (except for intro section, where we
-            // don't want to mess with gravity)
+            // don't want to mess with jumpGravity)
             if(travelPathSegment!=0)
             {
                 // we want to drop down to final point always
@@ -675,7 +690,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 float oy=scaledY;
                 x+=stepMove;
                 y+=upVelocity*stepTime;
-                upVelocity-=stepTime*gravity;
+                upVelocity-=stepTime*jumpGravity;
                 baselineY+=baselineStep;
                 scaledY=(y-baselineY)*finalScale+baselineY;
                 trajectoryLength+=Mathf.Sqrt((ox-x)*(ox-x)+(oy-scaledY)*(oy-scaledY));
@@ -729,14 +744,13 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             currentTrajectory.Add(outPos);
             ratio+=stepRatio;
             // calculate distance of this trajectory            
-            dy-=stepTime*gravity;
+            dy-=stepTime*jumpGravity;
             y+=stepTime*dy;
             maxY=Mathf.Max(y,maxY);
 
             
         }
         currentTrajectory.Add(endPos);
-        print("FS:"+finalScale+"MY:"+maxY+"EP:"+endPos.y+"OP:"+outPos.y+" UV:"+upVelocity);
     }
 
 
