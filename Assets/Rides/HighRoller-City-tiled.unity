@@ -7281,6 +7281,7 @@ MonoBehaviour:
   - {fileID: 752155458}
   - {fileID: 629267462}
   wheelviewpoints: []
+  audioController: {fileID: 1514675618}
 --- !u!114 &1670035078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7309,7 +7310,7 @@ MonoBehaviour:
   applySwingTransform: 0
   applyInverseSwingTransform: 0
   debug: 1
-  sineWave: 1
+  sineWave: 0
   forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:

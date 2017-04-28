@@ -85,8 +85,9 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 			startSources(directionalSources);
 			startSources(mixSources);
 			started = true;
+			masterMixer.audioMixer.SetFloat ("Master", 0f);
 		}
-		masterMixer.audioMixer.SetFloat ("Master", 0f);
+
 	}
 
 	private void OnZeroCross()

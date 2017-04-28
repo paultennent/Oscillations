@@ -185,9 +185,9 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 // put in an up and down oscillation from the swing only
                 float ratio=1f-.1f*offsetTime;
                 // now manually fix seat transform position and rotation
-                float realSwingY=Mathf.Cos(swingAngle*Mathf.Deg2Rad) * seatDistance;
-                float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
-                float realSwingZ=Mathf.Sin(swingAngle*Mathf.Deg2Rad)*seatDistance;
+                float realSwingY=Mathf.Cos(-swingAngle*Mathf.Deg2Rad) * seatDistance;
+                float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
+                float realSwingZ=Mathf.Sin(-swingAngle*Mathf.Deg2Rad)*seatDistance;
                 
                 seat.transform.localPosition=new Vector3(0,realSwingY*ratio + (1.0f-ratio)*transformY,ratio*realSwingZ);
 //                seat.transform.rotation=Quaternion.Euler(0,180,swingAngle);
@@ -200,7 +200,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     inIntro=false;
                 }else
                 {
-                    float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
+                    float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
                     // bounce on spot
                     seat.transform.localPosition=new Vector3(0,transformY);                    
                     return;

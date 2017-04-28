@@ -33,6 +33,8 @@ public class HighRollerCamMover : AbstractGameEffects {
 
     private float accelVal;
     private bool fadedIn = false;
+
+	public HighRollerAudioController audioController;
     
 	// Use this for initialization
 	void Start () {
@@ -44,6 +46,12 @@ public class HighRollerCamMover : AbstractGameEffects {
     {
 
         base.Update();
+
+		if (!inSession) {
+			return;
+		}
+
+		audioController.begin ();
 
         if (!fadedIn)
         {

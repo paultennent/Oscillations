@@ -44,7 +44,7 @@ public class SealifeMovement : MonoBehaviour {
         {
             transform.Translate(Vector3.forward * Time.deltaTime * speed);
         }
-		if (Vector3.Distance (player.position, transform.position) > 500f) {
+		if (Vector3.Distance (player.position, transform.position) > 750f) {
 			Destroy (gameObject, 0);
 		}
 	}
