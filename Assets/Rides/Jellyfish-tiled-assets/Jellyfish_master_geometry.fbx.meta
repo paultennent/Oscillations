@@ -2452,6 +2452,22 @@ ModelImporter:
     104888: coral_02
     104890: coral_03
     104892: coral_04
+    104894: Box_red
+    104896: Box_red001
+    104898: Box_red002
+    104900: Box_red003
+    104902: Box_red004
+    104904: Box_red005
+    104906: Box_red006
+    104908: Box_red007
+    104910: Box_red008
+    104912: Box_red009
+    104914: Box_red010
+    104916: Box_red011
+    104918: Box_red012
+    104920: Box_red013
+    104922: Box_red014
+    104924: Box_red015
     400000: Box_cl1_001
     400002: Box_cl1_0011
     400004: Box_cl1_0011 1
@@ -4899,6 +4915,22 @@ ModelImporter:
     404888: coral_02
     404890: coral_03
     404892: coral_04
+    404894: Box_red
+    404896: Box_red001
+    404898: Box_red002
+    404900: Box_red003
+    404902: Box_red004
+    404904: Box_red005
+    404906: Box_red006
+    404908: Box_red007
+    404910: Box_red008
+    404912: Box_red009
+    404914: Box_red010
+    404916: Box_red011
+    404918: Box_red012
+    404920: Box_red013
+    404922: Box_red014
+    404924: Box_red015
     2300000: Box_cl1_001
     2300002: Box_cl1_0011
     2300004: Box_cl1_0011 1
@@ -7156,6 +7188,22 @@ ModelImporter:
     2304508: coral_02
     2304510: coral_03
     2304512: coral_04
+    2304514: Box_red
+    2304516: Box_red001
+    2304518: Box_red002
+    2304520: Box_red003
+    2304522: Box_red004
+    2304524: Box_red005
+    2304526: Box_red006
+    2304528: Box_red007
+    2304530: Box_red008
+    2304532: Box_red009
+    2304534: Box_red010
+    2304536: Box_red011
+    2304538: Box_red012
+    2304540: Box_red013
+    2304542: Box_red014
+    2304544: Box_red015
     3300000: Box_cl1_001
     3300002: Box_cl1_0011
     3300004: Box_cl1_0011 1
@@ -9413,6 +9461,22 @@ ModelImporter:
     3304508: coral_02
     3304510: coral_03
     3304512: coral_04
+    3304514: Box_red
+    3304516: Box_red001
+    3304518: Box_red002
+    3304520: Box_red003
+    3304522: Box_red004
+    3304524: Box_red005
+    3304526: Box_red006
+    3304528: Box_red007
+    3304530: Box_red008
+    3304532: Box_red009
+    3304534: Box_red010
+    3304536: Box_red011
+    3304538: Box_red012
+    3304540: Box_red013
+    3304542: Box_red014
+    3304544: Box_red015
     4300000: Box_cl4_010
     4300002: Box_cl2_019
     4300004: Box_cl4_007
@@ -11670,23 +11734,22 @@ ModelImporter:
     4304508: coral_03
     4304510: coral_04
     4304512: coral_01
-    6400000: Cave_repeat_001
-    6400002: Cave_repeat_bio_001
-    6400004: Cave_top
-    6400006: Cave_top_bio
-    6400008: coral_01
-    6400010: coral_02
-    6400012: coral_03
-    6400014: coral_04
-    6400016: finish
-    6400018: Mid_base
-    6400020: Mid_base_bio
-    6400022: Mid_tile_001
-    6400024: Mid_tile_bio_001
-    6400026: Mid_top_001
-    6400028: Mid_top_bio_001
-    6400030: Start
-    6400032: Start_bio
+    4304514: Box_red006
+    4304516: Box_red005
+    4304518: Box_red007
+    4304520: Box_red010
+    4304522: Box_red009
+    4304524: Box_red004
+    4304526: Box_red003
+    4304528: Box_red002
+    4304530: Box_red001
+    4304532: Box_red
+    4304534: Box_red008
+    4304536: Box_red012
+    4304538: Box_red013
+    4304540: Box_red015
+    4304542: Box_red014
+    4304544: Box_red011
     7400000: Take 001
     9500000: //RootNode
   materials:
@@ -11699,8 +11762,6 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -11717,7 +11778,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
