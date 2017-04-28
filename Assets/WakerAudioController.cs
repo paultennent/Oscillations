@@ -44,9 +44,12 @@ public class WakerAudioController : MonoBehaviour {
 
     private bool fadingOut = false;
 
+	private bool started = false;
+
     public AudioMixerGroup masterMixer;
 
     public AudioClip[] ExtraGrowthSounds;
+	public AudioClip[] ExtraShrinkSounds;
 
     // Use this for initialization
     void Start () {
@@ -77,12 +80,16 @@ public class WakerAudioController : MonoBehaviour {
 
         //specially zero the water
         waterMixer[0].audioMixer.SetFloat(waterMixer[0].name, dbsilence);
+	}
 
-        startSources(swingSources, false);
-		startSources(turnSources, false);
-		startSources(waterSources, true);
-		startSources(mixSources, false);
-
+	public void begin(){
+		if (!started) {
+			startSources (swingSources, false);
+			startSources (turnSources, false);
+			startSources (waterSources, true);
+			startSources (mixSources, false);
+			started = true;
+		}
 	}
 
 	private void OnZeroCross()
@@ -108,8 +115,12 @@ public class WakerAudioController : MonoBehaviour {
 
     public void grow()
     {
-        growthSources[0].PlayOneShot(ExtraGrowthSounds[Random.Range(0, ExtraGrowthSounds.Length)]);
+		growthSources [0].PlayOneShot (ExtraGrowthSounds [Random.Range (0, ExtraGrowthSounds.Length)]);
     }
+
+	public void shrink(){
+		growthSources [0].PlayOneShot (ExtraShrinkSounds [Random.Range (0, ExtraShrinkSounds.Length)]);
+	}
 
 	private void setupAudioSources(AudioClip[] clips, AudioMixerGroup[] mixers, List<AudioSource> sources, bool alternatePans, bool loop)
 	{
@@ -200,21 +211,25 @@ public class WakerAudioController : MonoBehaviour {
 
     private void updateWaterSounds(AudioMixerGroup[] mixers, float[] startVals, float mixRate)
     {
-        float[] current = new float[1];
+        float[] current = new float[2];
         mixers[0].audioMixer.GetFloat(mixers[0].name, out current[0]);
+		mixMixer[0].audioMixer.GetFloat(mixMixer[0].name, out current[1]);
 
-        float[] targets = new float[1];
+        float[] targets = new float[2];
 
         if (scccm.cam.position.y < 0f)
         {
             targets[0] = startVals[0];
+			targets [1] = -40f;
         }
         else
         {
             targets[0] = dbsilence;
+			targets [1] = mixMixerStartVals [0];
         }
 
         mixers[0].audioMixer.SetFloat(mixers[0].name, Mathf.Lerp(current[0], targets[0], mixRate * Time.deltaTime));
+		mixMixer[0].audioMixer.SetFloat(mixMixer[0].name, Mathf.Lerp(current[1], targets[1], mixRate * Time.deltaTime));
     }
 
 	private void updateSwingSounds(int swingQuadrant, AudioMixerGroup[] mixers, float[] startVals, float mixRate)
