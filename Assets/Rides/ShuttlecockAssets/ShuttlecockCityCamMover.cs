@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ShuttlecockCityCamMover : AbstractGameEffects {
 
+	public ShuttlecockAudioScript audioController;
 	private CityBuilder cb;
 	private bool madeStart = false;
 
@@ -96,6 +97,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 	// Use this for initialization
 	void Start () {
         base.Start();
+
         usePLLPhaseEstimation=true;
         endMarker=new GameObject();
         endMarker.name="endmarker";
@@ -122,11 +124,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 	// Update is called once per frame
 	void Update () {
 
-        if (!fadedIn)
-        {
-            FadeSphereScript.doFadeIn(5f, Color.black);
-            fadedIn = true;
-        }
+        
 
         base.Update();
         bool newQuadrant=false;
@@ -142,7 +140,15 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         }
         lastQuadrant=swingQuadrant;
         if(!inSession)return;
-        
+
+		audioController.begin ();
+
+		if (!fadedIn)
+		{
+			FadeSphereScript.doFadeIn(5f, Color.black);
+			fadedIn = true;
+		}
+			
         if (!madeStart) {
             currentPos.position=travelPathPoints[0].position;
             updateTravelPath(false);
@@ -179,9 +185,9 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 // put in an up and down oscillation from the swing only
                 float ratio=1f-.1f*offsetTime;
                 // now manually fix seat transform position and rotation
-                float realSwingY=Mathf.Cos(swingAngle*Mathf.Deg2Rad) * seatDistance;
-                float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
-                float realSwingZ=Mathf.Sin(swingAngle*Mathf.Deg2Rad)*seatDistance;
+                float realSwingY=Mathf.Cos(-swingAngle*Mathf.Deg2Rad) * seatDistance;
+                float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
+                float realSwingZ=Mathf.Sin(-swingAngle*Mathf.Deg2Rad)*seatDistance;
                 
                 seat.transform.localPosition=new Vector3(0,realSwingY*ratio + (1.0f-ratio)*transformY,ratio*realSwingZ);
 //                seat.transform.rotation=Quaternion.Euler(0,180,swingAngle);
@@ -194,7 +200,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     inIntro=false;
                 }else
                 {
-                    float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
+                    float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
                     // bounce on spot
                     seat.transform.localPosition=new Vector3(0,transformY);                    
                     return;

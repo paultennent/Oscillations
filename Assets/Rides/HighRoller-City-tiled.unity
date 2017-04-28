@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 8
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.9607843, g: 0.75816375, b: 0.5915417, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.95703024, g: 0.76171917, b: 0.6049804, a: 1}
+  m_IndirectSpecularColor: {r: 0.95703024, g: 0.76171917, b: 0.60449165, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -7281,6 +7281,7 @@ MonoBehaviour:
   - {fileID: 752155458}
   - {fileID: 629267462}
   wheelviewpoints: []
+  audioController: {fileID: 1514675618}
 --- !u!114 &1670035078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7309,7 +7310,7 @@ MonoBehaviour:
   applySwingTransform: 0
   applyInverseSwingTransform: 0
   debug: 1
-  sineWave: 1
+  sineWave: 0
   forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:
@@ -7885,7 +7886,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1969948631}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.70710677}
-  m_LocalPosition: {x: -1012.9396, y: 2.5999498, z: 17.680086}
+  m_LocalPosition: {x: -325, y: 3, z: 17.680086}
   m_LocalScale: {x: 0.9000014, y: 0.900001, z: 0.9000006}
   m_Children:
   - {fileID: 280117450}

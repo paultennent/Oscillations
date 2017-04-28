@@ -43,6 +43,8 @@ public class HighRollerAudioController : MonoBehaviour {
     private bool fadingIn = false;
     private bool fadingOut = false;
 
+	private bool started = false;
+
 
     // Use this for initialization
     void Start () {
@@ -70,15 +72,18 @@ public class HighRollerAudioController : MonoBehaviour {
 		zeroMixers(BuildingsMixers, dbsilence);
 		zeroMixers(OtherEnvMixers, dbsilence);
 
-		startSources(MixSources);
-		startSources(SwingSources);
-		startSources(BuildingSources);
-		startSources(OtherEnvSources);
-
-        //masterMixer.audioMixer.SetFloat(masterMixer.name, dbsilence);
-        //StartCoroutine(fadeIn());
-
     }
+
+	public void begin(){
+		if (!started) {
+			startSources(MixSources);
+			startSources(SwingSources);
+			startSources(BuildingSources);
+			startSources(OtherEnvSources);
+			masterMixer.audioMixer.SetFloat ("Master", 0f);
+			started = true;
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
