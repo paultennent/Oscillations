@@ -4025,6 +4025,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6f5b995b8589b2e478b360e26ca3ee6d, type: 3}
   - {fileID: 8300000, guid: 6f5b995b8589b2e478b360e26ca3ee6d, type: 3}
   masterMixer: {fileID: 24300001, guid: ec9348cf0c6134ad29c6025691cad3d5, type: 2}
+  started: 0
 --- !u!1 &669912856 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1362510719351892, guid: 8a0f7109701e24ce78c03b4ccd3a987f,
@@ -9906,6 +9907,7 @@ MonoBehaviour:
   pauseStartTime: 0
   usePLLPhaseEstimation: 0
   disableStatusFlasher: 1
+  audioController: {fileID: 667119516}
   cage: {fileID: 768310623}
   currentPos: {fileID: 1959593109}
   jumpGravity: 9.81

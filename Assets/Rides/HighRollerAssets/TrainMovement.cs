@@ -28,8 +28,8 @@ public class TrainMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (transform.position.z < player.transform.position.z-4500f && autoStart) {
-            speed = -500f;
+		if (transform.position.z < player.transform.position.z-1000f && autoStart) {
+            speed = -350f;
 		}
 
 		if ((transform.position.z - player.transform.position.z) < 750f)
