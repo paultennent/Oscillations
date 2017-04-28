@@ -45,15 +45,12 @@ public class WaitBarcode : MonoBehaviour {
                 mText.text="SCAN \nA RIDER OR SWING\nBARCODE";
             }
             string code=barcodeReader.getDetectedCode();
-            if(Input.GetKeyDown("x"))
+            if(Input.GetKeyDown("s"))
             {
-                code="912030";
-            }else if(Input.GetKeyDown("c"))
+                code="10010037";
+            }else if(Input.GetKeyDown("r"))
             {
-                code="31232";
-            }else if(Input.GetKeyDown("v"))
-            {
-                code="1234";
+                code="00000987";
             }
             if(code!=null && code.Length>0)
             {
@@ -98,7 +95,7 @@ public class WaitBarcode : MonoBehaviour {
     }
     bool IsSwingBarcode(string code)
     {
-        if(code[0]>='1')return true;
+        if(code[0]=='1')return true;
         return false;
     }
     

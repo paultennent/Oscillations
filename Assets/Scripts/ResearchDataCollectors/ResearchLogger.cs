@@ -27,6 +27,11 @@ public class ResearchLogger : MonoBehaviour {
     private StreamWriter summaryFile;
     private BinaryWriter perFrameFile;
     
+    private MagicReader mr;
+
+    
+    SwingNetwork mNet;
+    
 	// Use this for initialization
 	void Start () {
         if(sSingleton==null)
@@ -37,6 +42,10 @@ public class ResearchLogger : MonoBehaviour {
             deviceID=File.ReadAllText("/sdcard/deviceid.txt");
             deviceID=deviceID.Trim(new char[]{'\n'});
             #endif
+            mNet=GetComponent<SwingNetwork>();
+            mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
+            
+            
         }else
         {
             // only allow one of us to exist
@@ -49,6 +58,30 @@ public class ResearchLogger : MonoBehaviour {
 	
 	// Update is called once per frame 
 	void Update () {
+        AbstractGameEffects gameEffects=AbstractGameEffects.GetSingleton();
+                
+        SwingNetwork.SwingInfo info=mNet.GetSwingInfoObject();
+        info.swingID=currentSwing;
+        info.riderID=currentUser;
+        if(gameEffects!=null)
+        {
+            info.inSession=gameEffects.inSession;
+            info.rideTime=gameEffects.offsetTime;
+        }else
+        {
+            info.inSession=false;
+            info.rideTime=0f;
+            info.swingAngle=0f;
+        }
+        if(mr!=null)
+        {
+            info.headsetBattery=mr.getLocalBatteryLevel ()*100f;
+            info.swingBattery=mr.getRemoteBatteryLevel () *100f;
+            info.connectionState=mr.getConnectionState();
+            info.swingAngle=mr.getAngle();
+        }
+        
+        
 #if UNITY_ANDROID && !UNITY_EDITOR
         if(SceneManager.GetActiveScene().name!=currentScene)
         {
@@ -62,7 +95,6 @@ public class ResearchLogger : MonoBehaviour {
             Input.location.Stop();
             hasLocation=true;
         }
-        AbstractGameEffects gameEffects=AbstractGameEffects.GetSingleton();
 		if(gameEffects!=null && gameEffects.inSession)
         {
             if(!recording)
