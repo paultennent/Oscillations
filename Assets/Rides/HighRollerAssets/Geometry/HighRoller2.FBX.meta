@@ -35,6 +35,26 @@ ModelImporter:
     100054: block_low02
     100056: block_low004
     100058: block_low03
+    100060: Link_high01
+    100062: Link_high02
+    100064: Link_high03
+    100066: Link_high_02
+    100068: Link_high_03
+    100070: Link_high_04
+    100072: Link_low004
+    100074: Link_low01
+    100076: Link_low02
+    100078: Link_low03
+    100080: Link_mid01
+    100082: Link_mid02
+    100084: Link_mid03
+    100086: Link_mid04
+    100088: Link_start
+    100090: LinkPark_01
+    100092: LinkPark_02
+    100094: LinkPark_rp_01
+    100096: LinkPark_rp_02
+    100098: Beach_end
     400000: Block_end
     400002: Block_high01
     400004: Block_high02
@@ -65,6 +85,26 @@ ModelImporter:
     400054: block_low02
     400056: block_low004
     400058: block_low03
+    400060: Link_high01
+    400062: Link_high02
+    400064: Link_high03
+    400066: Link_high_02
+    400068: Link_high_03
+    400070: Link_high_04
+    400072: Link_low004
+    400074: Link_low01
+    400076: Link_low02
+    400078: Link_low03
+    400080: Link_mid01
+    400082: Link_mid02
+    400084: Link_mid03
+    400086: Link_mid04
+    400088: Link_start
+    400090: LinkPark_01
+    400092: LinkPark_02
+    400094: LinkPark_rp_01
+    400096: LinkPark_rp_02
+    400098: Beach_end
     2300000: Block_end
     2300002: Block_high01
     2300004: Block_high02
@@ -93,6 +133,7 @@ ModelImporter:
     2300050: block_low02
     2300052: block_low004
     2300054: block_low03
+    2300056: Beach_end
     3300000: Block_end
     3300002: Block_high01
     3300004: Block_high02
@@ -121,6 +162,7 @@ ModelImporter:
     3300050: block_low02
     3300052: block_low004
     3300054: block_low03
+    3300056: Beach_end
     4300000: Block_high02
     4300002: RoadC031_MeshPart0
     4300004: RoadC031_MeshPart1
@@ -149,6 +191,7 @@ ModelImporter:
     4300050: block_low02
     4300052: block_low03
     4300054: block_low004
+    4300056: Beach_end
     7400000: Take 001
     9500000: //RootNode
   materials:
