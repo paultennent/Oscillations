@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ShuttlecockCityCamMover : AbstractGameEffects {
 
+	public ShuttlecockAudioScript audioController;
 	private CityBuilder cb;
 	private bool madeStart = false;
 
@@ -96,6 +97,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 	// Use this for initialization
 	void Start () {
         base.Start();
+
         usePLLPhaseEstimation=true;
         endMarker=new GameObject();
         endMarker.name="endmarker";
@@ -122,11 +124,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
 	// Update is called once per frame
 	void Update () {
 
-        if (!fadedIn)
-        {
-            FadeSphereScript.doFadeIn(5f, Color.black);
-            fadedIn = true;
-        }
+        
 
         base.Update();
         bool newQuadrant=false;
@@ -142,7 +140,15 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         }
         lastQuadrant=swingQuadrant;
         if(!inSession)return;
-        
+
+		audioController.begin ();
+
+		if (!fadedIn)
+		{
+			FadeSphereScript.doFadeIn(5f, Color.black);
+			fadedIn = true;
+		}
+			
         if (!madeStart) {
             currentPos.position=travelPathPoints[0].position;
             updateTravelPath(false);
