@@ -15,6 +15,7 @@ public class BlockLayout : MonoBehaviour {
     public GameObject[] midBlocks;
     public GameObject[] highBlocks;
 	public GameObject[] beachBlocks;
+    public GameObject beachEndBlock;
     public GameObject parkStartBlock;
     public GameObject[] parkRepeatingBlocks;
     public GameObject parkEndBlock;
@@ -32,7 +33,8 @@ public class BlockLayout : MonoBehaviour {
 		LOW1,
         MID1,
         HIGH1,
-		BEACH1,
+		BEACH,
+        BEACHEND,
 		HIGH2,
         PARKSTART,
         PARKREST,
@@ -81,6 +83,7 @@ public class BlockLayout : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
+        PopulateBlockList();
         sBlockLayout=this;
         startTime=Time.time;
         LayoutIncrementally(0,0);
@@ -151,9 +154,72 @@ public class BlockLayout : MonoBehaviour {
 
 	//future ref joe: random.range is exclusive in the upper end for integers (i know!)
 
+    class BlockListItem
+    {
+        public BlockListItem(LayoutPos thisBlockPos,GameObject []objs,float timeInBlock)
+        {
+            this.blockPos=thisBlockPos;
+            this.objs=objs;
+            this.timeInBlock=timeInBlock;
+        }
+        public LayoutPos blockPos;
+        public GameObject []objs;
+        public float timeInBlock;
+        public float incrementalEndTime;
+    };
+
+    List<BlockListItem> blocks=new List<BlockListItem>();
+    int blockListIndex=0;
+    
+    void PopulateBlockList()
+    {
+        blocks.Add(new BlockListItem(LayoutPos.START,new GameObject[]{startBlock},0));
+        blocks.Add(new BlockListItem(LayoutPos.LOW1,lowBlocks,2));
+        blocks.Add(new BlockListItem(LayoutPos.MID1,midBlocks,2));
+        blocks.Add(new BlockListItem(LayoutPos.HIGH1,highBlocks,1));
+        blocks.Add(new BlockListItem(LayoutPos.BEACH,beachBlocks,2));
+        blocks.Add(new BlockListItem(LayoutPos.BEACHEND,new GameObject[]{beachEndBlock},0));
+        blocks.Add(new BlockListItem(LayoutPos.HIGH2,highBlocks,1));
+        blocks.Add(new BlockListItem(LayoutPos.PARKSTART,new GameObject[]{parkStartBlock},0));
+        blocks.Add(new BlockListItem(LayoutPos.PARKREST,parkRepeatingBlocks,.5f));
+        blocks.Add(new BlockListItem(LayoutPos.PARKEND,new GameObject[]{parkEndBlock},0));
+        blocks.Add(new BlockListItem(LayoutPos.HIGH3,highBlocks,2));
+        blocks.Add(new BlockListItem(LayoutPos.MID2,midBlocks,2));
+        blocks.Add(new BlockListItem(LayoutPos.LOW2,lowBlocks,2));
+        blocks.Add(new BlockListItem(LayoutPos.END,new GameObject[]{endBlock},0));
+        blocks.Add(new BlockListItem(LayoutPos.FINISHED,null,5));
+        float totalTime=0f;
+        foreach(BlockListItem b in blocks)
+        {
+            totalTime+=b.timeInBlock;
+        }
+        float endTime=0f;
+        foreach(BlockListItem b in blocks)
+        {
+            endTime+=b.timeInBlock;
+            b.incrementalEndTime=endTime/totalTime;
+        }        
+    }
+    
+    
     void LayoutIncrementally(float untilLength,float fractionThrough)
     {
-        switch(currentBlockPos)
+
+        BlockListItem block = blocks[blockListIndex];
+        if(block.objs!=null)
+        {
+            blockDropPos=PlaceBlock(currentBlockPos,block.objs[Random.Range(0,block.objs.Length)],blockDropPos);
+        }
+        if( block.timeInBlock==0 || fractionThrough>=block.incrementalEndTime)
+        {
+            if(blockListIndex<blocks.Count-1)
+            {
+                blockListIndex++;
+                currentBlockPos=blocks[blockListIndex].blockPos;
+            }
+        }
+    
+/*        switch(currentBlockPos)
         {
          case LayoutPos.START:
             {
@@ -187,19 +253,25 @@ public class BlockLayout : MonoBehaviour {
 				blockDropPos=PlaceBlock(currentBlockPos,highBlocks[Random.Range(0,highBlocks.Length)],blockDropPos);
                 if(fractionThrough>0.4)
                 {
-                    currentBlockPos=LayoutPos.BEACH1;
+                    currentBlockPos=LayoutPos.BEACH;
                 }
             }
             break;
-         case LayoutPos.BEACH1:
+         case LayoutPos.BEACH:
 				{
 					blockDropPos = PlaceBlock(currentBlockPos, beachBlocks[Random.Range(0, beachBlocks.Length)], blockDropPos);
 					if (fractionThrough > 0.45)
 					{
-						currentBlockPos = LayoutPos.HIGH2;
+						currentBlockPos = LayoutPos.BEACHEND;
 					}
 				}
 				break;
+            case LayoutPos.BEACHEND:
+            {
+					blockDropPos = PlaceBlock(currentBlockPos, beachEndBlock, blockDropPos);
+                    currentBlockPos=LayoutPos.HIGH2;
+            }
+            break;
 			case LayoutPos.HIGH2:
 				{
 					blockDropPos = PlaceBlock(currentBlockPos, highBlocks[Random.Range(0, highBlocks.Length )], blockDropPos);
@@ -232,7 +304,7 @@ public class BlockLayout : MonoBehaviour {
          case LayoutPos.HIGH3:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,highBlocks[Random.Range(0,highBlocks.Length)],blockDropPos);
-                if(fractionThrough>0.7)
+                if(fractionThrough>0.6)
                 {
                     currentBlockPos=LayoutPos.MID2;
                 }
@@ -241,7 +313,7 @@ public class BlockLayout : MonoBehaviour {
          case LayoutPos.MID2:
             {
 				blockDropPos=PlaceBlock(currentBlockPos,midBlocks[Random.Range(0,midBlocks.Length)],blockDropPos);
-                if(fractionThrough>0.8)
+                if(fractionThrough>0.65)
                 {
                     currentBlockPos=LayoutPos.LOW2;
                 }
@@ -250,7 +322,7 @@ public class BlockLayout : MonoBehaviour {
 				case LayoutPos.LOW2:
 				{
 					blockDropPos = PlaceBlock(currentBlockPos, midBlocks[Random.Range(0, midBlocks.Length)], blockDropPos);
-					if (fractionThrough > 0.8)
+					if (fractionThrough > 0.7)
 					{
 						currentBlockPos = LayoutPos.END;
 					}
@@ -267,7 +339,7 @@ public class BlockLayout : MonoBehaviour {
             break;
          default:
             break;
-        }        
+        }        */
     }
 
     public void EnsureEndBlock()
@@ -275,6 +347,7 @@ public class BlockLayout : MonoBehaviour {
         // make sure that we're in state FINISHED
         if(currentBlockPos!=LayoutPos.FINISHED)
         {
+            blockListIndex=blocks.Count-1;
             currentBlockPos=LayoutPos.END;
             float zPos=viewpoint.position.z;
             LayoutIncrementally(zPos,1f);            

@@ -28,6 +28,8 @@ public class HighRollerCamMover : AbstractGameEffects {
     private float introTime=5f;
     private float outtroTime=10f;
     private float outtroSwingTime=5f;
+    
+    private float forceOutroTime=-1;
 
     private float accelVal;
     private bool fadedIn = false;
@@ -78,6 +80,24 @@ public class HighRollerCamMover : AbstractGameEffects {
             {
                 launched=true;
             }            
+        }else if(forceOutroTime>=0)
+        {
+            BlockLayout bl = BlockLayout.GetBlockLayout();
+            Vector3 endPos=bl.currentTarget.position;
+            Vector3 topPoint=endPos+Vector3.up*seatDrop;
+            Quaternion rotation=Quaternion.Euler(-swingAngle,0,0);
+            Vector3 rotationOffset=rotation*Vector3.up*-seatDrop;
+            Vector3 targetPoint=rotationOffset+topPoint;
+            // make it gradually start swinging again
+            viewpoint.transform.position=Vector3.Lerp(targetPoint,viewpoint.transform.position,forceOutroTime/10);
+            // make it fade
+            
+            if (forceOutroTime<5 && !FadeSphereScript.isFading())
+            {
+                FadeSphereScript.doFadeOut(5f, Color.black);
+                inCooldown = true;
+            }
+            forceOutroTime=Mathf.Max(forceOutroTime-Time.deltaTime,0);
         }else if(offsetTime<outtroTime && !countUp)
         {
             // last 20 seconds - outtro - zoom to final point in first 10 seconds then return to swinging for 10 seconds and fade
@@ -110,10 +130,11 @@ public class HighRollerCamMover : AbstractGameEffects {
             
             float mz = BlockLayout.GetBlockLayout().GetMaxZ();
             float newZ=viewpoint.transform.position.z + Time.deltaTime * speed;
-            if(mz!=0f )
+            if(mz!=0f && newZ>mz)
             {
                 // needs to drop into swing outtro here if we hit it early
-                newZ=Mathf.Min(mz,newZ);
+                newZ=mz;
+                forceOutroTime=10f;
             }
             viewpoint.transform.position=new Vector3(viewpoint.transform.position.x,viewpoint.transform.position.y,newZ);
         }

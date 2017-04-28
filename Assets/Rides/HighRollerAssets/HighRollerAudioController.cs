@@ -83,13 +83,14 @@ public class HighRollerAudioController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        //if (FadeSphereScript.isFading())
-        //{
-        //    if (!fadingOut)
-        //    {
-        //        StartCoroutine(fadeOut());
-        //    }
-        //}
+
+        if (FadeSphereScript.isFadingOut())
+        {
+            if (!fadingOut)
+            {
+                StartCoroutine(fadeOut());
+            }
+        }
 
         float swingAngle = swingBase.getSwingAngle();
 		int swingQuadrant = camMover.getSwingQuadrant();
@@ -235,7 +236,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		{
 			targets = new float[] { dbsilence, startVals[1] };
 		}
-		else if (pos == BlockLayout.LayoutPos.BEACH1)
+		else if (pos == BlockLayout.LayoutPos.BEACH)
 		{
 			targets = new float[] { startVals[0], dbsilence };
 		}
@@ -274,7 +275,7 @@ public class HighRollerAudioController : MonoBehaviour {
 			{
 				targets = new float[] { startVals[0], startVals[1] };
 			}
-			else if (pos == BlockLayout.LayoutPos.HIGH1 || pos == BlockLayout.LayoutPos.HIGH2 || pos == BlockLayout.LayoutPos.HIGH3 || pos == BlockLayout.LayoutPos.BEACH1)
+			else if (pos == BlockLayout.LayoutPos.HIGH1 || pos == BlockLayout.LayoutPos.HIGH2 || pos == BlockLayout.LayoutPos.HIGH3 || pos == BlockLayout.LayoutPos.BEACH)
 			{
 				targets = new float[] { startVals[0], dbsilence };
 			}
@@ -298,7 +299,7 @@ public class HighRollerAudioController : MonoBehaviour {
 		mixers[1].audioMixer.SetFloat(mixers[1].name, Mathf.Lerp(current[1], targets[1], mixRate * Time.deltaTime));
 
 		//print (flap);
-        if (pos != BlockLayout.LayoutPos.START && pos != BlockLayout.LayoutPos.BEACH1 && pos != BlockLayout.LayoutPos.PARKSTART && pos != BlockLayout.LayoutPos.PARKREST && pos != BlockLayout.LayoutPos.PARKEND && pos != BlockLayout.LayoutPos.END && pos != BlockLayout.LayoutPos.FINISHED)
+        if (pos != BlockLayout.LayoutPos.START && pos != BlockLayout.LayoutPos.BEACH && pos != BlockLayout.LayoutPos.PARKSTART && pos != BlockLayout.LayoutPos.PARKREST && pos != BlockLayout.LayoutPos.PARKEND && pos != BlockLayout.LayoutPos.END && pos != BlockLayout.LayoutPos.FINISHED)
         {
             mixers[2].audioMixer.SetFloat(mixers[2].name, Mathf.Lerp(current[2], flap, 30f * Time.deltaTime));
         }
