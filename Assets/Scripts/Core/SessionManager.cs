@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class SessionManager : MonoBehaviour {
 
+    static SessionManager globalAccess;
+    
+    public static SessionManager getInstance()
+    {
+        return globalAccess;
+    }
+
 	public float triggerAngle=10f;
 
 	private bool inGame=false;
@@ -18,7 +25,7 @@ public class SessionManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		globalAccess=this;
 	}
 	
 	// Update is called once per frame

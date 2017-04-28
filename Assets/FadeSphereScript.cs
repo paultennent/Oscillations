@@ -8,6 +8,8 @@ public class FadeSphereScript : MonoBehaviour {
 
     public bool fading = false;
     public bool fadingOut = false;
+    
+    public bool seenGame=false;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +18,16 @@ public class FadeSphereScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if(SessionManager.getInstance().isInSession())
+        {
+            seenGame=true;
+        }else
+        {
+            if(seenGame && !fadingOut && !fading)
+            {
+                doFadeOut(5,Color.black);
+            }
+        }
 
 	}
 

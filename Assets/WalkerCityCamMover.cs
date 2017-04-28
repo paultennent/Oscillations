@@ -12,6 +12,7 @@ public class WalkerCityCamMover : AbstractGameEffects
     public Transform vp;
 	public Transform pivot;
     public Transform cam;
+    public bool debugShowPath=false;
 
     public GameObject waterBody;
 
@@ -63,7 +64,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	int lastSwingQuadrant = 0;
 
-	float speedMultiplier = 2f;
+	float speedMultiplier = 5f;
 	float rotAmount = 0f;
 	float distTravelled;
 	float nextStepDist = 0f;
@@ -71,20 +72,20 @@ public class WalkerCityCamMover : AbstractGameEffects
 	bool growing = false;
 	bool shrinking = false;
 
-	bool steppingUp = false;
 
 	float zeroFloor = 1.3f;
 	bool hitWaypoint = false;
 
 	bool sentGrow = false;
 
+    
+    public float turnRadius=20f;
 	//route rules
 	int stage = 0;
 	int stepCounter = 0;
-	int[] steps;
-	float[] growthRates;
-	float[] turnAmounts;
-	float [] floorheights;
+    float currentTurnAmount=0f;
+    float percentageThroughTurn=0f;
+    float currentFloorHeight=0;
 
 	float lastDistToNextWaypoint = 9999999f;
 
@@ -92,23 +93,30 @@ public class WalkerCityCamMover : AbstractGameEffects
     void Start()
     {
         base.Start();
+        currentFloorHeight=zeroFloor;
+
+        if(debugShowPath)
+        {
+            GameObject fullPath=new GameObject("fullpath");
+            for(int c=0;c<2000;c++)
+            {
+                followWaypointPath(2);
+                GameObject newObj=GameObject.CreatePrimitive(PrimitiveType.Cube);
+                newObj.transform.position=vp.position;
+                newObj.transform.parent=fullPath.transform;
+            }
+            followWaypointPath(-10000);
+        }
+        
         theSwingBase = GetComponent<SwingBase>();
         curTargetWaypoint = 1;
 
         initialPosition = vp.position;
 
-		//setup route
-		//17 steps - turn left 90 degrees
-		//27 steps - turn right 30 degrees - into the city
-		//30 steps - step up onto the buildings
-		//34 steps - turn left 90 degrees and down into the waterline
-		//43 steps - turn right 60 degrees - onto the far edge
-		//46 steps - turn right 90 degrees - walking to end now
-
-		//steps = new int[]{17,27,30,34,43,48,100000};
-		growthRates = new float[] {3.005f,3f,3f,3f,3f,1.5f,1.5f,1.5f,-13.5f,-0.75f};
-		turnAmounts = new float[] {0f,-90f,30f,0f,0f,-75f,0f,0f,45f,90f,0f};
-		floorheights = new float[] {zeroFloor,zeroFloor,zeroFloor,zeroFloor+100f,zeroFloor+30f,zeroFloor,zeroFloor-100f,zeroFloor-50,zeroFloor,zeroFloor };
+        // this is in point.scale.y now
+		//growthRates = new float[] {3.005f,3f,3f,3f,3f,1.5f,1.5f,1.5f,-13.5f,-0.75f};
+        // the below is in point.position.y (with zerofloor added in case you want to shift everything up or down)
+		//floorheights = new float[] {zeroFloor,zeroFloor,zeroFloor,zeroFloor+100f,zeroFloor+30f,zeroFloor,zeroFloor-100f,zeroFloor-50,zeroFloor,zeroFloor };
     }
 
     public bool isTurning()
@@ -120,7 +128,15 @@ public class WalkerCityCamMover : AbstractGameEffects
     void Update()
     {
 		base.Update();
-
+        if(Input.GetKey("]"))
+        {
+            followWaypointPath(Time.deltaTime*500f);
+        }
+        if(Input.GetKey("["))
+        {
+            followWaypointPath(-Time.deltaTime*500f);
+        }
+        
 		if (!inSession) {
 			return;
 		}
@@ -145,7 +161,8 @@ public class WalkerCityCamMover : AbstractGameEffects
         {
             //we're at the end - do the outro
             //lerp to the correct position and rotation, just in case we're out
-            if (!inOutro)
+            inOutro=true;
+/*            if (!inOutro)
             {
                 if (Vector3.Distance(vp.position, path[path.Length - 1].position) < 0.1f)
                 {
@@ -162,7 +179,7 @@ public class WalkerCityCamMover : AbstractGameEffects
                     return;
                 }
             }
-            else
+            else*/
             {
                 if (Time.time > outroStartTime + 5f)
                 {
@@ -230,38 +247,13 @@ public class WalkerCityCamMover : AbstractGameEffects
 
             //this is the swinging action
 			if (((lastSwingQuadrant == 2) && (swingQuadrant == 3)) || ((lastSwingQuadrant == 0) && (swingQuadrant == 1))) {
-				if (turning) {
-					turning = false;
-				}
-				if (steppingUp) {
-					steppingUp = false;
-				}
 					
 				swoopTime = 0f;
 				sentGrow = false;
 				stepCounter++;
 
-				if (distToNextWaypoint > lastDistToNextWaypoint || hitWaypoint) {
-					//we've reached a turning point
-					stage++;
-
-					if (stage == path.Length) {
-						//we've reached the end of the line
-						return;
-					}
-
-					turning = true;
-					if (floorheights [stage - 1] != floorheights [stage]) {
-						steppingUp = true;
-					}
-					rotAmount = turnAmounts [stage];
-					hitWaypoint = false;
-					lastDistToNextWaypoint = 9999999f;
-					distToNextWaypoint = 9999999f;
-				}
 			}
 				
-			growthRate = growthRates[stage];
 
 			float halfcycle = swingCycleTime / 2f;
 			float quartercycle = swingCycleTime / 4f;
@@ -285,34 +277,30 @@ public class WalkerCityCamMover : AbstractGameEffects
 					}
 				}
 				if (!sentGrow) {
-					if (growthRates [stage] > 2) {
+					if (growthRate> 2) {
 						audioController.grow ();
-					} else if (growthRates [stage] < 0) {
+					} else if (growthRate  < 0) {
 						audioController.shrink ();
 					}
 					sentGrow = true;
 				}
 			}
 
-			//if we have to turn
-			if (turning) {
-				vp.localEulerAngles = new Vector3 (0f, vp.localEulerAngles.y + turnAmounts [stage] * Time.deltaTime * (1f/halfcycle), 0f);
-			}
 				
-			if (vp.position.y < floorheights [stage]) {
-				float diff = Mathf.Abs(floorheights [stage] - vp.position.y);
+			if (vp.position.y < currentFloorHeight) {
+				float diff = Mathf.Abs(currentFloorHeight - vp.position.y);
 				float newPos = vp.position.y + (diff * Time.deltaTime * (1f / halfcycle));
-				if (newPos > floorheights [stage]) {
-					newPos = floorheights [stage];
+				if (newPos > currentFloorHeight) {
+					newPos = currentFloorHeight;
 				}
 				vp.position = new Vector3 (vp.position.x, newPos , vp.position.z);
 			}
-			else if (vp.position.y > floorheights [stage]) {
+			else if (vp.position.y > currentFloorHeight) {
 				
-				float diff = Mathf.Abs(vp.position.y - floorheights [stage]);
+				float diff = Mathf.Abs(vp.position.y - currentFloorHeight);
 				float newPos = vp.position.y - (diff * Time.deltaTime * (1f / halfcycle));
-				if (newPos < floorheights [stage]) {
-					newPos = floorheights [stage];
+				if (newPos < currentFloorHeight) {
+					newPos = currentFloorHeight;
 				}
 				vp.position = new Vector3 (vp.position.x, newPos , vp.position.z);
 			}
@@ -332,17 +320,6 @@ public class WalkerCityCamMover : AbstractGameEffects
 				curAngle = -maxTipAngle * yPos;
 			}
 
-			//add banking
-			if (turning) {
-				if (turnAmounts [stage] < 0) {
-					curAngle += maxTipAngle * yPos * Mathf.Abs(turnAmounts [stage])/30f;
-					//turning left - bank right
-
-				} else if (turnAmounts [stage] > 0) {
-					curAngle += -maxTipAngle * yPos * Mathf.Abs(turnAmounts [stage])/30f;
-					//turning right - bank left
-				}
-			}
 
 
 			//we only want to go down 75% of our height
@@ -350,8 +327,11 @@ public class WalkerCityCamMover : AbstractGameEffects
 				yPos = yPos * myHeight * dropPercentage;
 			}
 
-			speed = speed * myHeight;
+            
+			speed = speed * Mathf.Max(myHeight,5f);
 
+//            print("YP:"+yPos+" S:"+speed+" MH:"+myHeight);
+            
 			//speed multiplier? - probably going to need this to be able to finish the route in time
 			speed = speed * speedMultiplier;
 				
@@ -360,8 +340,25 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 			pivot.localEulerAngles = new Vector3(0f,0f,curAngle);
 
+            followWaypointPath(speed*Time.deltaTime);
 
-			if (distToNextWaypoint <= lastDistToNextWaypoint && !hitWaypoint) {
+            			//add banking
+			if (turning) {
+                float bankingAmount = currentTurnAmount;
+                // fade banking in and out
+                if(percentageThroughTurn<0.2)
+                {
+                    bankingAmount*=percentageThroughTurn*5f;
+                }else if(percentageThroughTurn>.8)
+                {
+                    bankingAmount*=(1f-percentageThroughTurn)*5f;
+                }
+                curAngle += -maxTipAngle * yPos * (currentTurnAmount*percentageThroughTurn) /30f;
+
+			}
+
+            
+/*			if (distToNextWaypoint <= lastDistToNextWaypoint && !hitWaypoint) {
 				//if we're in the final run, lets just tidy up our position and angle
 				//if (stage == path.Length - 2) {
 					//fastLookAt (vp, path [stage + 1]);
@@ -374,12 +371,9 @@ public class WalkerCityCamMover : AbstractGameEffects
 				hitWaypoint = true;
 				float lefties = 1f/(halfcycle - swoopTime);
 				//vp.position = Vector3.Lerp (vp.position, path [stage+1].position, Time.deltaTime * lefties);
-			}
+			}*/
 			lastDistToNextWaypoint = distToNextWaypoint;
         }
-
-
-
     }
 
     private float Remap(float val, float OldMin, float OldMax, float NewMin, float NewMax)
@@ -394,7 +388,149 @@ public class WalkerCityCamMover : AbstractGameEffects
 		Quaternion rotation = Quaternion.LookRotation(lookPos);
 		t.rotation = rotation;
 	}
-		
+    
+    float totalDistanceOnPath=0f;
+    void followWaypointPath(float distanceForwards)
+    {
+
+        totalDistanceOnPath+=distanceForwards;
+        if(totalDistanceOnPath<0)totalDistanceOnPath=0;
+        // path line
+        Vector2 lineStart=new Vector2(path[0].position.x,path[0].position.z);
+        float distanceLeft=totalDistanceOnPath;
+        for(int c=1;c<path.Length;c++)
+        {
+            growthRate=path[c-1].localScale.y;
+            currentFloorHeight=path[c-1].position.y+zeroFloor;
+            // first calculate the straight line bit
+            Vector2  lineEnd=new Vector2(path[c].position.x,path[c].position.z);
+            Vector2 offset=(lineEnd-lineStart);
+            Vector2 direction=offset.normalized;
+            float lineDistance=offset.magnitude;
+            if(c!=path.Length-1)
+            {
+                // find the radius point for the rounded corner
+                // this is the point which is [radius] away from both lines in a perpendicular direction
+                // along the bisecting vector
+                
+                
+                
+                
+                Vector2 nextEnd=new Vector2(path[c+1].position.x,path[c+1].position.z);                
+                Vector2 nextDirection= (nextEnd-lineEnd).normalized;
+
+                
+                // two directions of lines exiting and leaving this point
+/*                float angle1 = Mathf.Rad2Deg*Mathf.Atan2(nextDirection.y,nextDirection.x);
+                float angle2 = Mathf.Rad2Deg*Mathf.Atan2(-direction.y,-direction.x);
+                // bisection = angle that is half way between these two 
+                float bisectionAngle=(angle1+angle2)*.5;
+                Vector2 radiusDirection=Quaternion.Euler(0,0,bisectionAngle)*Vector2.right;
+                if(Vector2.Dot(radiusDirection,nextDirection)<0)
+                {
+                    radiusDirection=-radiusDirection;
+                }*/
+                
+                float angle=Mathf.Rad2Deg*(Mathf.Atan2(nextDirection.y,nextDirection.x)-Mathf.Atan2(direction.y,direction.x));
+                if(angle<-180)angle+=360;
+                if(angle>180)angle-=360;
+
+                Vector2 radiusDirection;
+                if(angle<0)
+                {
+                    radiusDirection=Quaternion.Euler(0,0,(angle-180f)*.5f)*direction;
+                }else
+                {
+                    radiusDirection=Quaternion.Euler(0,0,(angle+180f)*.5f)*direction;
+                }
+                
+                // radius point is distance of radius from line in perpendicular direction
+                Vector2 perpendicularLine1=Quaternion.Euler(0,0,90)*direction;
+                if(Vector2.Dot(perpendicularLine1,nextDirection)<0)
+                {
+                    perpendicularLine1=Quaternion.Euler(0,0,-90)*direction;
+                }
+                Vector2 perpendicularLine2=new Vector2(nextDirection.y,-nextDirection.x);
+                Vector2 cornerCentrePoint = lineEnd + radiusDirection * (turnRadius/Vector2.Dot(radiusDirection,perpendicularLine1));
+                                
+                float distanceFromSecondLine = ((cornerCentrePoint-lineEnd)-nextDirection*Vector2.Dot(cornerCentrePoint-lineEnd,nextDirection)).magnitude;
+
+                // move away from the second line in the perpendicular that is coming back on us
+                cornerCentrePoint -= direction*(turnRadius-distanceFromSecondLine)*Vector2.Dot(perpendicularLine2,direction);
+                
+/*                GameObject newObj=GameObject.CreatePrimitive(PrimitiveType.Cube);
+                newObj.transform.position=new Vector3(cornerCentrePoint.x,0,cornerCentrePoint.y);
+                newObj.transform.parent=fullPath.transform;
+                newObj.name="CornerPoint";*/
+
+                
+                // now move away from the second line by radius
+                float distanceBeforeTurn=Vector3.Dot(cornerCentrePoint - lineStart,direction); 
+                //print(distanceBeforeTurn+","+lineDistance);
+                
+                if( distanceLeft<distanceBeforeTurn)
+                {
+                    // on the straight bit of this line
+                    Vector2 finalPosition=lineStart+(distanceLeft*direction);;
+                    vp.transform.position = new Vector3(finalPosition.x,vp.transform.position.y,finalPosition.y);
+                    curTargetWaypoint=c;
+                    vp.transform.rotation= Quaternion.LookRotation(new Vector3(direction.x,0,direction.y), Vector3.up);;
+                    stage=c-1;
+                    turning=false;
+                    return;
+                }else
+                {
+                    // take off the straight line bit
+                    distanceLeft-=distanceBeforeTurn;
+
+                    // go round the corner
+                    
+                    float arcDistance = Mathf.Abs(angle/360f) * (Mathf.PI * turnRadius*2f);
+                    //print("AD:"+arcDistance);
+                    if(arcDistance>distanceLeft)
+                    {
+                        float rotation = angle * Mathf.Abs(distanceLeft / arcDistance);
+                        Vector2 turnPoint= lineStart+(distanceBeforeTurn*direction);
+                        Vector2 radiusOffset = (turnPoint-cornerCentrePoint);
+                        radiusOffset=Quaternion.Euler(0,0,rotation)*radiusOffset;
+                        Vector3 finalPosition= radiusOffset + cornerCentrePoint;
+                        vp.transform.position = new Vector3(finalPosition.x,vp.transform.position.y,finalPosition.y);
+                        vp.transform.rotation= Quaternion.LookRotation(new Vector3(direction.x,0,direction.y), Vector3.up)*Quaternion.Euler(0,-rotation,0);
+                        stage=c-1;
+                        turning=true;
+                        percentageThroughTurn=distanceLeft/arcDistance;
+                        currentTurnAmount=Mathf.Abs(angle);
+                        return;
+                    }else
+                    {
+                        // find the next startpoint
+                        distanceLeft-=arcDistance;
+                        Vector2 turnPoint= lineStart+(distanceBeforeTurn*direction);
+                        Vector2 radiusOffset = (turnPoint-cornerCentrePoint);
+                        radiusOffset=Quaternion.Euler(0,0,angle)*radiusOffset;
+                        lineStart=radiusOffset + cornerCentrePoint;
+                    }
+                }
+                // now calculate the 
+            }else
+            {
+                // last line - go along it and stop at the end
+                if(distanceLeft>lineDistance)
+                {
+                    stage=c;
+                }else
+                {
+                    stage=c-1;
+                }
+                distanceLeft=Mathf.Min(distanceLeft,lineDistance);
+                Vector3 finalPosition=lineStart+distanceLeft*direction;
+                vp.transform.position = new Vector3(finalPosition.x,vp.transform.position.y,finalPosition.y);
+                vp.transform.rotation= Quaternion.LookRotation(new Vector3(direction.x,0,direction.y), Vector3.up);
+                turning=false;
+                return;
+            }
+        }
+    }        
 
 	private bool reachedWayPointExactly(){
 		//we actually stop a bit before as we need space to turn - we'll plot these manually
