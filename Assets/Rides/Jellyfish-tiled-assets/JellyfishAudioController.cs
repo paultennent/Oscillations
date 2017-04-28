@@ -30,6 +30,8 @@ public class JellyfishAudioController : MonoBehaviour {
 
 	private float raycastMaxDistance = 100f;
 
+	private bool started = false;
+
 	public AudioMixerGroup masterMixer;
 
 	// Use this for initialization
@@ -50,9 +52,16 @@ public class JellyfishAudioController : MonoBehaviour {
 		zeroMixers(SwingMixers, dbsilence);
 		zeroMixers(VoidMixers, dbsilence);
 
-		startSources(MixSources);
-		startSources(SwingSources);
-		startSources(VoidSources);
+	}
+
+	public void begin(){
+		if (!started) {
+			started = true;
+			startSources(MixSources);
+			startSources(SwingSources);
+			startSources(VoidSources);
+		}
+		masterMixer.audioMixer.SetFloat ("Master", 0f);
 	}
 	
 	// Update is called once per frame

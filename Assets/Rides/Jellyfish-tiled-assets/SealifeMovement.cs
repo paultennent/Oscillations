@@ -9,6 +9,8 @@ public class SealifeMovement : MonoBehaviour {
 	public float sizeMin = 0.5f;
 	public float sizeMax = 1.5f;
 
+	public Transform player;
+
 	float speed;
     bool turnleft = true;
 
@@ -21,6 +23,7 @@ public class SealifeMovement : MonoBehaviour {
         {
             turnleft = false;
         }
+		player = GameObject.Find ("CameraMover").transform;
 
     }
 	
@@ -41,6 +44,9 @@ public class SealifeMovement : MonoBehaviour {
         {
             transform.Translate(Vector3.forward * Time.deltaTime * speed);
         }
+		if (Vector3.Distance (player.position, transform.position) > 500f) {
+			Destroy (gameObject, 0);
+		}
 	}
 
     private bool checkForTraps()

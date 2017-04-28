@@ -37,19 +37,26 @@ public class JellyfishTileCamMover : AbstractGameEffects
 
     private bool fadedIn = false;
 
+	public JellyfishAudioController audioController;
+
     // Use this for initialization
     void Start()
     {
         base.Start();
         initialPosition = pivot.transform.position;
-        minCurheight = pivot.transform.position.y;
-        FadeSphereScript.doFadeIn(fadeTime, Color.black);
+        minCurheight = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
         base.Update();
+		if (!inSession) {
+			return;
+		}
+			
+		audioController.begin ();
+
 
         if (!fadedIn)
         {
@@ -92,7 +99,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
 
             yVelocity += upforce * Time.deltaTime;
             curHeight = curHeight + yVelocity * Time.deltaTime;
-            if (curHeight < 0 & !infiniteFall)
+			if (curHeight < 0 & !infiniteFall)
             {
                 curHeight = minCurheight;
                 yVelocity = 0;
@@ -104,7 +111,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
             {
                 zVal = (swingAngle / 2f) * (0.5f-climaxRatio);
             }
-
+				
             pivot.transform.position = initialPosition + new Vector3(0, curHeight, zVal);
 
             //print (sessionTime + ":" + sessionLength);

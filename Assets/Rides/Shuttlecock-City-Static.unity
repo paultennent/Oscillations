@@ -9904,10 +9904,11 @@ MonoBehaviour:
   countUp: 1
   maxSessions: 1
   pauseStartTime: 0
+  usePLLPhaseEstimation: 0
   disableStatusFlasher: 1
   cage: {fileID: 768310623}
   currentPos: {fileID: 1959593109}
-  gravity: 30
+  jumpGravity: 9.81
   dt: 0.01
   showCast: 0
   showPointObjects: 0
@@ -9935,7 +9936,7 @@ MonoBehaviour:
   applyInverseSwingTransform: 0
   debug: 1
   sineWave: 1
-  forceSineOnMobile: 1
+  forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:
     m_PersistentCalls:
