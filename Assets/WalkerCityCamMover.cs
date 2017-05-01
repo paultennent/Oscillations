@@ -5,7 +5,9 @@ using UnityEngine;
 public class WalkerCityCamMover : AbstractGameEffects
 {
 
-    public Transform[] path;
+    private Transform[] path;
+
+	public Transform pathParent;
 
     int curTargetWaypoint;
     bool turning = false;
@@ -64,7 +66,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	int lastSwingQuadrant = 0;
 
-	float speedMultiplier = 5f;
+	float speedMultiplier = 1.225f;
 	float rotAmount = 0f;
 	float distTravelled;
 	float nextStepDist = 0f;
@@ -95,6 +97,13 @@ public class WalkerCityCamMover : AbstractGameEffects
         base.Start();
         currentFloorHeight=zeroFloor;
 
+		path = new Transform[pathParent.childCount];
+		int count = 0;
+		foreach (Transform t in pathParent) {
+			path [count] = t;
+			count++;
+		}
+
         if(debugShowPath)
         {
             GameObject fullPath=new GameObject("fullpath");
@@ -113,11 +122,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 
         initialPosition = vp.position;
 
-        // this is in point.scale.y now
-		//growthRates = new float[] {3.005f,3f,3f,3f,3f,1.5f,1.5f,1.5f,-13.5f,-0.75f};
-        // the below is in point.position.y (with zerofloor added in case you want to shift everything up or down)
-		//floorheights = new float[] {zeroFloor,zeroFloor,zeroFloor,zeroFloor+100f,zeroFloor+30f,zeroFloor,zeroFloor-100f,zeroFloor-50,zeroFloor,zeroFloor };
-    }
+	}
 
     public bool isTurning()
     {
@@ -136,6 +141,11 @@ public class WalkerCityCamMover : AbstractGameEffects
         {
             followWaypointPath(-Time.deltaTime*500f);
         }
+
+		if(Input.GetKey(KeyCode.N))
+		{
+			print (vp.position);
+		}
         
 		if (!inSession) {
 			return;
@@ -146,7 +156,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 		//keep track of our angles and steps
 		if ((lastSwingQuadrant == 2) && (swingQuadrant == 3)) {
 			//we're starting a new step so we need to zero the swoop time
-			maxTipAngle = swingAngle * tipMultiplier;
+			maxTipAngle = -swingAngle * tipMultiplier;
 		}
 		lastSwingQuadrant = swingQuadrant;
 
@@ -159,27 +169,10 @@ public class WalkerCityCamMover : AbstractGameEffects
 
         if (stage >= path.Length-1)
         {
+
             //we're at the end - do the outro
             //lerp to the correct position and rotation, just in case we're out
             inOutro=true;
-/*            if (!inOutro)
-            {
-                if (Vector3.Distance(vp.position, path[path.Length - 1].position) < 0.1f)
-                {
-                    vp.position = path[path.Length - 1].position;
-                    inOutro = true;
-                    outroStartTime = Time.time;
-                    return;
-                }
-                else
-                {
-                    vp.position = Vector3.Lerp(vp.position, path[path.Length - 1].position, Time.deltaTime * 3f);
-                    vp.rotation = Quaternion.Slerp(vp.rotation, path[path.Length - 1].rotation, Time.deltaTime * 15f);
-					pivot.localPosition = Vector3.Lerp (pivot.localPosition, Vector3.zero, Time.deltaTime * 15f);
-                    return;
-                }
-            }
-            else*/
             {
                 if (Time.time > outroStartTime + 5f)
                 {
@@ -188,12 +181,14 @@ public class WalkerCityCamMover : AbstractGameEffects
                         FadeSphereScript.doFadeOut(5f, Color.black);
                     }
                 }
-                print("Doing outro swinging");
                 Vector3 endPos = vp.position;
                 Vector3 topPoint = endPos + Vector3.up * seatDrop;
-                Quaternion rotation = Quaternion.Euler(-swingAngle, 0, 0);
+				Quaternion rotation = Quaternion.Euler(-swingAngle, 0f, 0f);
                 Vector3 rotationOffset = rotation * Vector3.up * -seatDrop;
                 Vector3 targetPoint = rotationOffset + topPoint;
+				Quaternion pivRot = Quaternion.RotateTowards (pivot.rotation, Quaternion.Euler (0f, 0f, 0f), Time.deltaTime);
+				pivot.rotation = pivRot;
+				cam.position = targetPoint;
                 return;
             }
         }
@@ -286,27 +281,28 @@ public class WalkerCityCamMover : AbstractGameEffects
 				}
 			}
 
+			if (swingQuadrant == 0 || swingQuadrant == 2) {	
+				if (vp.position.y < currentFloorHeight) {
+					float diff = Mathf.Abs (currentFloorHeight - vp.position.y);
+					float newPos = vp.position.y + (diff * Time.deltaTime * (1f / quartercycle));
+					if (newPos > currentFloorHeight) {
+						newPos = currentFloorHeight;
+					}
+					vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
+				} else if (vp.position.y > currentFloorHeight) {
 				
-			if (vp.position.y < currentFloorHeight) {
-				float diff = Mathf.Abs(currentFloorHeight - vp.position.y);
-				float newPos = vp.position.y + (diff * Time.deltaTime * (1f / halfcycle));
-				if (newPos > currentFloorHeight) {
-					newPos = currentFloorHeight;
+					float diff = Mathf.Abs (vp.position.y - currentFloorHeight);
+					float newPos = vp.position.y - (diff * Time.deltaTime * (1f / quartercycle));
+					if (newPos < currentFloorHeight) {
+						newPos = currentFloorHeight;
+					}
+					vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
 				}
-				vp.position = new Vector3 (vp.position.x, newPos , vp.position.z);
-			}
-			else if (vp.position.y > currentFloorHeight) {
-				
-				float diff = Mathf.Abs(vp.position.y - currentFloorHeight);
-				float newPos = vp.position.y - (diff * Time.deltaTime * (1f / halfcycle));
-				if (newPos < currentFloorHeight) {
-					newPos = currentFloorHeight;
-				}
-				vp.position = new Vector3 (vp.position.x, newPos , vp.position.z);
 			}
 
 			//don't shrink past our original height
 			if (myHeight < 1f) {
+				print ("preventing height loss");
 				myHeight = 1f;
 			}
 
@@ -330,7 +326,6 @@ public class WalkerCityCamMover : AbstractGameEffects
             
 			speed = speed * Mathf.Max(myHeight,5f);
 
-//            print("YP:"+yPos+" S:"+speed+" MH:"+myHeight);
             
 			//speed multiplier? - probably going to need this to be able to finish the route in time
 			speed = speed * speedMultiplier;
@@ -356,22 +351,7 @@ public class WalkerCityCamMover : AbstractGameEffects
                 curAngle += -maxTipAngle * yPos * (currentTurnAmount*percentageThroughTurn) /30f;
 
 			}
-
-            
-/*			if (distToNextWaypoint <= lastDistToNextWaypoint && !hitWaypoint) {
-				//if we're in the final run, lets just tidy up our position and angle
-				//if (stage == path.Length - 2) {
-					//fastLookAt (vp, path [stage + 1]);
-				//}
-				vp.transform.Translate (Vector3.forward * speed * Time.deltaTime);
-				distTravelled += speed * Time.deltaTime;
-
-
-			} else {
-				hitWaypoint = true;
-				float lefties = 1f/(halfcycle - swoopTime);
-				//vp.position = Vector3.Lerp (vp.position, path [stage+1].position, Time.deltaTime * lefties);
-			}*/
+				
 			lastDistToNextWaypoint = distToNextWaypoint;
         }
     }
