@@ -18,6 +18,8 @@ public class BatteryLevels : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
+        viewCanvas.worldCamera=Camera.main;
+        viewCanvas.planeDistance=0.5f;
 	}
 	
 	// Update is called once per frame
@@ -27,12 +29,14 @@ public class BatteryLevels : MonoBehaviour {
 		{
 			visible = true;
 			viewCanvas.enabled = true;
+            FadeSphereScript.enableFader(false);
 		}
 
 		if(Input.GetButtonUp("Tap"))
 		{
 			visible = false;
 			viewCanvas.enabled = false;
+            FadeSphereScript.enableFader(true);
 		}
 
 		if (visible) {

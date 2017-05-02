@@ -76,14 +76,17 @@ public class SessionManager : MonoBehaviour {
 		if ((time - lastBackwardSwing > 5 && time - lastForwardSwing > 5)
 			||  (time - lastBackwardSwing > 15 || time - lastForwardSwing > 15))
 		{
-			// no swings seen for ages, person has got off
-			inGame=false;
-			gameTime=0;
-			//print ("session reset");
-			//if(isResetTime()){
-				//gf.reset(rawAngle);
-				//OVRManager.display.RecenterPose();
-			//}
+            if(gameTime>30)
+            {
+                // no swings seen for ages, person has got off
+                inGame=false;
+                gameTime=0;
+                //print ("session reset");
+                //if(isResetTime()){
+                    //gf.reset(rawAngle);
+                    //OVRManager.display.RecenterPose();
+                //}
+            }
 		}
 
 		if (inGame) 

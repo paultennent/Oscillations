@@ -21,6 +21,9 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
     public bool showPointObjects=false;
     public GameObject travelPath;
     public float minJumpUp=10f;
+    
+    public int lastSwingCycle=-1;
+    public int lastPhase=0;
 
     private Transform seat;
     private float seatDistance=-1.5f;
@@ -127,6 +130,8 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
         
 
         base.Update();
+        if(!inSession)return;
+
         bool newQuadrant=false;
         if(swingQuadrant!=lastQuadrant)
         {
@@ -139,8 +144,8 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             targetEndTime=Time.time + swingCycleTime/2f;
         }
         lastQuadrant=swingQuadrant;
-        if(!inSession)return;
 
+        
 		audioController.begin ();
 
 		if (!fadedIn)
@@ -248,7 +253,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 targetDistance=swingAmplitude*targetDistanceMultiplier;
             }        
 			// if we've got trajectory points left, replay them
-			if (currentTrajectory != null && currentTrajectory.Count > (int)trajectoryIndex) {
+			if (currentTrajectory != null && currentTrajectory.Count > (int)trajectoryIndex && (targetEndTime!=-1 && Time.time<targetEndTime) ) {
 				currentPos.position = currentTrajectory [(int)trajectoryIndex];
 				trajectoryIndex+=Time.deltaTime/dt;
                 if(Input.GetKeyDown("s"))
@@ -262,15 +267,34 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                     // make sure we're calculating from end of last trajectory 
                     currentPos.position= currentTrajectory[currentTrajectory.Count-1];
                 }
+                
+/*                if(lastSwingCycle!=-1)
+                {
+                    // check we're in the 
+                    lastSwingCycle=swingCycles;
+                    lastPhase=2;
+                    if(swingPhase>2)
+                    {
+                        lastPhase=0;
+                    }
+                }else
+                {
+                    lastSwingCycle+=1;
+                    lastPhase=(lastPhase+2)%4;
+                    
+                }*/
+                
+                
                 float timeToPhase4=(4f-swingPhase)*(swingCycleTime/4f);
                 targetTime=timeToPhase4;
                 if(targetTime<swingCycleTime/4f)
                 {
                     targetTime+=swingCycleTime/2f;
-                }else if(targetTime>(3f* swingCycleTime/4f))
+                }else if(targetTime>((3f* swingCycleTime)/4f))
                 {
                     targetTime-=swingCycleTime/2f;
                 }
+                targetEndTime=Time.time+targetTime;
                 
 //                targetTime=swingCycleTime/2f;
                 print(targetTime);

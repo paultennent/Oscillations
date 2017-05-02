@@ -11,7 +11,9 @@ class PhaseEstimator
     // find maxima and minima
    
     int lastQuadrant=-1;
-   
+    int loopCount=0;
+    float lastPhaseOut=0;
+  
     static float phaseStepFromCycleTime(float cycleTime)
     {
         return (2f*Mathf.PI)/cycleTime;
@@ -21,6 +23,7 @@ class PhaseEstimator
     {
         return (2f*Mathf.PI)/phaseStep;        
     }
+    
     
     public void onAngle(float angle)
     {
@@ -79,20 +82,18 @@ class PhaseEstimator
 
     }
     
-    public void getSwingPhaseAndQuadrant(out float phase,out int quadrant,out float amplitude,out float cycleTime)
+    public void getSwingPhaseAndQuadrant(out float phase,out int quadrant,out float amplitude,out float cycleTime,out int swingCycles)
     {
-        // phase as 0-4
-        phase=Mathf.Repeat(currentPhase,2f*Mathf.PI) * (2f / Mathf.PI);
-        // quadrant as 0,1,2,3
-        int outQuadrant=(int)phase;
-        // just in case the PLL adjusts back across a quadrant boundary, only ever step forward in quadrants
-        if(lastQuadrant==(outQuadrant+1)%4)
+        // only ever step forward
+        if(currentPhase>=lastPhaseOut)
         {
-            quadrant=lastQuadrant;
-        }else
-        {
-            quadrant=outQuadrant;
+            lastPhaseOut=currentPhase;
         }
+        // phase as 0-4
+        phase=Mathf.Repeat(lastPhaseOut,2f*Mathf.PI) * (2f / Mathf.PI);
+        swingCycles=(int)(phase/4);
+        // quadrant as 0,1,2,3
+        quadrant=(int)phase;
         
         cycleTime=cycleTimeFromPhaseStep(currentPhaseStep);
         amplitude=currentAmplitude;

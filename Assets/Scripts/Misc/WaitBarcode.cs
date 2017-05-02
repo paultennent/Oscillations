@@ -71,7 +71,6 @@ public class WaitBarcode : MonoBehaviour {
                         transform.parent=null;
                         active=false;
                         print("Found user:"+code);
-                        barcodeReader.stopCodeCapture();
                     }else if(IsSwingBarcode(code))
                     {
                         barcodeReader.stopCodeCapture();
@@ -87,6 +86,26 @@ public class WaitBarcode : MonoBehaviour {
             }
         }
 	}
+    
+    bool paused=false;
+    
+	void OnApplicationPause(bool paused)
+    {
+        if(paused)
+        {
+            if(active && barcodeReader!=null)
+            {
+                barcodeReader.stopCodeCapture();
+            }
+        }else
+        {
+            if(active && barcodeReader!=null)
+            {
+                barcodeReader.initCodeCapture();                
+            }
+        }
+        
+    }
     
     bool IsUserBarcode(string code)
     {
