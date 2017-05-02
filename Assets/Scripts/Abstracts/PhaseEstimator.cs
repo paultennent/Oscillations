@@ -144,7 +144,7 @@ class PhaseEstimator
             }
         }
         
-        Debug.Log(minPhaseStep+":"+currentPhaseStep+":"+currentPhase+":"+ bestPos+":"+bestScore+":"+Mathf.Sin(currentPhase)*currentAmplitude+":"+lastAngle);
+        //Debug.Log(minPhaseStep+":"+currentPhaseStep+":"+currentPhase+":"+ bestPos+":"+bestScore+":"+Mathf.Sin(currentPhase)*currentAmplitude+":"+lastAngle);
         if(bestPos>0)
         {
             

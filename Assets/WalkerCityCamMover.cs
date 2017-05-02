@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WalkerCityCamMover : AbstractGameEffects
 {
@@ -20,9 +21,11 @@ public class WalkerCityCamMover : AbstractGameEffects
 
     public Color underwaterFog;
     public float underwateFogEnd = 100f;
+	public float underwaterFogDensity = 0.02f;
 
     public Color overwaterFog;
     public float overwateFogEnd = 400f;
+	public float overwaterFogDensity = 0.005f;
 
     private SwingBase theSwingBase;
 
@@ -95,6 +98,10 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	float lastDistToNextWaypoint = 9999999f;
 
+	float maxAngleForSwoop = 45f;
+
+	float lastSeenAngle = 0f;
+
     // Use this for initialization
     void Start()
     {
@@ -126,6 +133,18 @@ public class WalkerCityCamMover : AbstractGameEffects
 
         initialPosition = vp.position;
 
+		swingBase.zeroCrossingEvent.AddListener (zeroCross);
+
+	}
+
+	public void zeroCross(){
+		if (launched && !inOutro) {
+			if (growthRate > 0) {
+				audioController.grow ();
+			} else if (growthRate < 0) {
+				audioController.shrink ();
+			}
+		}
 	}
 
     public bool isTurning()
@@ -137,6 +156,11 @@ public class WalkerCityCamMover : AbstractGameEffects
     void Update()
     {
 		base.Update();
+
+		if (debugText != null) {
+			debugText.text = "" + swingAngle + ":" + swingQuadrant + ":" + swingPhase +":Steps:" +stepCounter;
+		}
+
         if(Input.GetKey("]"))
         {
             followWaypointPath(Time.deltaTime*500f);
@@ -205,6 +229,7 @@ public class WalkerCityCamMover : AbstractGameEffects
                 //waterBody.GetComponent<Renderer>().enabled = false;
                 RenderSettings.fogColor = overwaterFog;
                 RenderSettings.fogEndDistance = overwateFogEnd;
+				RenderSettings.fogDensity = overwaterFogDensity;
                 RenderSettings.skybox = overwaterSky;
                 audioController.goAboveWater();
                 envSwitch = true;
@@ -217,6 +242,7 @@ public class WalkerCityCamMover : AbstractGameEffects
                 //waterBody.GetComponent<Renderer>().enabled = true;
                 RenderSettings.fogColor = underwaterFog;
                 RenderSettings.fogEndDistance = underwateFogEnd;
+				RenderSettings.fogDensity = underwaterFogDensity;
                 RenderSettings.skybox = underWaterSky;
                 audioController.goUnderWater();
                 envSwitch = false;
@@ -255,111 +281,171 @@ public class WalkerCityCamMover : AbstractGameEffects
 			}
 				
 
-			float halfcycle = swingCycleTime / 2f;
-			float quartercycle = swingCycleTime / 4f;
-			swoopTime += Time.deltaTime;
+//			float halfcycle = .1f;//swingCycleTime / 2f;
+//			float quartercycle = .5f;//swingCycleTime / 4f;
+//			print (quartercycle);
+//			swoopTime += Time.deltaTime;
+//
+//			float phaseFracPart = swingPhase - (float)swingQuadrant;
+//			//do the steps with a half cycle
+//			if (swingQuadrant == 3 || swingQuadrant == 1) {
+//
+//				yPos = Mathf.Cos (Mathf.PI * phaseFracPart);
+//				speed = Mathf.Cos (Mathf.PI * phaseFracPart);
+//			}
+//			else if (swingQuadrant == 0 || swingQuadrant == 2) {
+//				yPos = Mathf.Cos (Mathf.PI + Mathf.PI * phaseFracPart);
+//				if (phaseFracPart < 0.333f) {
+//					speed = Mathf.Cos (Mathf.PI +  Mathf.PI * phaseFracPart * 3f);
+//				} else {
+//					speed = 1;
+//				}
+//
+///*				if (swoopTime <= quartercycle + (quartercycle / swoopRatio)) {
+//					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
+//					speed = (Mathf.Cos (Mathf.PI * swoopTime / (quartercycle / swoopRatio)));
+//				} else {
+//					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
+//					speed = 1f;
+//					//don't grow when turning
+//					//if (!turning) {
+//
+//					//}
+//				}*/
+//				if (!sentGrow) {
+//					if (growthRate> 2) {
+//						audioController.grow ();
+//					} else if (growthRate  < 0) {
+//						audioController.shrink ();
+//					}
+//					sentGrow = true;
+//				}
+//			}
+//			print (yPos + ":" + swingQuadrant+":"+phaseFracPart);
+//
+//			myHeight = 1f + (climaxRatio - lauchclimaxTime) * maxheight;//myHeight + (growthRate * Time.deltaTime);
+//
+//			if (swingQuadrant == 0 || swingQuadrant == 2) {	
+//				if (vp.position.y < currentFloorHeight) {
+//					float diff = Mathf.Abs (currentFloorHeight - vp.position.y);
+//					float newPos = vp.position.y + (diff * Time.deltaTime * 2f);
+//					if (newPos > currentFloorHeight) {
+//						newPos = currentFloorHeight;
+//					}
+//					vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
+//				} else if (vp.position.y > currentFloorHeight) {
+//				
+//					float diff = Mathf.Abs (vp.position.y - currentFloorHeight);
+//					float newPos = vp.position.y - (diff * Time.deltaTime * (2f ));
+//					if (newPos < currentFloorHeight) {
+//						newPos = currentFloorHeight;
+//					}
+//					vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
+//				}
+//			}
+//
+//			//don't shrink past our original height
+//			if (myHeight < 1f) {
+//				myHeight = 1f;
+//			}
+//
+//			//get yPos into the correct range to be useful
+//			yPos = (yPos - 1f)/2f;
+//			speed = 1f-(yPos + 1f);
+//
+//			if (swingQuadrant == 0 || swingQuadrant == 3) {
+//				curAngle = maxTipAngle * yPos;
+//			} else {
+//				curAngle = -maxTipAngle * yPos;
+//			}
+//
+//
+//
+//			//we only want to go down 75% of our height
+//			if (yPos != 0f) {
+//				yPos = yPos * myHeight * dropPercentage;
+//			}
+//
+//            
+//			speed = speed * Mathf.Max(myHeight,5f);
+//
+//            
+//			//speed multiplier? - probably going to need this to be able to finish the route in time
+//			speed = speed * speedMultiplier;
+//				
+//			pivot.transform.localPosition = new Vector3 (0f, myHeight, 0f);
+//			cam.transform.localPosition = new Vector3 (0f, yPos, 0f);
+//
+//			pivot.localEulerAngles = new Vector3(0f,0f,curAngle);
 
-			//do the steps with a half cycle
-			if (swingQuadrant == 3 || swingQuadrant == 1) {
-				yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
-				speed = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
-			}
-			else if (swingQuadrant == 0 || swingQuadrant == 2) {
-				if (swoopTime <= quartercycle + (quartercycle / swoopRatio)) {
-					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
-					speed = (Mathf.Cos (Mathf.PI * swoopTime / (quartercycle / swoopRatio)));
-				} else {
-					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
-					speed = 1f;
-					//don't grow when turning
-					//if (!turning) {
-
-					//}
-				}
-				if (!sentGrow) {
-					if (growthRate> 2) {
-						audioController.grow ();
-					} else if (growthRate  < 0) {
-						audioController.shrink ();
-					}
-					sentGrow = true;
-				}
-			}
-
-			myHeight = 1f + (climaxRatio - lauchclimaxTime) * maxheight;//myHeight + (growthRate * Time.deltaTime);
-
-			if (swingQuadrant == 0 || swingQuadrant == 2) {	
-				if (vp.position.y < currentFloorHeight) {
-					float diff = Mathf.Abs (currentFloorHeight - vp.position.y);
-					float newPos = vp.position.y + (diff * Time.deltaTime * (1f / quartercycle));
-					if (newPos > currentFloorHeight) {
-						newPos = currentFloorHeight;
-					}
-					vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
-				} else if (vp.position.y > currentFloorHeight) {
-				
-					float diff = Mathf.Abs (vp.position.y - currentFloorHeight);
-					float newPos = vp.position.y - (diff * Time.deltaTime * (1f / quartercycle));
-					if (newPos < currentFloorHeight) {
-						newPos = currentFloorHeight;
-					}
-					vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
-				}
-			}
-
+			myHeight = 1f + (climaxRatio - lauchclimaxTime) * maxheight;
 			//don't shrink past our original height
 			if (myHeight < 1f) {
 				myHeight = 1f;
 			}
 
-			//get yPos into the correct range to be useful
-			yPos = (yPos - 1f)/2f;
-			speed = 1f-(yPos + 1f);
 
-			if (swingQuadrant == 0 || swingQuadrant == 3) {
-				curAngle = maxTipAngle * yPos;
-			} else {
-				curAngle = -maxTipAngle * yPos;
+			yPos = Mathf.Min (Mathf.Abs (swingAngle), maxAngleForSwoop);
+			yPos = Remap (yPos, 0, maxAngleForSwoop, 0, 0.75f);
+			yPos = yPos * myHeight;
+
+			curAngle = swingAngle / 4f;
+
+			//as angle decreasing approaches max bring speed down to 0
+			speed = Mathf.Min (Mathf.Abs (swingAngle), maxAngleForSwoop);
+			speed = 1f - Remap (speed, 0, maxAngleForSwoop, 0, 1f);
+			speed = speed * myHeight;
+
+			if ((swingAngle > 0 && lastSeenAngle > swingAngle) || (swingAngle < 0 && lastSeenAngle < swingAngle)) {
+				speed = speed * 3f;
+				if (speed > myHeight) {
+					speed = myHeight;
+				}
 			}
 
-
-
-			//we only want to go down 75% of our height
-			if (yPos != 0f) {
-				yPos = yPos * myHeight * dropPercentage;
-			}
-
-            
-			speed = speed * Mathf.Max(myHeight,5f);
-
-            
-			//speed multiplier? - probably going to need this to be able to finish the route in time
 			speed = speed * speedMultiplier;
-				
 			pivot.transform.localPosition = new Vector3 (0f, myHeight, 0f);
-			cam.transform.localPosition = new Vector3 (0f, yPos, 0f);
-
+			cam.transform.localPosition = new Vector3 (0f, -yPos, 0f);
 			pivot.localEulerAngles = new Vector3(0f,0f,curAngle);
-
             followWaypointPath(speed*Time.deltaTime);
 
-            			//add banking
-			if (turning) {
-                float bankingAmount = currentTurnAmount;
-                // fade banking in and out
-                if(percentageThroughTurn<0.2)
-                {
-                    bankingAmount*=percentageThroughTurn*5f;
-                }else if(percentageThroughTurn>.8)
-                {
-                    bankingAmount*=(1f-percentageThroughTurn)*5f;
-                }
-                curAngle += -maxTipAngle * yPos * (currentTurnAmount*percentageThroughTurn) /30f;
-
+			if (vp.position.y < currentFloorHeight) {
+				float diff = Mathf.Abs (currentFloorHeight - vp.position.y);
+				float newPos = vp.position.y + (diff * Time.deltaTime * 2f);
+				if (newPos > currentFloorHeight) {
+					newPos = currentFloorHeight;
+				}
+				vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
+			} else if (vp.position.y > currentFloorHeight) {
+								
+				float diff = Mathf.Abs (vp.position.y - currentFloorHeight);
+				float newPos = vp.position.y - (diff * Time.deltaTime * (2f));
+				if (newPos < currentFloorHeight) {
+					newPos = currentFloorHeight;
+				}
+				vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
 			}
+
+            			//add banking
+//			if (turning) {
+//                float bankingAmount = currentTurnAmount;
+//                // fade banking in and out
+//                if(percentageThroughTurn<0.2)
+//                {
+//                    bankingAmount*=percentageThroughTurn*5f;
+//                }else if(percentageThroughTurn>.8)
+//                {
+//                    bankingAmount*=(1f-percentageThroughTurn)*5f;
+//                }
+//                curAngle += -maxTipAngle * yPos * (currentTurnAmount*percentageThroughTurn) /30f;
+//
+//			}
 				
 			lastDistToNextWaypoint = distToNextWaypoint;
         }
+
+		lastSeenAngle = swingAngle;
+			
     }
 
     private float Remap(float val, float OldMin, float OldMax, float NewMin, float NewMax)

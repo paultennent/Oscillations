@@ -62,6 +62,8 @@ public class AbstractGameEffects : MonoBehaviour {
 
 	public bool disableStatusFlasher = true;
 
+	public Text debugText;
+
     //stuff from equations script
     float gravity = 9.8f;
 
@@ -302,6 +304,7 @@ public class AbstractGameEffects : MonoBehaviour {
             }
             //print("["+swingQuadrant+"] angle:"+swingAngle+"\t"+swingAmplitude);
             swingPhase = MapASin (swingPhase);
+
         }
 
 
@@ -393,6 +396,9 @@ public class AbstractGameEffects : MonoBehaviour {
 
         shopping["resultant_G_Force_at_CofG"] = (1f / gravity) * (Mathf.Sqrt((shopping["centripetal_Force_per_unit_mass"] + shopping["gravity_force_per_unit_mass_at_CofG_perpendicular_to_direction"]) * (shopping["centripetal_Force_per_unit_mass"] + shopping["gravity_force_per_unit_mass_at_CofG_perpendicular_to_direction"])) + (shopping["gravity_force_per_unit_mass_at_CofG_tangential_to_direction"] * shopping["gravity_force_per_unit_mass_at_CofG_tangential_to_direction"]));
 
+		//if (debugText != null) {
+		//	debugText.text = "" + swingAngle + ":" + swingQuadrant + ":" + swingPhase;
+		//}
 
     }
 
