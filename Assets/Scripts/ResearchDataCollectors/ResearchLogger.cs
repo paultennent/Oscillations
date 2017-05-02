@@ -44,7 +44,7 @@ public class ResearchLogger : MonoBehaviour {
             #endif
             mNet=GetComponent<SwingNetwork>();
             mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
-            
+            SceneManager.activeSceneChanged+=onSceneChange;
             
         }else
         {
@@ -52,6 +52,12 @@ public class ResearchLogger : MonoBehaviour {
             Destroy(gameObject);
         }		
 	}
+    
+    void onSceneChange(Scene arg0, Scene arg1)
+    {
+        mr=null;
+        mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();        
+    }
 
     float[] frameData=new float[16];
 
