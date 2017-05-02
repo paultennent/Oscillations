@@ -3906,7 +3906,7 @@ MonoBehaviour:
   applySwingTransform: 0
   applyInverseSwingTransform: 0
   debug: 1
-  sineWave: 1
+  sineWave: 0
   forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:
@@ -6463,6 +6463,16 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 223860371213545410, guid: 65d21961811333c48af7ba53156ebcc3,
+        type: 2}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 205}
+    - target: {fileID: 223860371213545410, guid: 65d21961811333c48af7ba53156ebcc3,
+        type: 2}
+      propertyPath: m_PlaneDistance
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 65d21961811333c48af7ba53156ebcc3, type: 2}

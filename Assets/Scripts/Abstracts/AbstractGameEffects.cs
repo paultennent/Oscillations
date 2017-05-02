@@ -40,6 +40,7 @@ public class AbstractGameEffects : MonoBehaviour {
 	public float offsetTime;
     public bool countUp=true;
     
+    protected int swingCycles=0;
     protected float swingPhase=0;
     protected float swingAmplitude=0;
     protected float swingAngVel=0;
@@ -227,7 +228,7 @@ public class AbstractGameEffects : MonoBehaviour {
         if(usePLLPhaseEstimation)
         {
             phaseEstimator.onAngle(swingAngle);
-            phaseEstimator.getSwingPhaseAndQuadrant(out swingPhase,out swingQuadrant,out swingAmplitude, out swingCycleTime);
+            phaseEstimator.getSwingPhaseAndQuadrant(out swingPhase,out swingQuadrant,out swingAmplitude, out swingCycleTime, out swingCycles);
         }else
         {
             // NOTE: right now there is no smoothing of anything, it relies on input data being quite smooth?
@@ -252,6 +253,7 @@ public class AbstractGameEffects : MonoBehaviour {
                         swingQuadrant=1;
                         swingAmplitude=highAngle;
                         updateCycleTimes(1);
+                        swingCycles+=1;
                     }
                     break;
                 case 1:

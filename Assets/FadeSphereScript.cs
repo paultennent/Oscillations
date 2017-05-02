@@ -10,14 +10,27 @@ public class FadeSphereScript : MonoBehaviour {
     public bool fadingOut = false;
     
     public bool seenGame=false;
+    
+    private bool enableSphere=true;
 
 	// Use this for initialization
 	void Start () {
         globalAccess = this;
     }
+    
+    public static void enableFader(bool enabled)
+    {
+        if(globalAccess!=null)
+        {
+            globalAccess.enableSphere=enabled;
+        }
+    }
+    
+    
 	
 	// Update is called once per frame
 	void Update () {
+        GetComponent<Renderer>().enabled=enableSphere;
         if(SessionManager.getInstance().isInSession())
         {
             seenGame=true;

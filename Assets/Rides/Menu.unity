@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4097786d7d40eeb46bb28887fe7efc60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volumePercent: 1
+  volumePercent: 0.9
 --- !u!1 &17
 GameObject:
   m_ObjectHideFlags: 0
