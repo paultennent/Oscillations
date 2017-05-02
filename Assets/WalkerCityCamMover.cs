@@ -66,7 +66,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	int lastSwingQuadrant = 0;
 
-	float speedMultiplier = 1.225f;
+	float speedMultiplier = 1f;
 	float rotAmount = 0f;
 	float distTravelled;
 	float nextStepDist = 0f;
@@ -80,6 +80,8 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	bool sentGrow = false;
 
+	float maxheight = 100f;
+
     
     public float turnRadius=20f;
 	//route rules
@@ -88,6 +90,8 @@ public class WalkerCityCamMover : AbstractGameEffects
     float currentTurnAmount=0f;
     float percentageThroughTurn=0f;
     float currentFloorHeight=0;
+
+	float lauchclimaxTime = 0f;
 
 	float lastDistToNextWaypoint = 9999999f;
 
@@ -233,6 +237,7 @@ public class WalkerCityCamMover : AbstractGameEffects
             if (offsetTime > introTime && swingQuadrant == 3)
             {
                 launched = true;
+				lauchclimaxTime = climaxRatio;
             }
 
         }
@@ -267,9 +272,9 @@ public class WalkerCityCamMover : AbstractGameEffects
 					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
 					speed = 1f;
 					//don't grow when turning
-					if (!turning) {
-						myHeight = myHeight + (growthRate * Time.deltaTime);
-					}
+					//if (!turning) {
+
+					//}
 				}
 				if (!sentGrow) {
 					if (growthRate> 2) {
@@ -280,6 +285,8 @@ public class WalkerCityCamMover : AbstractGameEffects
 					sentGrow = true;
 				}
 			}
+
+			myHeight = 1f + (climaxRatio - lauchclimaxTime) * maxheight;//myHeight + (growthRate * Time.deltaTime);
 
 			if (swingQuadrant == 0 || swingQuadrant == 2) {	
 				if (vp.position.y < currentFloorHeight) {
@@ -302,7 +309,6 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 			//don't shrink past our original height
 			if (myHeight < 1f) {
-				print ("preventing height loss");
 				myHeight = 1f;
 			}
 
