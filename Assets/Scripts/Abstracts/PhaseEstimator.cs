@@ -72,12 +72,11 @@ class PhaseEstimator
             error=-error;
         }
         
-        currentPhase-=3f*error*Time.deltaTime*currentPhaseStep;
-        currentPhaseStep-=error*Time.deltaTime*currentPhaseStep;
+        currentPhase-=3f*error*Time.deltaTime;
+        currentPhaseStep-=error*Time.deltaTime;
         currentPhaseStep=Mathf.Max(currentPhaseStep,minPhaseStep);
         currentPhaseStep=Mathf.Min(currentPhaseStep,maxPhaseStep);
         
-//        Debug.Log(amplitude+","+currentPhase+","+lastAngle+","+compareVal+":"+currentPhaseStep+":"+error);
 
     }
     
@@ -96,6 +95,9 @@ class PhaseEstimator
         
         cycleTime=cycleTimeFromPhaseStep(currentPhaseStep);
         amplitude=currentAmplitude;
+        float compareVal=Mathf.Sin(currentPhase)*currentAmplitude;
+        float error=(compareVal-lastAngle)/currentAmplitude;
+        Debug.Log(currentAmplitude+","+currentPhase+","+lastAngle+","+compareVal+":"+currentPhaseStep+":"+cycleTimeFromPhaseStep(currentPhaseStep)+":"+error+":"+quadrant);
     }
     
     
