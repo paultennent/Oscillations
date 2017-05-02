@@ -44,7 +44,6 @@ public class ResearchLogger : MonoBehaviour {
             #endif
             mNet=GetComponent<SwingNetwork>();
             mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
-            SceneManager.activeSceneChanged+=onSceneChange;
             
         }else
         {
@@ -53,11 +52,6 @@ public class ResearchLogger : MonoBehaviour {
         }		
 	}
     
-    void onSceneChange(Scene arg0, Scene arg1)
-    {
-        mr=null;
-        mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();        
-    }
 
     float[] frameData=new float[16];
 
@@ -222,6 +216,8 @@ public class ResearchLogger : MonoBehaviour {
     public void OnNewScene(string scene)
     {
         currentScene=scene;
+        mr=null;
+        mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();                
     }
     
     public void OnNewUser(string userCode)

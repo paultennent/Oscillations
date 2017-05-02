@@ -173,8 +173,8 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             {
                 outroNext=true;
             }
-            // first 10 seconds, transitioning between swing and not swing and fading cube
-            if(offsetTime<10f && countUp)
+            // first 10 seconds swinging, then 10 seconds, transitioning between swing and not swing and fading cube
+            if(offsetTime<20f && countUp)
             {
                 if(Input.GetKeyDown("s"))
                 {
@@ -188,7 +188,12 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 inIntro=true;
                 outroNext=false;
                 // put in an up and down oscillation from the swing only
-                float ratio=1f-.1f*offsetTime;
+                // which fades in after 10 seconds
+                float ratio=1;
+                if(offsetTime>10f)
+                {
+                    ratio=2f-.1f*offsetTime;
+                }
                 // now manually fix seat transform position and rotation
                 float realSwingY=Mathf.Cos(-swingAngle*Mathf.Deg2Rad) * seatDistance;
                 float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;

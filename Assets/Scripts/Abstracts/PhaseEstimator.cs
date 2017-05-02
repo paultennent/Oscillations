@@ -24,7 +24,6 @@ class PhaseEstimator
         return (2f*Mathf.PI)/phaseStep;        
     }
     
-    
     public void onAngle(float angle)
     {
         lastAngle=angle;
@@ -38,9 +37,9 @@ class PhaseEstimator
     }
     
     float currentPhase=0;
-    float maxPhaseStep=phaseStepFromCycleTime(3.0f);
+    float maxPhaseStep=phaseStepFromCycleTime(2.4f);
     float minPhaseStep=phaseStepFromCycleTime(3.6f);
-    float currentPhaseStep=phaseStepFromCycleTime(3.2f);
+    float currentPhaseStep=phaseStepFromCycleTime(2.7f);
     float currentAmplitude=0f;
     
     void calculatePhaseAmplitude()
