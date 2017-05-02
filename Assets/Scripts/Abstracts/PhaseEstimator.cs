@@ -37,9 +37,9 @@ class PhaseEstimator
     }
     
     float currentPhase=0;
-    float maxPhaseStep=phaseStepFromCycleTime(2.4f);
-    float minPhaseStep=phaseStepFromCycleTime(3.6f);
-    float currentPhaseStep=phaseStepFromCycleTime(2.7f);
+    float maxPhaseStep=phaseStepFromCycleTime(2.3f);
+    float minPhaseStep=phaseStepFromCycleTime(3.0f);
+    float currentPhaseStep=phaseStepFromCycleTime(2.6f);
     float currentAmplitude=0f;
     
     void calculatePhaseAmplitude()
