@@ -86,10 +86,18 @@ public class SwingBase : MonoBehaviour {
 
 		if (!sineWave) {
 			swingAngle = Gxyz [1];
+            randomPhaseOffset-=Time.time*2;
 		} else {
-			swingAngle = (Mathf.Sin(Time.time * 2+randomPhaseOffset)) * sineAmplitude ;
+            if(debug)
+            {
+                swingAngle = Mathf.Sin(Time.time * 2.2f+randomPhaseOffset) * sineAmplitude ;
+            }else
+            {
+                swingAngle = Mathf.Sin(Time.time * 2f+randomPhaseOffset) * sineAmplitude ;
+            }
+//			swingAngle = (Mathf.Sin(Time.time * 2+randomPhaseOffset+Random.Range(-.1f,.1f))) * sineAmplitude ;
 			//swingAngle = (Mathf.Sin(Time.time * 2)+Random.Range(-.1f,.1f)) * sineAmplitude ;
-            //randomPhaseOffset+=Time.deltaTime*0.1f;
+            randomPhaseOffset+=Random.Range(-Time.deltaTime*5f,Time.deltaTime*5f);
 		}
 		
 //		swingAngle=errorFilter.addValue (time, Gxyz [1], Gaccel [2]);

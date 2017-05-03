@@ -6,19 +6,39 @@ class PhaseEstimator
 {
     // 1 second shift (i.e. less than one swing cycle)
     const int SIN_SHIFT=64;
-    // 4 seconds or so of history
+    // 5 seconds or so of history (but we heavily weight towards start)
     float[] angleHistory=new float[256];
     float[] dtHistory=new float[256];
     
-    float[] sinBuf=new float[256+SIN_SHIFT*2+1];
     int angleHistoryPos=0;
     float lastAngle=0;
+    float lastTime=-9999f;
+    float lastDT=0.1666f;
+    float dtAccumulator=0;
     // find maxima and minima
    
     int lastQuadrant=-1;
     int loopCount=0;
     float lastPhaseOut=0;
-  
+
+    // these are phases and amplitude used by the internal PLL style phase matcher
+    float currentPhase=0;
+    float maxPhaseStep=phaseStepFromCycleTime(2.3f);
+    float minPhaseStep=phaseStepFromCycleTime(4.0f);
+//    float minPhaseStep=phaseStepFromCycleTime(3.0f);
+    float currentPhaseStep=2f;//phaseStepFromCycleTime(2.6f);
+    float currentAmplitude=1f;
+    
+    // these are render phases and ampitudes, used to output a smoothly varying signal
+    // their parameters slowly shift to be equal to the matched phase / amplitude
+    float renderPhaseSmoothingTime=1f;
+    float renderPhaseStep=2f;
+    float renderAmplitude=1f;
+    float renderPhase=0f;
+
+    
+    
+    
     static float phaseStepFromCycleTime(float cycleTime)
     {
         return (2f*Mathf.PI)/cycleTime;
@@ -31,47 +51,37 @@ class PhaseEstimator
     
     public void onAngle(float angle)
     {
+        dtAccumulator+=Time.deltaTime;
+        doStep();
+        if(Time.time-lastTime<.016f)
+        {
+            return;
+        }
+        lastDT=dtAccumulator;
+        dtAccumulator=0f;
         lastAngle=angle;
         angleHistory[angleHistoryPos]=angle;
-        dtHistory[angleHistoryPos]=Time.deltaTime;
+        dtHistory[angleHistoryPos]=lastDT;
         angleHistoryPos++;
         if(angleHistoryPos>=angleHistory.Length)
         {
             angleHistoryPos=0;
         }
-        calculatePhaseAmplitude();
+        adjustPhaseAmplitude();
     }
     
-    float currentPhase=0;
-    float maxPhaseStep=phaseStepFromCycleTime(2.3f);
-    float minPhaseStep=phaseStepFromCycleTime(4.0f);
-//    float minPhaseStep=phaseStepFromCycleTime(3.0f);
-    float currentPhaseStep=2f;//phaseStepFromCycleTime(2.6f);
-    float currentAmplitude=0f;
-    
-    float calcDifference(float []sinBuf,int startSin,float[]angleHist,int startHist)
-    {
-        float total=0;
-        int historyPos=startHist;
-        int sinPos=startSin;
-        for(int c=0;c<angleHist.Length;c++)
-        {
-            historyPos--;
-            if(historyPos<0)historyPos=angleHist.Length-1;
-            float histVal=angleHist[historyPos];
-            float sinVal=sinBuf[sinPos];
-            float diff=(histVal-sinVal);
-            total+=Mathf.Abs(diff);
-            sinPos++;
-        }
-        return total;
-    }
     
     float scoreSinOffset(float offset)
     {
+        float lowPassCoeff=0.05f;
+        
         float total=0f;
         float sinPhase=currentPhase-offset;
         int historyPos=angleHistoryPos;
+        
+        float positionWeight=1;
+        float weightStep=.5f/(float)angleHistory.Length;
+        
         for(int c=0;c<angleHistory.Length;c++)
         {
             historyPos--;
@@ -79,17 +89,42 @@ class PhaseEstimator
             
             float sinVal=Mathf.Sin(sinPhase)*currentAmplitude;
             float histVal=angleHistory[historyPos];
-            float diff=histVal-sinVal;
-            total+=diff*diff;
-            sinPhase-=dtHistory[historyPos]*currentPhaseStep;            
+
+            
+        // weight more recent points higher, and also weight zero points higher too as they're more perceptible (bottom of swing)
+            float weight=positionWeight*(2f-Mathf.Abs(sinVal));
+//            positionWeight-=weightStep;
+            float mult=-(histVal*sinVal);
+            total+=mult;
+//            float diff=histVal-sinVal;
+//            total+=diff*diff;
+            sinPhase-=dtHistory[historyPos]*currentPhaseStep;
         }
         return total;
     }
-    
-    void calculatePhaseAmplitude()
-    {
-        currentPhase+=currentPhaseStep*Time.deltaTime;
 
+    void doStep()
+    {
+        // update internal phase
+        currentPhase+=currentPhaseStep*Time.deltaTime;
+        
+        // update render phase
+        renderPhase+=renderPhaseStep*Time.deltaTime;
+        
+        Debug.Log(currentPhase+":"+renderPhase+":"+(currentPhase-renderPhase));
+        // move render phase closer to internal phase etc.
+//        float filterConstant=.1f;
+        float filterConstant=Time.deltaTime/(renderPhaseSmoothingTime+Time.deltaTime);
+        // move renderPhase closer to the currentPhase
+        renderPhase= filterConstant * currentPhase + (1f-filterConstant) * renderPhase;
+        // move renderPhaseStep closer to the currentPhaseStep
+        renderPhaseStep= filterConstant * currentPhaseStep + (1f-filterConstant) * renderPhaseStep;
+        // move renderAmplitude close to the current amplitude
+        renderAmplitude= filterConstant * currentAmplitude + (1f-filterConstant) * renderAmplitude;
+    }
+    
+    void adjustPhaseAmplitude()
+    {
         float sineShift=0;
         
         
@@ -97,35 +132,42 @@ class PhaseEstimator
         float maxAngle=0;
         float minAngle=0;
         
-        int sinePos=angleHistoryPos;
+        float minFirstSecond=0;
+        float maxFirstSecond=0;
+        
+        int histPos=angleHistoryPos;
         
         // first calculate amplitude
         for(int c=0;c<angleHistory.Length;c++)
         {
-            sinePos--;
-            if(sinePos<0)sinePos=angleHistory.Length-1;
-            
-            
-            if(angleHistory[c]>maxAngle)
+            histPos-=1;
+            if(histPos<0)
             {
-                maxAngle=angleHistory[c];
+               histPos=angleHistory.Length-1;
             }
-            if(angleHistory[c]<minAngle)
+            
+            
+            if(angleHistory[histPos]>maxAngle)
             {
-                minAngle=angleHistory[c];
+                maxAngle=angleHistory[histPos];
+                if(c<60)maxFirstSecond=maxAngle;
+            }
+            if(angleHistory[histPos]<minAngle)
+            {
+                minAngle=angleHistory[histPos];
+                if(c<60)minFirstSecond=minAngle;
             }
         }
         
         currentAmplitude=Mathf.Max(1f,Mathf.Max(maxAngle,-minAngle));
-
-        
-        float dt=Time.deltaTime;
-        float sinPhase=currentPhase+((float)SIN_SHIFT)*dt*currentPhaseStep;
-        for(int c=0;c<sinBuf.Length;c++)
+        float firstSecondAmplitude=Mathf.Max(maxFirstSecond,-minFirstSecond);
+        if(firstSecondAmplitude<5 || (minAngle>-5f || maxAngle<5))
         {
-            sinBuf[c]=Mathf.Sin(sinPhase)*currentAmplitude;
-            sinPhase-=dt*currentPhaseStep;
+            // nothing to work with so don't update phase estimations
+            return;
         }
+
+        float dt=lastDT;
         
         float []positionScores=new float[SIN_SHIFT*2+1];
         float bestScore=0;
@@ -133,10 +175,7 @@ class PhaseEstimator
         // compare all sin buffers
         for(int c=-SIN_SHIFT;c<SIN_SHIFT;c++)
         {
-            positionScores[c+SIN_SHIFT]=scoreSinOffset(dt*(float)c);
-            
-            
-            positionScores[c+SIN_SHIFT]=calcDifference(sinBuf,c+SIN_SHIFT,angleHistory,angleHistoryPos);
+            positionScores[c+SIN_SHIFT]=scoreSinOffset(.5f*dt*(float)c);                       
             if(bestPos==-999 || positionScores[c+SIN_SHIFT]<bestScore)
             {
                 bestPos=c;
@@ -187,22 +226,27 @@ class PhaseEstimator
     
     public void getSwingPhaseAndQuadrant(out float phase,out int quadrant,out float amplitude,out float cycleTime,out int swingCycles)
     {
+//        float thisPhase=currentPhase;
+        float thisPhase=renderPhase;
         // only ever step forward
-        if(currentPhase>=lastPhaseOut)
+        if(thisPhase>=lastPhaseOut)
         {
-            lastPhaseOut=currentPhase;
+            lastPhaseOut=thisPhase;
         }
+        amplitude=renderAmplitude;
+//        amplitude=currentAmplitude;
         // phase as 0-4
-        phase=Mathf.Repeat(lastPhaseOut,2f*Mathf.PI) * (2f / Mathf.PI);
+        phase=Mathf.Repeat(thisPhase,2f*Mathf.PI) * (2f / Mathf.PI);
         swingCycles=(int)(phase/4);
         // quadrant as 0,1,2,3
         quadrant=(int)phase;
         
-        cycleTime=cycleTimeFromPhaseStep(currentPhaseStep);
-        amplitude=currentAmplitude;
-        float compareVal=Mathf.Sin(currentPhase)*currentAmplitude;
-        float error=(compareVal-lastAngle)/currentAmplitude;
-//        Debug.Log(currentAmplitude+","+currentPhase+","+lastAngle+","+compareVal+":"+currentPhaseStep+":"+cycleTimeFromPhaseStep(currentPhaseStep)+":"+error+":"+quadrant);
+        cycleTime=cycleTimeFromPhaseStep(renderPhaseStep);
+//        cycleTime=cycleTimeFromPhaseStep(currentPhaseStep);
+        float compareVal=Mathf.Sin(renderPhase)*amplitude;
+        float error=(compareVal-lastAngle)/amplitude;
+        Debug.Log(lastAngle+","+compareVal);
+//        Debug.Log(amplitude+","+phase+","+lastAngle+","+compareVal+":"+currentPhaseStep+":"+cycleTime+":"+error+":"+quadrant);
     }
     
     
