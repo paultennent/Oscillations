@@ -1025,7 +1025,8 @@ MonoBehaviour:
   maxSessions: 1
   pauseStartTime: 0
   usePLLPhaseEstimation: 0
-  disableStatusFlasher: 1
+  disableStatusFlasher: 0
+  debugText: {fileID: 0}
   velocityDragConstant: 0.1
   upforceConstant: 0.01
   gravityConstant: 30

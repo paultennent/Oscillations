@@ -14,9 +14,9 @@ public class TestCam : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//if (Input.GetButton ("Tap")) {
-			transform.Translate (Vector3.up * Time.deltaTime * 5f);
-		//}
+		if (Input.GetButton ("Tap")) {
+			transform.Translate (Vector3.up * Time.deltaTime);
+		}
 
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 		{

@@ -54,7 +54,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 	float swingStart = 0f;
 	float swoopRatio = 3f;
 
-	float dropPercentage = 0.75f;
+	float dropPercentage = -0.75f;
 
 	float maxTipAngle = 45f;
 	float tipMultiplier = 0.25f;
@@ -207,6 +207,7 @@ public class WalkerCityCamMover : AbstractGameEffects
                 {
                     if (!FadeSphereScript.isFading())
                     {
+						print ("FADE OUT");
                         FadeSphereScript.doFadeOut(5f, Color.black);
                     }
                 }
