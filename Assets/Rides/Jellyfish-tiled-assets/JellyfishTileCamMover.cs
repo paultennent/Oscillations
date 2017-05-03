@@ -25,7 +25,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
     private Skirt skirtObj;
 
     private bool launched = false;
-    private float introTime = 5f;
+    private float introTime = 15f;
 
     public float seatDrop = 1.5f;
 
@@ -83,7 +83,13 @@ public class JellyfishTileCamMover : AbstractGameEffects
             Vector3 seatPoint = topPoint + rotationOffset;
             Vector3 onlyFwdBackPoint = new Vector3(seatPoint.x, topPoint.y, seatPoint.z);
 
-            pivot.transform.position = Vector3.Lerp(seatPoint, onlyFwdBackPoint, offsetTime / 10f);
+            float ratio=0f;
+            if(sessionTime>10f)
+            {
+                ratio=(sessionTime-10f)/5;
+            }
+            
+            pivot.transform.position = Vector3.Lerp(seatPoint, onlyFwdBackPoint,ratio);
 
             if (offsetTime > introTime && swingQuadrant == 0)
             {
