@@ -88,6 +88,7 @@ public class WakerAudioController : MonoBehaviour {
 			startSources (turnSources, false);
 			startSources (waterSources, true);
 			startSources (mixSources, false);
+			masterMixer.audioMixer.SetFloat ("Master", 0f);
 			started = true;
 		}
 	}

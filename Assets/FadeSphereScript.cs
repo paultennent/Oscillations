@@ -94,6 +94,9 @@ public class FadeSphereScript : MonoBehaviour {
 
     public static void doFadeIn(float t, Color fadeColour)
     {
+		foreach(Transform child in globalAccess.transform){
+			child.GetComponent<Renderer> ().enabled = false;
+		}
         globalAccess.StartCoroutine(fadeIn(t, fadeColour));
     }
 

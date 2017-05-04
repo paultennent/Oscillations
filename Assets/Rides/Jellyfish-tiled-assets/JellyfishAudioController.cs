@@ -60,7 +60,7 @@ public class JellyfishAudioController : MonoBehaviour {
 			startSources(MixSources);
 			startSources(SwingSources);
 			startSources(VoidSources);
-			masterMixer.audioMixer.SetFloat ("Master", 0f);
+			masterMixer.audioMixer.SetFloat ("Master", 5f);
 		}
 
 	}

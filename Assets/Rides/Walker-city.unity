@@ -828,7 +828,7 @@ MonoBehaviour:
   maxSessions: 1
   pauseStartTime: 0
   usePLLPhaseEstimation: 1
-  disableStatusFlasher: 0
+  disableStatusFlasher: 1
   debugText: {fileID: 534613076}
   pathParent: {fileID: 531289706}
   vp: {fileID: 197}
