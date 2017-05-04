@@ -241,7 +241,7 @@ public class LayerLayout : MonoBehaviour
         }
         else
         {
-            newObj.transform.position = new Vector3(0.1f, curLength, 0.1f) - objBounds.center + new Vector3(0, objBounds.size.y * 0.5f, 0);
+            newObj.transform.position = new Vector3(1f, curLength, 1f) - objBounds.center + new Vector3(0, objBounds.size.y * 0.5f, 0);
         }
         dirFlip = !dirFlip;
 

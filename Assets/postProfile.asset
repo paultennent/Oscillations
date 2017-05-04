@@ -25,7 +25,7 @@ MonoBehaviour:
         motionVectorsResolution: 24
         motionVectorsAmplitude: 64
   antialiasing:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       method: 1
       fxaaSettings:
@@ -65,11 +65,11 @@ MonoBehaviour:
       screenEdgeMask:
         intensity: 0.081
   depthOfField:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      focusDistance: 2
-      aperture: 10.8
-      focalLength: 70
+      focusDistance: 5.3
+      aperture: 1
+      focalLength: 51
       useCameraFov: 0
       kernelSize: 0
   motionBlur:
@@ -95,10 +95,10 @@ MonoBehaviour:
     m_Enabled: 0
     m_Settings:
       bloom:
-        intensity: 1.69
-        threshold: 1.35
-        softKnee: 0.603
-        radius: 5.07
+        intensity: 0.15
+        threshold: 0.62
+        softKnee: 0.168
+        radius: 2.97
         antiFlicker: 1
       lensDirt:
         texture: {fileID: 0}
@@ -141,20 +141,17 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - serializedVersion: 2
-              time: 0
+            - time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - serializedVersion: 2
-              time: 0.20215054
+            - time: 0.20215054
               value: 0.2657658
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - serializedVersion: 2
-              time: 1
+            - time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -169,14 +166,12 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - serializedVersion: 2
-              time: 0
+            - time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - serializedVersion: 2
-              time: 1
+            - time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -191,14 +186,12 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - serializedVersion: 2
-              time: 0
+            - time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - serializedVersion: 2
-              time: 1
+            - time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -213,14 +206,12 @@ MonoBehaviour:
           curve:
             serializedVersion: 2
             m_Curve:
-            - serializedVersion: 2
-              time: 0
+            - time: 0
               value: 0
               inSlope: 1
               outSlope: 1
               tangentMode: 0
-            - serializedVersion: 2
-              time: 1
+            - time: 1
               value: 1
               inSlope: 1
               outSlope: 1
@@ -290,11 +281,11 @@ MonoBehaviour:
     m_Enabled: 0
     m_Settings:
       colored: 1
-      intensity: 1
-      size: 2
-      luminanceContribution: 1
+      intensity: 0.5
+      size: 1
+      luminanceContribution: 0.8
   vignette:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       mode: 0
       color: {r: 0, g: 0, b: 0, a: 1}

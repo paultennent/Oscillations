@@ -111,7 +111,7 @@ class PhaseEstimator
         // update render phase
         renderPhase+=renderPhaseStep*Time.deltaTime;
         
-        Debug.Log(currentPhase+":"+renderPhase+":"+(currentPhase-renderPhase));
+        //Debug.Log(currentPhase+":"+renderPhase+":"+(currentPhase-renderPhase));
         // move render phase closer to internal phase etc.
 //        float filterConstant=.1f;
         float filterConstant=Time.deltaTime/(renderPhaseSmoothingTime+Time.deltaTime);
@@ -245,7 +245,7 @@ class PhaseEstimator
 //        cycleTime=cycleTimeFromPhaseStep(currentPhaseStep);
         float compareVal=Mathf.Sin(renderPhase)*amplitude;
         float error=(compareVal-lastAngle)/amplitude;
-        Debug.Log(lastAngle+","+compareVal);
+        //Debug.Log(lastAngle+","+compareVal);
 //        Debug.Log(amplitude+","+phase+","+lastAngle+","+compareVal+":"+currentPhaseStep+":"+cycleTime+":"+error+":"+quadrant);
     }
     

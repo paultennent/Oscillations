@@ -7267,7 +7267,8 @@ MonoBehaviour:
   maxSessions: 1
   pauseStartTime: 0
   usePLLPhaseEstimation: 0
-  disableStatusFlasher: 1
+  disableStatusFlasher: 0
+  debugText: {fileID: 0}
   viewpoint: {fileID: 1959593108}
   speed: 1
   seatDrop: 1.5
@@ -7310,7 +7311,7 @@ MonoBehaviour:
   applySwingTransform: 0
   applyInverseSwingTransform: 0
   debug: 1
-  sineWave: 0
+  sineWave: 1
   forceSineOnMobile: 0
   sineAmplitude: 45
   zeroCrossingEvent:

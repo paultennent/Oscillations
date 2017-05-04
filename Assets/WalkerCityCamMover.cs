@@ -102,6 +102,10 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	float lastSeenAngle = 0f;
 
+	int noiseCounter = 0;
+	int noiseReset = 4;
+
+
     // Use this for initialization
     void Start()
     {
@@ -139,11 +143,18 @@ public class WalkerCityCamMover : AbstractGameEffects
 
 	public void zeroCross(){
 		if (launched && !inOutro) {
-			if (growthRate > 0) {
-				audioController.grow ();
-			} else if (growthRate < 0) {
-				audioController.shrink ();
+			if (noiseCounter == 0) {
+				if (growthRate > 0) {
+					audioController.grow ();
+					noiseCounter++;
+				} else if (growthRate < 0) {
+					audioController.shrink ();
+					noiseCounter++;
+				}
 			}
+		}
+		if (noiseCounter >= noiseReset) {
+			noiseCounter = 0;
 		}
 	}
 
@@ -180,14 +191,9 @@ public class WalkerCityCamMover : AbstractGameEffects
 		}
 
 		audioController.begin ();
-
+		tipMultiplier = path [stage].localScale.x;
         maxTipAngle=swingAmplitude*tipMultiplier;
-/*		//keep track of our angles and steps
-		if ((lastSwingQuadrant == 2) && (swingQuadrant == 3)) {
-			//we're starting a new step so we need to zero the swoop time
-			maxTipAngle = -swingAngle * tipMultiplier;
-		}
-		lastSwingQuadrant = swingQuadrant;*/
+
 
         if (!fadedIn)
         {
@@ -302,26 +308,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 				} else {
 					speed = 1;
 				}
-
-/*				if (swoopTime <= quartercycle + (quartercycle / swoopRatio)) {
-					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
-					speed = (Mathf.Cos (Mathf.PI * swoopTime / (quartercycle / swoopRatio)));
-				} else {
-					yPos = Mathf.Cos (Mathf.PI * swoopTime / quartercycle);
-					speed = 1f;
-					//don't grow when turning
-					//if (!turning) {
-
-					//}
-				}*/
-				if (!sentGrow) {
-					if (growthRate> 2) {
-						audioController.grow ();
-					} else if (growthRate  < 0) {
-						audioController.shrink ();
-					}
-					sentGrow = true;
-				}
+					
 			}
 //			print (yPos + ":" + swingQuadrant+":"+phaseFracPart);
 
@@ -361,7 +348,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 				curAngle = -maxTipAngle * yPos;
 			}
 
-
+			float accelTipAng = (Mathf.Abs(yPos))*5f;
 
 			//we only want to go down 75% of our height
 			if (yPos != 0f) {
@@ -369,45 +356,26 @@ public class WalkerCityCamMover : AbstractGameEffects
 			}
 
            
-			speed = speed * Mathf.Max(myHeight,5f);
 
-           
-			//speed multiplier? - probably going to need this to be able to finish the route in time
-			speed = speed * speedMultiplier;
-				
-			pivot.transform.localPosition = new Vector3 (0f, myHeight, 0f);
-			cam.transform.localPosition = new Vector3 (0f, yPos, 0f);
-
-			pivot.localEulerAngles = new Vector3(0f,0f,curAngle);
 
 			myHeight = 1f + (climaxRatio - lauchclimaxTime) * maxheight;
 //			don't shrink past our original height
 			if (myHeight < 1f) {
 				myHeight = 1f;
 			}
+				
+
+			speed = speed * Mathf.Max(myHeight,5f);
 
 
-//			yPos = Mathf.Min (Mathf.Abs (swingAngle), maxAngleForSwoop);
-//			yPos = Remap (yPos, 0, maxAngleForSwoop, 0, 0.75f);
-//			yPos = yPos * myHeight;
-
-//			curAngle = swingAngle / 4f;
-
-			// //as angle decreasing approaches max bring speed down to 0
-			// speed = Mathf.Min (Mathf.Abs (swingAngle), maxAngleForSwoop);
-			// speed = 1f - Remap (speed, 0, maxAngleForSwoop, 0, 1f);
-			// speed = speed * myHeight;
-
-			// if ((swingAngle > 0 && lastSeenAngle > swingAngle) || (swingAngle < 0 && lastSeenAngle < swingAngle)) {
-				// speed = speed * 3f;
-				// if (speed > myHeight) {
-					// speed = myHeight;
-				// }
-			// }
-
+			//speed multiplier? - probably going to need this to be able to finish the route in time
 			speed = speed * speedMultiplier;
+
+
+
 			pivot.transform.localPosition = new Vector3 (0f, myHeight, 0f);
 			cam.transform.localPosition = new Vector3 (0f, -yPos, 0f);
+			cam.localEulerAngles = new Vector3 (-accelTipAng, 0f, 0f);
 			pivot.localEulerAngles = new Vector3(0f,0f,curAngle);
             followWaypointPath(speed*Time.deltaTime);
 
@@ -428,7 +396,7 @@ public class WalkerCityCamMover : AbstractGameEffects
 				vp.position = new Vector3 (vp.position.x, newPos, vp.position.z);
 			}
 
-            			//add banking
+            //add banking
 			if (turning) {
                float bankingAmount = currentTurnAmount;
                // fade banking in and out
