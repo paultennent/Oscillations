@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -185,7 +185,7 @@ public class SwingNetwork : MonoBehaviour
         }
         if(!server && connected && connectionID!=0)
         {
-            messageInfo.swingID="10010037";
+            //messageInfo.swingID="10010037";
             timeSinceSent+=Time.deltaTime;
             // only send every 5 seconds if not in session
             if(timeSinceSent>5f || (messageInfo.inSession && timeSinceSent>.5f) )

@@ -60,7 +60,7 @@ public class AbstractGameEffects : MonoBehaviour {
     
     public bool usePLLPhaseEstimation=false;
 
-	public bool disableStatusFlasher = true;
+	private bool disableStatusFlasher = true;
 
 	public Text debugText;
 
