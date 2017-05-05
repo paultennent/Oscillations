@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AndroidCameraHandler: MonoBehaviour 
 {
+    const bool useCamera2=false;
 
     static AndroidCameraHandler sSingleton;
     public static AndroidCameraHandler GetInstance()
@@ -20,6 +21,7 @@ public class AndroidCameraHandler: MonoBehaviour
     bool isScanningCode=false;
     bool flashOn=false;
     bool lastFlash=false;
+    bool paused=false;
     string currentSwing=null;
     
     
@@ -77,31 +79,68 @@ public class AndroidCameraHandler: MonoBehaviour
 
     void OnApplicationPause( bool pauseStatus )
     {
+        paused=pauseStatus;
         if(pauseStatus==true)
         {
             flashOn=false;
-            flashPattern=null;
-            setCamera();
+            if(!useCamera2)
+            {
+                if(mCamera!=null)
+                {
+                    mCamera.Call("release");
+                    mCamera=null;
+                }
+            }
         }
     }
     
     void setCamera()
     {
     #if UNITY_ANDROID  && !UNITY_EDITOR
-        if(isScanningCode==false)
+        if(isScanningCode==false && paused==false)
         {
             if(flashOn!=lastFlash)
             {
                 if(mCamera==null)
                 {
-                    AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
-                    mCamera=activity.Call<AndroidJavaObject>("getSystemService","camera");
+                    if(useCamera2)
+                    {
+                        AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+                        mCamera=activity.Call<AndroidJavaObject>("getSystemService","camera");
+                    }else
+                    {
+                        AndroidJavaClass cameraClass = new AndroidJavaClass("android.hardware.Camera");
+                        mCamera = cameraClass.CallStatic<AndroidJavaObject>("open", 0);
+                        mCamera.Call("startPreview");
+                    }
                 }
                 if(mCamera!=null)
                 {
-                    mCamera.Call("setTorchMode","0",flashOn);
+                    if(flashOn)
+                    {
+                        AndroidJavaObject cameraParameters = mCamera.Call<AndroidJavaObject>("getParameters");
+                        cameraParameters.Call("setFlashMode", "torch");
+                        mCamera.Call("setParameters", cameraParameters);                                                
+                    }else
+                    {
+                        AndroidJavaObject cameraParameters = mCamera.Call<AndroidJavaObject>("getParameters");
+                        cameraParameters.Call("setFlashMode", "off");
+                        mCamera.Call("setParameters", cameraParameters);                                                
+                    }
                 }
                 lastFlash=flashOn;
+            }
+        }else
+        {
+            flashOn=false;
+            // release the camera so barcode scanning works
+            if(!useCamera2)
+            {
+                if(mCamera!=null)
+                {
+                    mCamera.Call("release");
+                    mCamera=null;
+                }
             }
         }
         return;
@@ -147,6 +186,8 @@ public class AndroidCameraHandler: MonoBehaviour
         {
             #if UNITY_ANDROID && !UNITY_EDITOR
             isScanningCode=true;
+            // clear any flash so we can use the camera
+            setCamera();
             detectedCode="";
             AndroidJavaObject context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
             mBarcodeReader=new AndroidJavaObject("com.mrl.flashcamerasource.BarcodeReader");
@@ -213,6 +254,7 @@ public class AndroidCameraHandler: MonoBehaviour
         {
             flashOn=false;
         }
+            
         setCamera();
 	}
 }
