@@ -6,10 +6,15 @@ using System.IO;
 
 public class ReplayCamMover : ResearchReplay
 {
+
+	byte[] rawData;
+	float lerpSpeed = 1f;
+
     public void Start()
     {
         base.Start();
-        Open("D:\\jqm\\Box Sync\\VRPlayground-Data\\20170426124624-10010037-ce12160c4a6c7b0a05");
+		rawData = GameObject.Find ("ReplayController").GetComponent<ReplaySceneSelector> ().getData ();
+		Open(null,true,rawData);
         Play();
     }
     
@@ -17,12 +22,15 @@ public class ReplayCamMover : ResearchReplay
     {
         base.Update();
         FrameData data=GetCurrentData();
-        print(data);
+        
         if(data!=null)
         {
-            print(data.camPos);
-            Camera.main.transform.position=data.camPos;
-            Camera.main.transform.rotation=data.camRotation;
+			print(data);
+            //print(data.camPos);
+            //Camera.main.transform.position=data.camPos;
+			if (!Input.GetMouseButton(0)) {
+				Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation,data.camRotation,Time.deltaTime*lerpSpeed);
+			}
         }
     }
     

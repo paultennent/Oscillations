@@ -34,6 +34,8 @@ public class SwingBase : MonoBehaviour {
     
     private float randomPhaseOffset=0f;
 
+	private bool replay = false;
+	private ReplayCamMover rcm;
 
 	public Transform getSwingSeat(){
 		return swingSeat;
@@ -68,37 +70,43 @@ public class SwingBase : MonoBehaviour {
 			sineWave = forceSineOnMobile;
 		#endif
 
+		rcm = gameObject.GetComponent<ReplayCamMover> ();
+		if (rcm) {
+			replay = true;
+		}
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		//swingData.dumpVals ();
+		double time;
+
+		if (!replay) {
+			//swingData.dumpVals ();
 
 //		Quaternion q=InputTracking.GetLocalRotation (VRNode.CenterEye); 
-		Vector3 p=InputTracking.GetLocalPosition(VRNode.CenterEye);
-		headset.localPosition = -p;
+			Vector3 p = InputTracking.GetLocalPosition (VRNode.CenterEye);
+			headset.localPosition = -p;
 //		headset.localRotation = q;
 
-		float[] Gxyz = swingData.getHeadingsNow ();
-		//float [] Gaccel = swingData.getAccNow();
-		double time = swingData.getTimeNow();
+			float[] Gxyz = swingData.getHeadingsNow ();
+			//float [] Gaccel = swingData.getAccNow();
+			time = swingData.getTimeNow ();
 
-		if (!sineWave) {
-			swingAngle = Gxyz [1];
-            randomPhaseOffset-=Time.time*2;
-		} else {
-            if(debug)
-            {
-                swingAngle = Mathf.Sin(Time.time * 2.2f+randomPhaseOffset) * sineAmplitude ;
-            }else
-            {
-                swingAngle = Mathf.Sin(Time.time * 2f+randomPhaseOffset) * sineAmplitude ;
-            }
+			if (!sineWave) {
+				swingAngle = Gxyz [1];
+				randomPhaseOffset -= Time.time * 2;
+			} else {
+				if (debug) {
+					swingAngle = Mathf.Sin (Time.time * 2.2f + randomPhaseOffset) * sineAmplitude;
+				} else {
+					swingAngle = Mathf.Sin (Time.time * 2f + randomPhaseOffset) * sineAmplitude;
+				}
 //			swingAngle = (Mathf.Sin(Time.time * 2+randomPhaseOffset+Random.Range(-.1f,.1f))) * sineAmplitude ;
-			//swingAngle = (Mathf.Sin(Time.time * 2)+Random.Range(-.1f,.1f)) * sineAmplitude ;
-            randomPhaseOffset+=Random.Range(-Time.deltaTime*5f,Time.deltaTime*5f);
-		}
+				//swingAngle = (Mathf.Sin(Time.time * 2)+Random.Range(-.1f,.1f)) * sineAmplitude ;
+				randomPhaseOffset += Random.Range (-Time.deltaTime * 5f, Time.deltaTime * 5f);
+			}
 		
 //		swingAngle=errorFilter.addValue (time, Gxyz [1], Gaccel [2]);
 //		if (debug) {
@@ -106,6 +114,16 @@ public class SwingBase : MonoBehaviour {
 //				print (errorFilter.debugMessage);
 //			}
 //		}
+		} else {
+			ResearchReplay.FrameData data = rcm.GetCurrentData();
+			if (data != null) {
+				time = data.time;
+				swingAngle = data.swingAngle;
+			} else {
+				time = 0f;
+				swingAngle = 0f;
+			}
+		}
 
 		if (applySwingTransform) {
 			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 90);

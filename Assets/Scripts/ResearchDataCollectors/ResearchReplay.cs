@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using System.Text;
+using System;
 
 public class ResearchReplay : MonoBehaviour
 {
@@ -25,8 +27,9 @@ public class ResearchReplay : MonoBehaviour
     int currentFrame=0;
     
     List<FrameData> mReplayItems=new List<FrameData>();
+
     
-    public bool Open(string basename)
+	public bool Open(string basename, bool isString, byte[] byteData)
     {
         
         Vector3 camPos;
@@ -34,7 +37,12 @@ public class ResearchReplay : MonoBehaviour
         Quaternion headRotation;
         
         try{
-            BinaryReader frameFile = new BinaryReader(File.Open(basename+".bin", FileMode.Open));
+			BinaryReader frameFile;
+			if(!isString){
+				frameFile = new BinaryReader(File.Open(basename+".bin", FileMode.Open));
+			}else{
+				frameFile = new BinaryReader(new MemoryStream(byteData));
+			}
             byte[] logHeader={79,83,67,73,76,79,71,49};
             byte[]fileSig=frameFile.ReadBytes(logHeader.Length);
             if(fileSig.Length==8)
@@ -138,6 +146,11 @@ public class ResearchReplay : MonoBehaviour
         {
             return null;
         }
-    }    
+    } 
+
+	public static MemoryStream GenerateStreamFromString(string value)
+	{
+		return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
+	}
     
 }

@@ -12,11 +12,11 @@ public class AndroidCameraHandler: MonoBehaviour
         return sSingleton;
     }
 
-    private string FLASH_RUNNING="0000";
-	private string FLASH_DISCONNECT_ONE="0000";
-	private string FLASH_DISCONNECT_ALL="1";
-	private string FLASH_FINISHING="0000";
-	private string FLASH_FINISHED= "1010100000";
+    public string FLASH_RUNNING="0000";
+	public string FLASH_DISCONNECT_ONE="0000";
+	public string FLASH_DISCONNECT_ALL="1";
+	public string FLASH_FINISHING="0000";
+	public string FLASH_FINISHED= "1010100000";
 
     bool isScanningCode=false;
     bool flashOn=false;
