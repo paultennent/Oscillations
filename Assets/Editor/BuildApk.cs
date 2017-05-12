@@ -36,6 +36,7 @@ class BuildApk
         options.locationPathName=targetAPK;
         options.target=BuildTarget.Android;
         options.options=BuildOptions.None;
+        options.targetGroup=BuildTargetGroup.Android;
         BuildPipeline.BuildPlayer(options);
      }
 }
