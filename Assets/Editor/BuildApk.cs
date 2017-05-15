@@ -11,8 +11,8 @@ class BuildApk
         var args = System.Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length; i++)
         {
-            print(args[i]);
-            if (args[i] == name && args.Length > i + 1)
+            Debug.Log(args[i]);
+            if (args[i].Equals(name) && args.Length > i + 1)
             {
                 return args[i + 1];
             }
