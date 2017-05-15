@@ -2,6 +2,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.IO;
+
 class BuildApk
 {
     private static string GetArg(string name)
@@ -9,6 +11,7 @@ class BuildApk
         var args = System.Environment.GetCommandLineArgs();
         for (int i = 0; i < args.Length; i++)
         {
+            print(args[i]);
             if (args[i] == name && args.Length > i + 1)
             {
                 return args[i + 1];
@@ -39,4 +42,42 @@ class BuildApk
         options.targetGroup=BuildTargetGroup.Android;
         BuildPipeline.BuildPlayer(options);
      }
+
+     static void PerformWebBuilds()
+     {
+        AssetDatabase.Refresh();
+        string targetFolder=GetArg("-targetPath");
+        
+        Debug.Log("Building Oscillate to path: "+targetFolder+"\nScenes:");
+        List<string> allScenes=new List<string>();
+        string starterScene="";
+        for(int c=0;c<20;c++)
+        {
+            string name = SceneUtility.GetScenePathByBuildIndex(c);                           
+            if(name==null || name.Length==0)break;
+            if(name.IndexOf("ReplayStarter")==-1)
+            {
+                allScenes.Add(name);
+            }else
+            {
+                starterScene=name;
+            }
+            Debug.Log(name);
+        }
+        for(int c=0;c<allScenes.Count;c++)
+        {
+            string shortName=Path.GetFileNameWithoutExtension(allScenes[c]);
+            BuildPlayerOptions options = new BuildPlayerOptions();
+            options.scenes=new string[]{starterScene,allScenes[c]};
+            options.locationPathName=targetFolder+Path.DirectorySeparatorChar+shortName;            
+            options.target=BuildTarget.WebGL;
+            options.options=BuildOptions.None;
+
+            Debug.Log("Building Oscillate scene:  to path: "+options.locationPathName+".\nScenes:"+options.scenes[0]+","+options.scenes[1]);
+            BuildPipeline.BuildPlayer(options);
+        }
+     }
+
+
+     
 }
