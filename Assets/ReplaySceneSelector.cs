@@ -15,7 +15,7 @@ public class ReplaySceneSelector : MonoBehaviour {
 	public Text debug;
 
 	private URLReadTest urt;
-	private string riderNo = "10010037";
+	private string riderNo = "00162708";
 	private bool gotRideData = false;
 	private bool gotSwingData = false;
 
@@ -27,8 +27,10 @@ public class ReplaySceneSelector : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad(transform.gameObject);
+#if !UNITY_EDITOR        
 		riderNo = GetFilenames ();
-		print ("UnityRecieved:" + riderNo);
+#endif
+		print ("UnityReceived:" + riderNo);
 		if (riderNo != null) {
 			debug.text = "";//"Rider Number: " + riderNo;
 		} else {

@@ -9,13 +9,13 @@ public class MessageSender : MonoBehaviour {
 
 	private TcpListener tcpListener;
 	private Thread listenThread;
-	private RotateAroundObject roa;
+//	private RotateAroundObject roa;
 	private bool alive = true;
 
 	// Use this for initialization
 	void Start () {
 		GameObject swing = GameObject.Find ("Swing");
-		roa = swing.GetComponent <RotateAroundObject> ();
+//		roa = swing.GetComponent <RotateAroundObject> ();
 
 		this.tcpListener = new TcpListener(IPAddress.Any, 3000);
 		this.listenThread = new Thread(new ThreadStart(ListenForClients));
@@ -80,13 +80,13 @@ public class MessageSender : MonoBehaviour {
 			while (alive)
 			{	
 				//get the message here
-				byte[] buffer;
+				byte[] buffer=null;
 				if (first){
 					buffer = encoder.GetBytes("QUERYGOOD\n");
 					first = false;
 				}
 				else{
-					buffer = encoder.GetBytes(roa.getAngleString());
+	//				buffer = encoder.GetBytes(roa.getAngleString());
 				}
 
 				try
