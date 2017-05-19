@@ -6,6 +6,8 @@ using UnityStandardAssets.ImageEffects;
 
 public class SceneSwitcher : MonoBehaviour {
 
+    private static SceneSwitcher singleton=null;
+
 	private string[] scenes;
 	private float lastTapTime = 0;
 
@@ -25,12 +27,20 @@ public class SceneSwitcher : MonoBehaviour {
 
 	void Awake()
 	{
-		DontDestroyOnLoad(transform.gameObject);
 	}
 
 	// Use this for initialization
 	void Start () {
-		scenes = new string[]{"Float","Pachinko","HighRoller","Jellyfish","Shuttlecock","Walker","Oscillate","Variables"};
+        if(singleton==null)
+        {
+            scenes = new string[]{"Float","Pachinko","HighRoller","Jellyfish","Shuttlecock","Walker","Oscillate","Variables"};
+            DontDestroyOnLoad(transform.gameObject);
+            singleton=this;
+        }else{
+            Destroy(gameObject);
+        }
+        
+        
 	}
 	
 	// Update is called once per frame

@@ -19,6 +19,14 @@ public class Fader : MonoBehaviour {
         GetComponent<Canvas>().enabled=false;
         img=transform.GetChild(0).gameObject.GetComponent<Image>();
 	}
+    
+    void OnDestroy()
+    {
+        if(globalAccess==this)
+        {
+            globalAccess=null;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {

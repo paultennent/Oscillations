@@ -132,6 +132,14 @@ public class AbstractGameEffects : MonoBehaviour {
         shopping["Gravity_G_Force_at_CofG_perpendicular_to_direction"] = 0;
         shopping["resultant_G_Force_at_CofG"] = 0;
     }
+    
+    public void OnDestroy()
+    {
+        if(s_Singleton==this)
+        {
+            s_Singleton=null;
+        }
+    }
 	
 	// Update is called once per frame
 	public void Update () {

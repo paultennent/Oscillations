@@ -18,6 +18,13 @@ public class FadeSphereScript : MonoBehaviour {
         globalAccess = this;
     }
     
+    void OnDestroy() {
+        if(globalAccess==this)
+        {
+            globalAccess=null;
+        }
+    }
+    
     public static void enableFader(bool enabled)
     {
         if(globalAccess!=null)

@@ -27,6 +27,14 @@ public class SessionManager : MonoBehaviour {
 	void Start () {
 		globalAccess=this;
 	}
+    
+    void OnDestroy()
+    {
+        if(globalAccess==this)
+        {
+            globalAccess=null;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {

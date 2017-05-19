@@ -93,6 +93,14 @@ public class BlockLayout : MonoBehaviour {
         }
 //		LayoutCity(1000f);
 	}
+    
+    void OnDestroy()
+    {
+        if(sBlockLayout==this)
+        {
+            sBlockLayout=null;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
