@@ -208,6 +208,11 @@ public class WalkerCityCamMover : AbstractGameEffects
             //we're at the end - do the outro
             //lerp to the correct position and rotation, just in case we're out
             inOutro=true;
+            if(outroStartTime==0)
+            {
+                outroStartTime=Time.time;
+            }
+            
             {
                 if (Time.time > outroStartTime + 5f)
                 {
@@ -217,6 +222,7 @@ public class WalkerCityCamMover : AbstractGameEffects
                         FadeSphereScript.doFadeOut(5f, Color.black);
                     }
                 }
+                
                 Vector3 endPos = vp.position;
                 Vector3 topPoint = endPos + Vector3.up * seatDrop;
 				Quaternion rotation = Quaternion.Euler(-swingAngle, 0f, 0f);
