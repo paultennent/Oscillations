@@ -202,7 +202,7 @@ public class WalkerCityCamMover : AbstractGameEffects
         }
         
 
-        if (stage >= path.Length-1)
+        if (stage >= path.Length-1 || (climaxTime<10f && countUp==false) )
         {
 
             //we're at the end - do the outro

@@ -149,7 +149,15 @@ public class ResearchLogger : MonoBehaviour {
         string saveFolder= "/sdcard/vrplayground-logs/";
         
         string curTime=DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-        string saveTag=curTime+"-"+currentSwing+"-"+deviceID;
+        string saveTag=curTime+"-"+currentSwing+"-"+deviceID.Substring(deviceID.Length-8);
+        if(currentUser.Length>0)
+        {
+            saveTag+="-"+currentUser;
+        }
+        if(currentScene.Length>0)
+        {
+            saveTag+="-"+currentScene.Substring(0,2);
+        }
         // open per frame data log (raw binary)
         // write per frame data log header (just a fixed file magic code)
         perFrameFile = new BinaryWriter(File.Open(saveFolder+saveTag+".bin", FileMode.Create));

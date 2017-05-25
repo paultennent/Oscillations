@@ -52,19 +52,21 @@ public class FadeSphereScript : MonoBehaviour {
 	}
 
     public static bool isFading() {
+        if(globalAccess==null)return false;
         return globalAccess.fading;
     }
 
     public static bool isFadingOut()
     {
+        if(globalAccess==null)return false;
         return globalAccess.fadingOut;
     }
 
     static IEnumerator fadeOut(float t, Color fadeColour)
     {
-        Material mat = globalAccess.GetComponent<Renderer>().material;
-        if (!globalAccess.fading)
+        if (globalAccess!=null && !globalAccess.fading)
         {
+            Material mat = globalAccess.GetComponent<Renderer>().material;
             globalAccess.fading = true;
             globalAccess.fadingOut = true;
             float fadeStartTime = Time.time;

@@ -182,6 +182,10 @@ public class AbstractGameEffects : MonoBehaviour {
                 {
                     timeLeftInGame=0;
                 }
+                if(timeLeftInGame<5 && !FadeSphereScript.isFading())
+                {
+                    FadeSphereScript.doFadeOut(5f, Color.black);
+                }
                 if(offsetTime>climaxTime)                
                 {
                     countUp=false;
@@ -212,6 +216,7 @@ public class AbstractGameEffects : MonoBehaviour {
 				suppressEffects = false;
 			}
 		}
+        
 
 		if (inSession && suppressEffects) {
 			inSession = false;
