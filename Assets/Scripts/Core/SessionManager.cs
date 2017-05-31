@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VR;
 
 public class SessionManager : MonoBehaviour {
 
@@ -13,6 +14,7 @@ public class SessionManager : MonoBehaviour {
 
 	public float triggerAngle=10f;
 
+    private bool unlocked=false;
 	private bool inGame=false;
 
 	private double gameStartTime=0;
@@ -66,6 +68,20 @@ public class SessionManager : MonoBehaviour {
 	//public void onAngle(double time,float angle, GyroAccelFilter gf, float rawAngle)
 	public void onAngle(double time,float angle)
 	{
+        if(!unlocked) 
+        {
+            if(Input.GetButton("Tap"))
+            {
+                unlocked=true;
+                FadeSphereScript.changePauseColour(new Color(0,1,0));
+                InputTracking.Recenter();
+            }
+            return;
+        }
+        if(!inGame && Input.GetButton("Tap"))
+        {
+            InputTracking.Recenter();
+        }
 		if(angle>triggerAngle)
 		{
 			lastForwardSwing=time;

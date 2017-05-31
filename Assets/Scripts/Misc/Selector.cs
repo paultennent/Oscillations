@@ -12,7 +12,7 @@ public class Selector : MonoBehaviour {
     public Text loadText;
     Vector3[] corners=new Vector3[4];
 
-
+    
 	public void Update()
 	{
 
@@ -38,8 +38,9 @@ public class Selector : MonoBehaviour {
             {
                 print (raycastResults [0].gameObject.name);
                 if (Input.GetButtonUp ("Tap")) {
-                    SceneManager.LoadScene (raycastResults [0].gameObject.name);
-                    loadText.enabled = true;
+                    string sceneName=raycastResults [0].gameObject.name;
+                    showLoadingGraphic(sceneName);
+                    SceneManager.LoadScene (sceneName);
                 }
             }
 		} else {
@@ -48,8 +49,41 @@ public class Selector : MonoBehaviour {
 
 	}
 
+    public static bool openSceneByNumber(int number)
+    {
+        string sceneName=null;
+        switch(number)
+        {
+            case 2:
+                sceneName="HighRoller-City-tiled";
+                break;
+            case 3:
+                sceneName="Walker-city";
+                break;
+            case 4:
+                sceneName="Jellyfish-tiled";
+                break;
+            case 5:
+                sceneName="Shuttlecock-City-Static";
+                break;
+            default:
+                return false;
+        }
+        print("Auto scene:"+number+":"+sceneName);
+        
+        
+        showLoadingGraphic(sceneName);
+        SceneManager.LoadScene(sceneName);
+        return true;
+    }
+    
+    public static void showLoadingGraphic(string sceneName)
+    {
+        GameObject.Find("LoadingScreenParent").transform.GetChild(0).gameObject.SetActive(true);
+    }
+    
 	public void openHighRoller(){
-		SceneManager.LoadScene ("HighRoller-City");
+		SceneManager.LoadScene ("HighRoller-City-tiled");
 	}
 
 	public void openFloat(){
@@ -57,11 +91,11 @@ public class Selector : MonoBehaviour {
 	}
 
 	public void openWalker(){
-		SceneManager.LoadScene ("Walker");
+		SceneManager.LoadScene ("Walker-city");
 	}
 
 	public void openJellyfish(){
-		SceneManager.LoadScene ("Jellyfish");
+		SceneManager.LoadScene ("Jellyfish-tiled");
 	}
 
 	public void openPachinko(){
@@ -69,6 +103,6 @@ public class Selector : MonoBehaviour {
 	}
 
 	public void openShuttlecock(){
-		SceneManager.LoadScene ("Shuttlecock-city");
+		SceneManager.LoadScene ("Shuttlecock-City-Static");
 	}
 }
