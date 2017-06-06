@@ -28,15 +28,27 @@ public class EditorMouseLook : MonoBehaviour {
 	public float frameCounter = 20;
 
 	Quaternion originalRotation;
+    
+    bool lastDown=false;
 
 	void Update ()
 	{
 
-        #if !UNITY_EDITOR
-            //Cursor.visible = false;
-            //return;
-        #endif
-        if(!Input.GetMouseButton(0))return;
+        if(!Input.GetMouseButton(0))
+        {
+            lastDown=false;
+            return;
+        }
+        // make it so that it doesn't jump if the camera is moved between clicks
+        if(!lastDown)
+        {
+            originalRotation = transform.localRotation;
+            rotationX=0f;
+            rotationY=0f;
+            rotArrayY.Clear();
+            rotArrayX.Clear();
+        }
+        lastDown=true;
 
 
         if (axes == RotationAxes.MouseXAndY)
