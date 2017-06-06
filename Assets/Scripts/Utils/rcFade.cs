@@ -41,6 +41,14 @@ public class rcFade : MonoBehaviour
         }
         return instance;
     }
+    
+    public void OnDestroy()
+    {
+        if(instance==this)
+        {
+            instance=null;
+        }
+    }
 
     public void Reinit()
     {

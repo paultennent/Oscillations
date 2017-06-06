@@ -6,17 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Rides/ReplayStarter.unity
-    guid: 4b2f12ae13be241318564db7c3bed7b7
+    path: Assets/Rides/Menu.unity
+    guid: 30845cb43f2c947b6923129200a96ad3
   - enabled: 1
-    path: Assets/Rides/HighRoller-City-tiled-replay.unity
-    guid: 4d2e9146d21844fb49029d2c2cc9f3a3
+    path: Assets/Rides/Shuttlecock-City-Static.unity
+    guid: cb1a55da24bf4ef4f9bb441a081c41ad
   - enabled: 1
-    path: Assets/Rides/Jellyfish-tiled-replay.unity
-    guid: 0c04d2fcbd0374cbe95d64b0804984c0
+    path: Assets/Rides/Walker-city.unity
+    guid: 1189d8838aac896419e7de0b23270987
   - enabled: 1
-    path: Assets/Rides/Shuttlecock-City-Static-replay.unity
-    guid: 78a133260e46e49dfba64510377fe3e0
+    path: Assets/Rides/HighRoller-City-tiled.unity
+    guid: 27572c9cb0d7a224ba3a1736832b4646
   - enabled: 1
-    path: Assets/Rides/Walker-city-replay.unity
-    guid: 80ef4670d513a4fa8820500a45bcad21
+    path: Assets/Rides/Jellyfish-tiled.unity
+    guid: ae6cfe6cd0d40c445861520e62ad1a07

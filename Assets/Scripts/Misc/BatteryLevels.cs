@@ -14,7 +14,12 @@ public class BatteryLevels : MonoBehaviour {
 	public Text connectionState;
 
 	private bool visible = false;
+    private float visibleTime=0f;
 
+    private bool fadeEnabled=false;
+    
+    private float downY=0f;
+    
 	// Use this for initialization
 	void Start () {
 		mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
@@ -24,20 +29,50 @@ public class BatteryLevels : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		if(Input.GetButton("Tap"))
-		{
+        if(visibleTime>0f)
+        {
+            if(!visible)
+            {
+                fadeEnabled=FadeSphereScript.isEnabled();
+                FadeSphereScript.enableFader(false);
+            }
 			visible = true;
 			viewCanvas.enabled = true;
-            FadeSphereScript.enableFader(false);
-		}
+            visibleTime-=Time.deltaTime;
+            if(visibleTime<=0)
+            {
+                visible = false;
+                viewCanvas.enabled = false;
+                if(fadeEnabled)
+                {
+                    FadeSphereScript.enableFader(fadeEnabled);
+                }
+            }
+        }
 
-		if(Input.GetButtonUp("Tap"))
+		if(Input.GetButtonDown("Tap"))
 		{
-			visible = false;
-			viewCanvas.enabled = false;
-            FadeSphereScript.enableFader(true);
+            downY=Input.mousePosition.y;
+            print("Down:"+downY);
 		}
+        if(Input.GetButtonUp("Tap"))
+        {
+            float upY=Input.mousePosition.y;
+            print("Up:"+upY);
+            float diffY=upY-downY;
+            if(diffY>200f)
+            {
+                // turn on for 2 seconds with up swipe
+                visibleTime=2f;
+            }
+            if(diffY<-200f && visibleTime>0)
+            {
+                // turn off with down swipe
+                visibleTime=0.01f;
+            }
+            print("Swipe:"+diffY);
+        }
+
 
 		if (visible) {
 			headsetDisplay.text = "Headset Battery: " + (int) (mr.getLocalBatteryLevel () * 100f) + "%";

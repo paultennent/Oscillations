@@ -42,6 +42,14 @@ public class CameraRotation : MonoBehaviour
     {
         instance = this;
     }
+    
+    void OnDestroy()
+    {
+        if(instance==this)
+        {
+            instance=null;
+        }
+    }
 
     // Use this for initialization
     void Start()
