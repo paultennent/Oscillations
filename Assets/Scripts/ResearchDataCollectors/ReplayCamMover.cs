@@ -25,7 +25,7 @@ public class ReplayCamMover : ResearchReplay
         
         if(data!=null)
         {
-			print(data);
+			//print(data);
             //print(data.camPos);
             //Camera.main.transform.position=data.camPos;
 			if (!Input.GetMouseButton(0)) {

@@ -15,7 +15,7 @@ public class ReplaySceneSelector : MonoBehaviour {
 	public Text debug;
 
 	private URLReadTest urt;
-	private string riderNo = "00162708";
+	public string riderNo = "00162708";
 	private bool gotRideData = false;
 	private bool gotSwingData = false;
 
