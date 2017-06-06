@@ -68,6 +68,7 @@ public class SessionManager : MonoBehaviour {
 	//public void onAngle(double time,float angle, GyroAccelFilter gf, float rawAngle)
 	public void onAngle(double time,float angle)
 	{
+#if UNITY_ANDROID
         if(!unlocked) 
         {
             if(Input.GetButton("Tap"))
@@ -78,6 +79,9 @@ public class SessionManager : MonoBehaviour {
             }
             return;
         }
+#else
+        unlocked=true;
+#endif
         if(!inGame && Input.GetButton("Tap"))
         {
             InputTracking.Recenter();

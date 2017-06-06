@@ -11,12 +11,15 @@ public class VideoSaver : MonoBehaviour
 
     public bool exitOnFinish=false;
     public bool doRecording=false;
+    
+    public bool isRecordingNow=false;
     bool startedRecording=false;
     bool stopPlaying=false;
 
 #if UNITY_EDITOR    
      public void Start()
-     {                  
+     {          
+        isRecordingNow=false;     
          if(!UnityEditor.EditorApplication.isPlaying)
          {
              if(doRecording)
@@ -68,19 +71,19 @@ public class VideoSaver : MonoBehaviour
      public void Update()
      {
          
-         SessionManager sm=SessionManager.getInstance();
          if(!startedRecording)
          {
+            SessionManager sm=SessionManager.getInstance();
              if(sm!=null && sm.isInSession() )
              {
                 StartRecord();
+                isRecordingNow=true;
              }
          }
          
-         print("SM:"+sm+":"+sm.isInSession());
-         if(startedRecording && (Time.time-startTime>300f || (sm!=null && sm.isInSession()==false) ))
+         if(isRecordingNow && (Time.time-startTime>300f || (FadeSphereScript.isFadingOut() && !FadeSphereScript.isFading()) ))
          {
-             startedRecording=false;
+                isRecordingNow=false;
              print("Finish capture");
             VRCapture.VRCapture.Instance.StopCapture();
          }

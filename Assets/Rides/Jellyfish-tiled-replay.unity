@@ -86,7 +86,8 @@ LightmapSettings:
     m_PVRFilteringAtrousColorSigma: 1
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000002, guid: bb68b982a601a1d4ea68faf25fdd6238,
+    type: 2}
   m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
@@ -1105,8 +1106,8 @@ MonoBehaviour:
   usePLLPhaseEstimation: 0
   debugText: {fileID: 0}
   velocityDragConstant: 0.1
-  upforceConstant: 0.01
-  gravityConstant: 30
+  upforceConstant: 0.02
+  gravityConstant: 15
   fadeTime: 5
   pivot: {fileID: 2062473235}
   launch: 0

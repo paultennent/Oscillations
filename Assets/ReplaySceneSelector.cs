@@ -15,7 +15,10 @@ public class ReplaySceneSelector : MonoBehaviour {
 	public Text debug;
 
 	private URLReadTest urt;
-	public string riderNo = "00162708";
+	//private string riderNo = "00162708"; // walker
+	private string riderNo = "00384117"; // jellyfish
+	//private string riderNo = "00200554"; // high roller
+	//private string riderNo = "00348393";     //shuttlecock
 	private bool gotRideData = false;
 	private bool gotSwingData = false;
 

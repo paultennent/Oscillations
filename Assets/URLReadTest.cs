@@ -57,6 +57,7 @@ public class URLReadTest : MonoBehaviour {
 	void ProcessRaw(byte[] s){
 		gotData = true;
 		rawdata = s;
+        print("woo");
 	}
 
 	void Process(string s){
