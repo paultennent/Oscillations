@@ -1,5 +1,6 @@
 @echo off
 if "%1"=="" GOTO :usage
+if "%2"=="" GOTO :usage
 echo Unity folder:%1
 
 echo Building unity web versions to folder %2
