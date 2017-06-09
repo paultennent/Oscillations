@@ -70,7 +70,7 @@ public class SessionManager : MonoBehaviour {
 	{
         if(!unlocked) 
         {
-            if(Input.GetButton("Tap"))
+            if(Input.GetButtonDown("Tap"))
             {
                 unlocked=true;
                 FadeSphereScript.changePauseColour(new Color(0,1,0));
@@ -78,7 +78,7 @@ public class SessionManager : MonoBehaviour {
             }
             return;
         }
-        if(!inGame && Input.GetButton("Tap"))
+        if(!inGame && Input.GetButtonDown("Tap"))
         {
             InputTracking.Recenter();
         }

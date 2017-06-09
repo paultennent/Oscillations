@@ -54,6 +54,9 @@ public class Selector : MonoBehaviour {
         string sceneName=null;
         switch(number)
         {
+            case 0:
+                sceneName="Jellyfish-tiled";
+                break;
             case 2:
                 sceneName="HighRoller-City-tiled";
                 break;
@@ -61,9 +64,6 @@ public class Selector : MonoBehaviour {
                 sceneName="Walker-city";
                 break;
             case 4:
-                sceneName="Jellyfish-tiled";
-                break;
-            case 5:
                 sceneName="Shuttlecock-City-Static";
                 break;
             default:
