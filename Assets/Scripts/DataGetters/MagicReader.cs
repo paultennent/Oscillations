@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -64,6 +65,14 @@ public class MagicReader : AbstractDataReader {
 
 	// Use this for initialization
 	void Start () {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if(File.Exists("/sdcard/forceaccel.txt"))
+        {
+            useAccelerometer=true;
+            Debug.Log("Forced using accelerometer tracking");
+        }
+#endif
+        
         // only one gyroconnector ever - won't get deleted during the scene switch
         if(gc==null)
         {

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.VR;
 
@@ -43,7 +44,7 @@ public class GyroConnector
     
     public Quaternion mForwardsDirection=Quaternion.identity;
     
-    public SwingTracker mTracker=new SwingTracker();
+    public FastSwingTracker mTracker=new FastSwingTracker();
     public AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
 
 	public void init () 
@@ -67,11 +68,8 @@ public class GyroConnector
 
 			activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 			activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-			Debug.Log("woo:1"+activity);
 			intent = new AndroidJavaObject("android.content.Intent");
-			Debug.Log("woo:2"+intent);
 			intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
-			Debug.Log("woo:3"+intent);
 			activity.Call<AndroidJavaObject>("startService",intent);
 #else
 			timeLastPoll = Time.time;
@@ -308,6 +306,7 @@ public class GyroConnector
             }
             dbgTxt=mTracker.dbgTxt;
             mAngle=outAngle;
+            //Debug.Log("Angle:"+mAngle+":"+dbgTxt);
         }
 	}
 

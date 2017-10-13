@@ -192,25 +192,28 @@ public class AccelerometerGetter
         Vector3 origAccel;
         if(accelPos<Input.accelerationEvents.Length)
         {
-            AccelerationEvent accEvent=Input.accelerationEvents[accelPos];
-            origAccel=new Vector3(accEvent.acceleration.x,accEvent.acceleration.y,-accEvent.acceleration.z);
+            
+            origAccel=Input.acceleration;
+            accelHistoryTime+=Time.deltaTime;
+            accelPos=Input.accelerationEvents.Length-1 ;
+//            AccelerationEvent accEvent=Input.accelerationEvents[accelPos];
+//            accelHistoryTime+=accEvent.deltaTime;
+            //origAccel=new Vector3(accEvent.acceleration.x,accEvent.acceleration.y,-accEvent.acceleration.z);
             rotatedAccel=directionCorrection*origAccel;            
-            accelHistoryTime+=accEvent.deltaTime;
 
-            mag=Mathf.Sqrt(accEvent.acceleration.x*accEvent.acceleration.x+accEvent.acceleration.y*accEvent.acceleration.y+accEvent.acceleration.z*accEvent.acceleration.z);
+            mag=Mathf.Sqrt(origAccel.x*origAccel.x+origAccel.y*origAccel.y+origAccel.z*origAccel.z);
             timestamp=accelHistoryTime;
             forwardAccel=rotatedAccel.z;
 
 #if !ACCEL_LOGFILE            
             if(mLogWriter!=null)
-            {
+            { 
                 mLogItem.fwdAccel=forwardAccel;
                 mLogItem.magAccel=mag;
                 mLogItem.time=accelHistoryTime;
                 mLogWriter.Write(mLogItem.getCSVLine());
             }
 #endif
-
             
             accelPos++;
             return true;
