@@ -6,7 +6,7 @@
 using UnityEngine;
 using System;
 
-public class SwingTracker 
+public class FastSwingTracker 
 {
     int WINDOW_SIZE=0;
     int WINDOW_SHIFT=20;
@@ -51,7 +51,84 @@ public class SwingTracker
     float calculatedMaxAngle=0;
     
     float gyroYOffset=0f;
+    
+    public FastSwingTracker()
+    {
+        SetWindowSize( 160,20);  
+        plls=new FixedPLL[100];
+        for(int c=0;c<100;c++)
+        {
+            plls[c]=new FixedPLL(1.0f+c*0.1f);
+        }        
+    }
+    
+    class FixedPLL
+    {
+        public FixedPLL(float step)
+        {
+            this.step=step;
+            phase=0;
+            smoothedError=5f;
+        }
         
+        public float update(float dt,float accValue,float fwdAccel)
+        {
+            phase+=dt*step;
+            float phasePos=Mathf.Repeat(phase,Mathf.PI*2f);
+            float fwdBackPos=Mathf.Repeat(phase,Mathf.PI*4f);
+            if(fwdBackPos<Mathf.PI*2f)
+            {
+                // expecting more forward acceleration than backwards in this bit of the swing
+                fwdAccum=0.9f*fwdAccum+0.1f*fwdAccel;
+            }else
+            {
+                backAccum=0.9f*backAccum+0.1f*fwdAccel;
+            }         
+            float error=accValue-Mathf.Cos(phase);
+            float absError=Mathf.Abs(error);
+            if(phasePos<Mathf.PI)
+            {
+                error=-error;
+            }
+            if(error<-0.1f)
+            {
+                phase-=dt;                               
+            }else if(error>0.1f){
+                phase+=dt;
+            }
+            smoothedError=0.95f*smoothedError+0.05f*absError;
+            return smoothedError;
+        }
+        
+        public float getPhase()
+        {
+            if(fwdAccum>backAccum)
+            {
+                return 2f*Mathf.PI+(phase-Mathf.PI);
+            }else
+            {
+                return phase-Mathf.PI;
+            }
+        }
+        
+        public float getStep()
+        {
+            return step;
+        }
+        
+        float phase;
+        float step;
+        float smoothedError;
+        
+        float fwdAccum=0f;
+        float backAccum=0f;
+        
+        
+        
+    }
+    
+    FixedPLL[] plls;
+    
     public void SetWindowSize(int windowSize,int windowShift)
     {   
         WINDOW_SIZE=windowSize;
@@ -206,31 +283,12 @@ public class SwingTracker
         float outAngle=lastAngle;
         if(hasGyro)outAngle=gyroAngle;
         
-        if(measuringWindowCountLeft==-1)
-        {
-            measuringWindowCountLeft=50;
-            windowStartTime=magTime;
-            return 0;
-        }else if(measuringWindowCountLeft>0)
-        {
-            measuringWindowCountLeft--;
-            if(measuringWindowCountLeft==0)
-            {
-                float timeFor50=(magTime-windowStartTime);
-                int countsFor3Seconds=(int)((50f * 3f)/timeFor50);
-                SetWindowSize( 160,20);  
-//                SetWindowSize( countsFor3Seconds,20);  
-//                SetWindowSize( countsFor3Seconds,countsFor3Seconds/15);  
-            }
-            return 0;
-        }
         int gyroCount=0;
         int lastMagHistoryPos=magHistoryPos;
         float dt = magTime-lastTime;
         lastTime=magTime;
         // update the output estimate and phase estimate
         float outVal=Mathf.Sin(outPhase);
-        outPhase+=dt*swingStep;
         // update the history buffer
         zHistory[magHistoryPos]=zAccel;
         if(hasGyro)
@@ -249,30 +307,8 @@ public class SwingTracker
         if(magHistoryPos>=magHistory.Length)magHistoryPos=0;
         magHistoryLen+=1;
         // wait till we have full history before doing anything - i.e. nothing will work before 4 seconds
-        if(magHistoryLen>=sinWindow.Length)
+        if(magHistoryLen>=200)
         {
-            // how this algorithm works for pure accelerometer:
-            // 
-            // 1) based on current frequency+phase estimate, calculate sine wave for length of accelerometer magnitude history buffer
-            // 2) align vertically&scale by using mean/variance, then score it against the observed accel data for +-20 samples offset
-            // 3) shift phase towards best offset
-            // 4) shift frequency very slightly also
-            // 5) Estimate swinging probability by error, low pass filtered amount we have had to shift recently, and difference multiplier between 0 offset and -20 offset 
-            //   (because for a good match, we'd expect there to be a much better match at 0 then -20, whereas for a poor match it is likely
-            //   to be roughly uniform.
-            // 6) estimate maximum angle by taking maximum acceleration using kinetic energy = potential energy formula.
-            //     simplifies out to the line down there: thisMaxAngle=Mathf.Acos(1f-scale)*accelAngleMultiplier;
-            // 7) estimate current angle by taking 0.5*phase and applying sine wave to it (max acceleration happens twice per complete swing, hence phase*0.5)
-            //
-            // With gyro data there's an extra step:
-            // 
-            // 2g where we have gyro data, generate sine wave using angle calculatation (based on last max angle), plus maybe align vertically & scale using mean/variance, 
-            // then score against observed gyro angle data
-            // 6g where we have a decent amount of gyro data use that to estimate maximum angle
-            // 7g if swing probability is high, use phase output (because it will be lovely and smooth)
-            //    otherwise use last gyro data point
-              
-            
             // calculate the mean and variance of the history buffer
             float meanMain=0,varianceMain=0;
             GetMeanVariance(magHistory,out meanMain,out varianceMain,null);
@@ -282,24 +318,15 @@ public class SwingTracker
             gyroCount=GetMeanVariance(gyroHistory,out meanGyro,out varianceGyro,gyroValidHistory);
             
             float gyroMaxAngle=Mathf.Sqrt(varianceGyro)/(0.5f*Mathf.Sqrt(2));
-            //Debug.Log(gyroMaxAngle);
             
             offset=-meanMain;
             scale=Mathf.Sqrt(varianceMain)/(0.5f*Mathf.Sqrt(2));
+            
 /*            if(hasGyro)
             {
                 gyroYOffset=gyroHistory[lastMagHistoryPos]-gyroMaxAngle *Mathf.Sin((outPhase-0.5f*Mathf.PI)/2f);
             }*/
 
-            // create a comparison buffer sine wave 
-            // starts from WINDOW_SHIFT frames ahead
-            float phaseSin=outPhase+dt*swingStep*(float)WINDOW_SHIFT;
-            for(int c=0;c<sinWindow.Length;c++)
-            {
-                sinWindow[c]=Mathf.Sin(phaseSin);
-                gyroSinWindow[c]=gyroYOffset+gyroMaxAngle *Mathf.Sin((phaseSin-0.5f*Mathf.PI)/2f);
-                phaseSin-=dt*swingStep;
-            }
             
 
             // assuming we have a sensible history, now check whether our sine buffer fits nicely shifted +- WINDOW_SHIFT along
@@ -307,102 +334,34 @@ public class SwingTracker
             if(scale>0)
             {
                 float invScale=1/scale; 
-                
-                for(int c=0;c<currentErrors.Length;c++)
+                float magScaled=(mag+offset)*invScale;
+                float bestPhase=0;
+                float bestError=0;
+                float bestStep=0;
+                for(int c=0;c<100;c++)
                 {
-                    int offsetTest=c-WINDOW_SHIFT;
-                    // always start comparison from earliest history point
-                    int magPos=magHistoryPos;// position in history buffer - from earliest point, goes forward (in time and value)
-                    int sinPos=WINDOW_SIZE+WINDOW_SHIFT+offsetTest;// position in sin buffer (from end, goes backwards in value / forwards in time)
-                    currentErrors[c]=0;
-                    // loop round just like the history buffers (starting from oldest = historyPos+1)
-
-                    // weighting ups by 1 each time round the loop so that it prioritises recent points
-                    float weighting=0;//WINDOW_SIZE;
-                    float divisor=0;
-                    float totalError=0;
-                    for(int d=0;d<WINDOW_SIZE;d++)
+                    float error=plls[c].update(dt,magScaled,zAccel);
+                    if(error<bestError || c==0)
                     {
-                        weighting+=1f;
-                        divisor+=weighting;
-                        if(gyroValidHistory[magPos])
-                        {
-                            // this should be already scaled
-                            float pointError=gyroHistory[magPos] - gyroSinWindow[sinPos];
-                            totalError+=weighting*pointError*pointError;
-                        }else
-                        {
-                            float pointError=(magHistory[magPos]+offset)*invScale - sinWindow[sinPos];
-                            totalError+=weighting*pointError*pointError;
-                        }
-
-                        sinPos-=1;
-                        magPos+=1;
-                        if(magPos>=magHistory.Length)magPos=0;
-                    }
-                    currentErrors[c]=totalError/divisor;
-                }
-                
-                float minVal=currentErrors[0];
-                int bestPos=0-WINDOW_SHIFT;
-                for(int c=0;c<currentErrors.Length;c++)
-                {
-                    if(currentErrors[c]<minVal)
-                    {
-                        bestPos=c-WINDOW_SHIFT;
-                        minVal=currentErrors[c];
+                        bestError=error;
+                        bestPhase=plls[c].getPhase();
+                        bestStep=plls[c].getStep();
                     }
                 }
-
-                
-                float TIME_CONSTANT=0.323333333f;
-                float moveErrorCoefficient=dt/(TIME_CONSTANT+dt); 
-                moveErrorAccumulator=Mathf.Abs(bestPos)*moveErrorCoefficient+moveErrorAccumulator*(1f-moveErrorCoefficient);
-                float win1ms=((float)(WINDOW_SHIFT))/20f;
-                float probFromMoveErrors=Mathf.Max(0,(win1ms-moveErrorAccumulator)/win1ms);
-                float probFromBestError=Mathf.Min(Mathf.Max(1-(currentErrors[WINDOW_SHIFT]-.2f),0),1);
-                
-                float probFromRangeDifference=Mathf.Min(1,Mathf.Max(0,currentErrors[0]/currentErrors[bestPos+WINDOW_SHIFT]-1.5f));
-                if(currentErrors[bestPos+WINDOW_SHIFT]==0)
-                {
-                    probFromRangeDifference=1;
+                while(bestPhase-outPhase>Mathf.PI*4f){
+                    bestPhase-=Mathf.PI*4f;
                 }
-                swingProbability=probFromBestError*probFromMoveErrors*probFromRangeDifference;
-                dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2} {3,5:F2} {4,5:F2} {5,5:F2} {6,5:F2} {7,5:F2}",probFromMoveErrors,probFromBestError,probFromRangeDifference,bestPos,moveErrorAccumulator,swingStep,outPhase,dt);
-
-                logCount++;
-//                if((logCount&63)==0)
-                {
-                    #if DEBUG_OUTPUT
-                    Debug.Log(probFromMoveErrors+":"+probFromBestError+":"+probFromRangeDifference+":"+bestPos+"["+Mathf.Repeat(outPhase,Mathf.PI*2f));
-                    #endif
+                while (outPhase-bestPhase>Mathf.PI){
+                    bestPhase+=Mathf.PI*4f;
                 }
-                                
-                offsetHistory[lastMagHistoryPos]=bestPos;
-                errorHistory[lastMagHistoryPos]=currentErrors[WINDOW_SHIFT];
-                probabilityHistory[lastMagHistoryPos]=swingProbability;                
+                outPhase=bestPhase;
+                swingProbability=1.0f-Mathf.Min(bestError/1.0f,1.0f);
+                swingProbability*=Mathf.Max(scale/20.0f,1f);
+                #if DEBUG_OUTPUT
                 
-                if(bestPos>0 || bestPos<0)
-                {
-                    // shift phase if we detect phase error
-//                    Debug.Log(bestPos+"<"+outPhase);
-//                    outPhase-=0.5f*dt*swingStep*bestPos;
-                    outPhase-=0.25f*dt*swingStep*bestPos;
-//                    Debug.Log(">"+outPhase);
-                    if(bestPos<(WINDOW_SHIFT/4) && bestPos>(-WINDOW_SHIFT/4))
-                    {
-                        // shift output frequency very slightly to get it closer
-                        swingStep-=0.005f*bestPos;
-                        if(swingStep<3.0f)swingStep=3.0f;
-                        if(swingStep>6.8f)swingStep=6.8f;
-                    }
-//                    Debug.Log(bestPos+":"+minVal+":"+estimatedPeriod+":"+dt+":"+swingStep);
-                }
-                
-                estimatedPeriod=(2.0f*Mathf.PI)/swingStep;                
-                
-
-            }            
+                Debug.Log("Best PLL:"+bestError+"["+bestStep+"]"+outPhase);
+                #endif
+            }
 
           // the main accel magnitude cycles twice per swing phase (once in each direction)
             // need to work out which cycle we are on
@@ -486,7 +445,7 @@ public class SwingTracker
 			//dbgTxt = "";
             //dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2}",calculatedMaxAngle*(180.0f/Mathf.PI),calculatedCurAngle,swingStep);
 //            dbgTxt=String.Format("{0,5:F2} {1,3:F2} {2,3:F2}",calculatedMaxAngle*(180.0f/Mathf.PI),calculatedCurAngle,swingStep);
-            Debug.Log(dbgTxt);
+            //Debug.Log(dbgTxt);
 
             
             

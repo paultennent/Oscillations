@@ -26,6 +26,7 @@ public class ResearchLogger : MonoBehaviour {
 
     private StreamWriter summaryFile;
     private BinaryWriter perFrameFile;
+    private BinaryWriter accelDataFile;
     
     private MagicReader mr;
 
@@ -44,6 +45,10 @@ public class ResearchLogger : MonoBehaviour {
             #endif
             mNet=GetComponent<SwingNetwork>();
             mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
+
+            Input.compass.enabled=true;
+            Input.gyro.enabled=true;
+
             
         }else
         {
@@ -130,6 +135,31 @@ public class ResearchLogger : MonoBehaviour {
             {
                 perFrameFile.Write(d);
             }
+            
+            // accel data file
+            frameData[0]=Time.time;
+            Vector3 gyro=Input.gyro.rotationRateUnbiased;
+            frameData[1]=gyro.x;
+            frameData[2]=gyro.y;
+            frameData[3]=gyro.z;
+            Vector3 accel=Input.acceleration;
+            frameData[4]=accel.x;
+            frameData[5]=accel.y;
+            frameData[6]=accel.z;
+            Vector3 mag=Input.compass.rawVector;
+            frameData[7]=mag.x;
+            frameData[8]=mag.y;
+            frameData[9]=mag.z;
+            frameData[10]=gameEffects.swingAngle;
+            frameData[11] = headLook.w;
+            frameData[12] = headLook.x;
+            frameData[13] = headLook.y;
+            frameData[14] = headLook.z;
+            frameData[15]= -9999999f;
+            foreach(float d in frameData)
+            {
+                accelDataFile.Write(d);
+            }            
         }else
         {
             if(recording)
@@ -160,6 +190,7 @@ public class ResearchLogger : MonoBehaviour {
         }
         // open per frame data log (raw binary)
         // write per frame data log header (just a fixed file magic code)
+        accelDataFile = new BinaryWriter(File.Open(saveFolder+saveTag+".inn", FileMode.Create));
         perFrameFile = new BinaryWriter(File.Open(saveFolder+saveTag+".bin", FileMode.Create));
         byte[] logHeader={79,83,67,73,76,79,71,49};
         perFrameFile.Write(logHeader);
@@ -205,6 +236,11 @@ public class ResearchLogger : MonoBehaviour {
         {
             perFrameFile.Close();
             print("Stop frame log");
+        }
+        if(accelDataFile!=null)
+        {
+            accelDataFile.Close();
+            print("stop accel data");
         }
         
         // launch the box uploaderservice
