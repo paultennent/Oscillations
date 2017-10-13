@@ -9,8 +9,8 @@ public class OrbitCamMover : AbstractGameEffects {
     public bool fadedIn=false;
     
     float ellipseW=20f;
-    float ellipseH=40f;
-    float ellipseAngleMult=2f;
+    float ellipseH=80f;
+    float ellipseAngleMult=1f;
     
     Transform posOfCamera;
     Transform ellipseRotation;
@@ -21,6 +21,8 @@ public class OrbitCamMover : AbstractGameEffects {
     bool onTangent=false;
     float tangentDistance=0f;
     Quaternion tangentUp;
+
+	public bool doMadRotate = false;
     
 	// Use this for initialization
 	void Start () {               
@@ -86,13 +88,17 @@ public class OrbitCamMover : AbstractGameEffects {
             Vector3 fromPos=new Vector3(posOfCamera.localPosition.x,-centralCircleRadius,tangentDistance);
             Vector3 toPos= new Vector3(posOfCamera.localPosition.x,-centralCircleRadius,0);
             posOfCamera.localPosition=Vector3.Lerp(toPos,fromPos,ratio);
-            posOfCamera.localRotation=Quaternion.Slerp(Quaternion.identity,tangentUp,ratio);
+			if (doMadRotate) {
+				posOfCamera.localRotation = Quaternion.Slerp (Quaternion.identity, tangentUp, ratio);
+			}
    //         print("!"+posOfCamera.localPosition.z+":"+posOfCamera.localPosition.y);
             
         }else
         {
             onTangent=false;
-            posOfCamera.localRotation=Quaternion.identity;
+			if (doMadRotate) {
+				posOfCamera.localRotation = Quaternion.identity;
+			}
             float z=Mathf.Sin(ellipseAngleMult*swingAngle*Mathf.Deg2Rad)*ellipseW;
             float y=(ellipseH-Mathf.Cos(ellipseAngleMult*swingAngle*Mathf.Deg2Rad)*ellipseH)-centralCircleRadius;
 //            float rotatedZ= Mathf.Cos(ellipseRotation)*z + Mathf.Sin(ellipseRotation)*y ;

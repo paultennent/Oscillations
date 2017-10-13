@@ -147,8 +147,8 @@ GameObject:
   m_Component:
   - component: {fileID: 415443667}
   m_Layer: 0
-  m_Name: Swing
-  m_TagString: Swing
+  m_Name: EllipseBasis
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,7 +164,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1856577750}
-  m_Father: {fileID: 1763301820}
+  m_Father: {fileID: 1977391202}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &514650770
@@ -790,6 +790,7 @@ MonoBehaviour:
   debugText: {fileID: 0}
   centralCircleRadius: 10
   fadedIn: 0
+  doMadRotate: 1
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -809,11 +810,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4fa1ece11ba2415084b2fa02f59e0f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minStations: 5
   maxStations: 10
   station: {fileID: 1752031383540258, guid: b8ae82bfdce1b4182aa101d07b875725, type: 2}
   minDistance: 1500
@@ -920,7 +922,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 415443667}
+  - {fileID: 1977391202}
   m_Father: {fileID: 1959593109}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1044,6 +1046,35 @@ Transform:
   - {fileID: 1763301820}
   m_Father: {fileID: 0}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1977391201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1977391202}
+  m_Layer: 0
+  m_Name: Swing
+  m_TagString: Swing
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1977391202
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1977391201}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 415443667}
+  m_Father: {fileID: 1763301820}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2025409195
 GameObject:
