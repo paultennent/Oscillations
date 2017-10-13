@@ -55,7 +55,7 @@ public class Selector : MonoBehaviour {
         switch(number)
         {
             case 0:
-                sceneName="Jellyfish-tiled";
+                sceneName="Orbit";
                 break;
             case 2:
                 sceneName="HighRoller-City-tiled";

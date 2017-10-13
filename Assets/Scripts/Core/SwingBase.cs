@@ -105,7 +105,7 @@ public class SwingBase : MonoBehaviour {
 				}
 //			swingAngle = (Mathf.Sin(Time.time * 2+randomPhaseOffset+Random.Range(-.1f,.1f))) * sineAmplitude ;
 				//swingAngle = (Mathf.Sin(Time.time * 2)+Random.Range(-.1f,.1f)) * sineAmplitude ;
-				randomPhaseOffset += Random.Range (-Time.deltaTime * 5f, Time.deltaTime * 5f);
+				//randomPhaseOffset += Random.Range (-Time.deltaTime * 5f, Time.deltaTime * 5f);
 			}
 		
 //		swingAngle=errorFilter.addValue (time, Gxyz [1], Gaccel [2]);

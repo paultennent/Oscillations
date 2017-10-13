@@ -814,6 +814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fa1ece11ba2415084b2fa02f59e0f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minStations: 5
   maxStations: 10
   station: {fileID: 1752031383540258, guid: b8ae82bfdce1b4182aa101d07b875725, type: 2}
   minDistance: 1500
