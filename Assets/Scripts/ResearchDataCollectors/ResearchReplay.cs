@@ -63,7 +63,7 @@ public class ResearchReplay : MonoBehaviour
                 newFrame.time=frameFile.ReadSingle();
                 newFrame.swingAngle=frameFile.ReadSingle();
                 newFrame.offsetTime=frameFile.ReadSingle();
-                newFrame.offsetTime=frameFile.ReadSingle();
+                newFrame.climaxRatio=frameFile.ReadSingle();
                 newFrame.camPos.x=frameFile.ReadSingle();
                 newFrame.camPos.y=frameFile.ReadSingle();
                 newFrame.camPos.z=frameFile.ReadSingle();

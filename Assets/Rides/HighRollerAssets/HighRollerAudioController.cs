@@ -360,6 +360,10 @@ public class HighRollerAudioController : MonoBehaviour {
 
 	private float Remap(float val, float OldMin, float OldMax, float NewMin, float NewMax)
 	{
+        if(OldMin==OldMax)
+        {
+            return NewMin;
+        }
 		return (((val - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin;
 	}
 
@@ -391,7 +395,13 @@ public class HighRollerAudioController : MonoBehaviour {
         masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
         while (cur > dbsilence + 0.01f)
         {
-            masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1 / fadeInDuration) * Time.deltaTime));
+            if(fadeInDuration==0)
+            {
+                masterMixer.audioMixer.SetFloat(masterMixer.name, cur);
+            }else
+            {
+                masterMixer.audioMixer.SetFloat(masterMixer.name, Mathf.Lerp(cur, dbsilence, (1 / fadeInDuration) * Time.deltaTime));
+            }
             masterMixer.audioMixer.GetFloat(masterMixer.name, out cur);
             yield return null;
         }

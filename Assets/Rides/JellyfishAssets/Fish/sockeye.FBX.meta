@@ -78,6 +78,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -121,7 +123,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 0.01
-    meshCompression: 3
+    meshCompression: 0
     addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 1
