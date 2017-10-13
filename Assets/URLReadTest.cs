@@ -41,7 +41,7 @@ public class URLReadTest : MonoBehaviour {
 		if (www.error == null)
 		{
 			if (!raw) {
-				Process (www.data);
+				Process (www.text);
 			} else {
 				ProcessRaw (www.bytes);
 			}
