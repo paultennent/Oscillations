@@ -90,6 +90,14 @@ public class LayerLayout : MonoBehaviour
         }
         //		LayoutCity(1000f);
     }
+        
+    void OnDestroy()
+    {
+        if(sLayerLayout==this)
+        {
+            sLayerLayout=null;
+        }
+    }
 
     // Update is called once per frame
     void Update()

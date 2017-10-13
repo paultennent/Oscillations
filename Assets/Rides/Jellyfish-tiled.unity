@@ -1025,11 +1025,10 @@ MonoBehaviour:
   maxSessions: 1
   pauseStartTime: 0
   usePLLPhaseEstimation: 0
-  disableStatusFlasher: 1
   debugText: {fileID: 0}
   velocityDragConstant: 0.1
-  upforceConstant: 0.01
-  gravityConstant: 30
+  upforceConstant: 0.02
+  gravityConstant: 15
   fadeTime: 5
   pivot: {fileID: 2062473235}
   launch: 0
@@ -1096,7 +1095,7 @@ MonoBehaviour:
   debug: 0
   sineWave: 1
   forceSineOnMobile: 0
-  sineAmplitude: 45
+  sineAmplitude: 25
   zeroCrossingEvent:
     m_PersistentCalls:
       m_Calls: []

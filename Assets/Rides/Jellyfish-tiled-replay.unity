@@ -1105,8 +1105,8 @@ MonoBehaviour:
   usePLLPhaseEstimation: 0
   debugText: {fileID: 0}
   velocityDragConstant: 0.1
-  upforceConstant: 0.01
-  gravityConstant: 30
+  upforceConstant: 0.02
+  gravityConstant: 15
   fadeTime: 5
   pivot: {fileID: 2062473235}
   launch: 0

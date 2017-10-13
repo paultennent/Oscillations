@@ -237,9 +237,13 @@ public class AndroidCameraHandler: MonoBehaviour
     public bool connectToSwing(string code)
     {
         currentSwing=code;
+        #if UNITY_ANDROID && !UNITY_EDITOR
         AndroidJavaObject context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
         AndroidJavaObject wifiSelector=new AndroidJavaObject("com.mrl.flashcamerasource.ClientWifiSelector");
         return wifiSelector.Call<bool>("SelectNetworkForBarcode",context,code);
+        #else
+        return true;
+        #endif
     }
 	
 	// Update is called once per frame

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,18 @@ public class MenuGenerator : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
+           print("All " + Resources.FindObjectsOfTypeAll<UnityEngine.Object>().Length);
+        print("Textures " + Resources.FindObjectsOfTypeAll<Texture>().Length);
+        print("AudioClips " + Resources.FindObjectsOfTypeAll<AudioClip>().Length);
+        print("Meshes " + Resources.FindObjectsOfTypeAll<Mesh>().Length);
+        print("Materials " + Resources.FindObjectsOfTypeAll<Material>().Length);
+        print("GameObjects " + Resources.FindObjectsOfTypeAll<GameObject>().Length);
+        print("Components " + Resources.FindObjectsOfTypeAll<Component>().Length);
+        // empty any memory allocated by previous scenes
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+    
+        
 		// find all scenes in build except scene 0 (menu)
         Regex nameExtractor=new Regex(".*/(([^/-]*).*).unity");
         List<string> sceneNames=new List<string>();

@@ -33,6 +33,13 @@ public class WaitBarcode : MonoBehaviour {
             {
                 barcodeReader.initCodeCapture();
             }
+            if(barcodeReader.getCurrentSwing()==null)
+            {
+                FadeSphereScript.enableFader(false);
+            }else
+            {
+                FadeSphereScript.enableFader(true);                
+            }
         }
         if(barcodeReader!=null && active)
         {
@@ -43,6 +50,7 @@ public class WaitBarcode : MonoBehaviour {
             }else
             {
                 mText.text="SCAN \nA RIDER OR SWING\nBARCODE";
+                FadeSphereScript.changePauseColour(new Color(0,0,1));
             }
             string code=barcodeReader.getDetectedCode();
             if(Input.GetKeyDown("s"))
@@ -50,7 +58,7 @@ public class WaitBarcode : MonoBehaviour {
                 code="10010037";
             }else if(Input.GetKeyDown("r"))
             {
-                code="00000987";
+                code="20000987";
             }
             if(code!=null && code.Length>0)
             {
@@ -71,6 +79,17 @@ public class WaitBarcode : MonoBehaviour {
                         transform.parent=null;
                         active=false;
                         print("Found user:"+code);
+                        if(isAutoSceneBarcode(code))
+                        {
+                            // these barcodes auto start a scene
+                            int sceneNum=0;
+                            if(int.TryParse(code[0].ToString(),out sceneNum))
+                            {
+                                Selector.openSceneByNumber(sceneNum);
+                                FadeSphereScript.changePauseColour(new Color(1,0,0));
+                                
+                            }
+                        }
                     }else if(IsSwingBarcode(code))
                     {
                         barcodeReader.stopCodeCapture();
@@ -81,6 +100,7 @@ public class WaitBarcode : MonoBehaviour {
                         r.OnNewSwing(code);
                         barcodeReader.clearDetectedCode();
                         hasSwingCode=true;
+                        FadeSphereScript.enableFader(true);                
                     }
                 }                                
             }
@@ -109,7 +129,7 @@ public class WaitBarcode : MonoBehaviour {
     
     bool IsUserBarcode(string code)
     {
-        if(code[0]=='0')return true;
+        if(code[0]!='1')return true;
         return false;
     }
     bool IsSwingBarcode(string code)
@@ -117,6 +137,11 @@ public class WaitBarcode : MonoBehaviour {
         if(code[0]=='1')return true;
         return false;
     }
+    bool isAutoSceneBarcode(string code)
+    {
+        if(code[0]!='1' )return true;
+        return false;
+    }    
     
     public void WaitForBarcode()
     {
