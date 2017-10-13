@@ -6,8 +6,11 @@ public class OrbitCamMover : AbstractGameEffects {
 
     public float centralCircleRadius=10f;
 
+    public bool fadedIn=false;
+    
     float ellipseW=20f;
     float ellipseH=40f;
+    float ellipseAngleMult=2f;
     
     Transform posOfCamera;
     Transform worldRotation;
@@ -15,8 +18,8 @@ public class OrbitCamMover : AbstractGameEffects {
 	// Use this for initialization
 	void Start () {               
         base.Start();
-        posOfCamera=GameObject.Find("CameraMover").transform;
-        worldRotation=GameObject.Find("WorldRotator").transform;
+        posOfCamera=GameObject.Find("ViewPoint").transform;
+        worldRotation=GameObject.Find("RoomRotationAroundCamera").transform;
     }
 
     // Update is called once per frame
@@ -29,11 +32,11 @@ public class OrbitCamMover : AbstractGameEffects {
 			return;
 		}
 
-        // if (!fadedIn)
-        // {
-            // FadeSphereScript.doFadeIn(5f, Color.black);
-            // fadedIn = true;
-        // }
+        if (!fadedIn)
+        {
+            FadeSphereScript.doFadeIn(5f, Color.black);
+            fadedIn = true;
+        }
 
         // if (!foundInitialPos)
         // {
@@ -43,13 +46,11 @@ public class OrbitCamMover : AbstractGameEffects {
         
         // angle around an ellipse this W and H
         // note: we rotate the world so that this is always axis oriented
-       
-        // float x=Mathf.Sin(swingAngle*Mathf.Deg2Rad)*ellipseH;
-        // float y=(ellipseH-Mathf.Cos(swingAngle*Mathf.Deg2Rad)*ellipseH)-centralCircleRadius;
-        // posOfCamera.localPosition.x=x;
-        // posOfCamera.localPosition.y=y;
-        
-        
+        float z=Mathf.Sin(ellipseAngleMult*swingAngle*Mathf.Deg2Rad)*ellipseW;
+        float y=(ellipseH-Mathf.Cos(ellipseAngleMult*swingAngle*Mathf.Deg2Rad)*ellipseH)-centralCircleRadius;
+        print(z+":"+y);
+
+        posOfCamera.localPosition=new Vector3(posOfCamera.localPosition.x,y,z);
         
     }
 
