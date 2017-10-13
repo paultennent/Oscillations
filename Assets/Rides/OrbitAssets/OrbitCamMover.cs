@@ -44,10 +44,10 @@ public class OrbitCamMover : AbstractGameEffects {
         // angle around an ellipse this W and H
         // note: we rotate the world so that this is always axis oriented
        
-        float x=Mathf.Sin(swingAngle*Mathf.Deg2Rad)*ellipseH;
-        float y=(ellipseH-Mathf.Cos(swingAngle*Mathf.Deg2Rad)*ellipseH)-centralCircleRadius;
-        posOfCamera.localPosition.x=x;
-        posOfCamera.localPosition.y=y;
+        // float x=Mathf.Sin(swingAngle*Mathf.Deg2Rad)*ellipseH;
+        // float y=(ellipseH-Mathf.Cos(swingAngle*Mathf.Deg2Rad)*ellipseH)-centralCircleRadius;
+        // posOfCamera.localPosition.x=x;
+        // posOfCamera.localPosition.y=y;
         
         
         
