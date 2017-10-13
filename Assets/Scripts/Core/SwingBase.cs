@@ -101,7 +101,7 @@ public class SwingBase : MonoBehaviour {
 				if (debug) {
 					swingAngle = Mathf.Sin (Time.time * 2.2f + randomPhaseOffset) * sineAmplitude;
 				} else {
-					swingAngle = Mathf.Sin (Time.time * 2f + randomPhaseOffset) * sineAmplitude;
+					swingAngle = Mathf.Sin (Time.time * 2f ) * sineAmplitude;
 				}
 //			swingAngle = (Mathf.Sin(Time.time * 2+randomPhaseOffset+Random.Range(-.1f,.1f))) * sineAmplitude ;
 				//swingAngle = (Mathf.Sin(Time.time * 2)+Random.Range(-.1f,.1f)) * sineAmplitude ;
