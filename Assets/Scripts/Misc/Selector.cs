@@ -55,13 +55,13 @@ public class Selector : MonoBehaviour {
         switch(number)
         {
             case 0:
-                sceneName="Orbit";
+                sceneName="Jellyfish-tiled";
                 break;
             case 2:
                 sceneName="HighRoller-City-tiled";
                 break;
             case 3:
-                sceneName="Walker-city";
+                sceneName="Orbit";
                 break;
             case 4:
                 sceneName="Shuttlecock-City-Static";
