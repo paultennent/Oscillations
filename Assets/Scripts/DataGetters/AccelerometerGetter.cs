@@ -60,9 +60,9 @@ public class AccelerometerGetter
     
     public Quaternion getCurrentDirection()
     {
-        if(VRDevice.isPresent)
+        if(UnityEngine.XR.XRDevice.isPresent)
         {
-            return InputTracking.GetLocalRotation(VRNode.Head);
+            return UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);
 //            return Quaternion.Inverse(InputTracking.GetLocalRotation(VRNode.Head));
         }
         // for cardboard VR

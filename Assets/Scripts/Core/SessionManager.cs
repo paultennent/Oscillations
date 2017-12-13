@@ -74,13 +74,13 @@ public class SessionManager : MonoBehaviour {
             {
                 unlocked=true;
                 FadeSphereScript.changePauseColour(new Color(0,1,0));
-                InputTracking.Recenter();
+                UnityEngine.XR.InputTracking.Recenter();
             }
             return;
         }
         if(!inGame && Input.GetButtonDown("Tap"))
         {
-            InputTracking.Recenter();
+            UnityEngine.XR.InputTracking.Recenter();
         }
 		if(angle>triggerAngle)
 		{
@@ -90,7 +90,7 @@ public class SessionManager : MonoBehaviour {
 				// two swings in last 3 seconds, start the game clock
 				inGame=true	;
 				gameStartTime=time;
-				//print ("Start Session");
+				print ("Start Session");
 			}
 		}
 		if(angle<-triggerAngle)

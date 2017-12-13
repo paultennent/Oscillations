@@ -86,7 +86,7 @@ public class SwingBase : MonoBehaviour {
 			//swingData.dumpVals ();
 
 //		Quaternion q=InputTracking.GetLocalRotation (VRNode.CenterEye); 
-			Vector3 p = InputTracking.GetLocalPosition (VRNode.CenterEye);
+			Vector3 p = UnityEngine.XR.InputTracking.GetLocalPosition (UnityEngine.XR.XRNode.CenterEye);
 			headset.localPosition = -p;
 //		headset.localRotation = q;
 

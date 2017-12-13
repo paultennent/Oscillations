@@ -33,7 +33,7 @@ public class EyeRaycaster : MonoBehaviour
 		indicatorFillRawImage = transform.Find("IndicatorFill").GetComponent<RawImage>();
 		centerRawImage = transform.Find("Center").GetComponent<RawImage>();
 
-		gameObject.SetActive(VRSettings.enabled || forceActive);
+		gameObject.SetActive(UnityEngine.XR.XRSettings.enabled || forceActive);
 
 		endFocusTime = Time.time + loadingTime;
 	}
