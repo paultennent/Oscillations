@@ -125,7 +125,7 @@ public class ResearchLogger : MonoBehaviour {
             
             
             // head look angle
-            Quaternion headLook=InputTracking.GetLocalRotation(VRNode.Head);
+            Quaternion headLook=UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);
             frameData[11] = headLook.w;
             frameData[12] = headLook.x;
             frameData[13] = headLook.y;

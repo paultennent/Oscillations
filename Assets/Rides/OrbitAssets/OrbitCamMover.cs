@@ -7,6 +7,7 @@ public class OrbitCamMover : AbstractGameEffects {
     public float centralCircleRadius=10f;
     public float parabolaConstant=2.5f;
     public float swingMaxDistance=100f;
+    public float angleRotateMultiplier=0.2f;
     
     public float []offsetY=new float[900];
     public float []angleY=new float[900];
@@ -73,6 +74,8 @@ public class OrbitCamMover : AbstractGameEffects {
             fadedIn = true;
         }
 
+        swingMaxDistance=10f+climaxRatio*10000f;
+        
         // map from swing angle to point on parabola x^2 = 4ay (where a = parabolaConstant parameter)
         int parabolaYIndex=(int)(Mathf.Abs(swingAngle)*10);
         if(parabolaYIndex>899)
@@ -88,9 +91,9 @@ public class OrbitCamMover : AbstractGameEffects {
             angle=-angle;
         }
         parabolaY-=centralCircleRadius;
-        print(parabolaY+":"+parabolaZ+":"+swingAngle);
+        //print(parabolaY+":"+parabolaZ+":"+swingAngle);
         posOfCamera.localPosition=new Vector3(0,parabolaY,parabolaZ);
-        posOfCamera.localRotation=Quaternion.Euler(angle,0f,0f);
+        posOfCamera.localRotation=Quaternion.Euler(angle*angleRotateMultiplier,0f,0f);
         
     }
 
