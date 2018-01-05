@@ -116,7 +116,7 @@ public class ShuttlecockAudioScript : MonoBehaviour {
 #if UNITY_EDITOR
 			updateDirectionalSounds (cam.localEulerAngles.y, directionalMixer, directionalMixerStartVals, minValueForDirectionalSounds, 5f);
 #else
-		updateDirectionalSounds(InputTracking.GetLocalRotation(VRNode.Head).eulerAngles.y, directionalMixer, directionalMixerStartVals, minValueForDirectionalSounds, 5f);    
+		updateDirectionalSounds(UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head).eulerAngles.y, directionalMixer, directionalMixerStartVals, minValueForDirectionalSounds, 5f);    
 #endif    
 	
 	}
