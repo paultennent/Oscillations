@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Rides/Menu.unity
     guid: 30845cb43f2c947b6923129200a96ad3
   - enabled: 0
@@ -17,9 +17,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Rides/HighRoller-City-tiled.unity
     guid: 27572c9cb0d7a224ba3a1736832b4646
-  - enabled: 1
+  - enabled: 0
     path: Assets/Rides/Jellyfish-tiled.unity
     guid: ae6cfe6cd0d40c445861520e62ad1a07
-  - enabled: 0
+  - enabled: 1
     path: Assets/Rides/Orbit.unity
     guid: 62e390eceb125914c827154ffa9a0953
