@@ -94,6 +94,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
             if (offsetTime > introTime && swingQuadrant == 0)
             {
                 launched = true;
+                print("launched!");
                 startBubble.trigger = true;
             }
         }
@@ -102,10 +103,11 @@ public class JellyfishTileCamMover : AbstractGameEffects
         {
 
             float upforce = calculateUpforce();
+            print("!"+curHeight+":"+upforce+":"+swingAngVel);
 
             yVelocity += upforce * Time.deltaTime;
             curHeight = curHeight + yVelocity * Time.deltaTime;
-			if (curHeight < 0 & !infiniteFall)
+			if (curHeight < minCurheight && !infiniteFall)
             {
                 curHeight = minCurheight;
                 yVelocity = 0;
@@ -136,6 +138,8 @@ public class JellyfishTileCamMover : AbstractGameEffects
     float calculateUpforce()
     {
         float totalForce = swingAngVel * swingAngVel * upforceConstant;
+        // if there is an error in angular velocity it can cause silly large forces
+        totalForce=Mathf.Min(totalForce,150f); 
         if (launch == true)
         {
             totalForce = 20f;
