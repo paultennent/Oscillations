@@ -77,7 +77,9 @@ public class MagicReader : AbstractDataReader {
         if(gc==null)
         {
             gc = new GyroConnector();
+            gc.useAccelerometer=useAccelerometer;
             gc.init ();
+            useAccelerometer=gc.useAccelerometer;            
         }else
         {
             if(SceneManager.GetActiveScene().name.IndexOf("Menu")!=-1)
@@ -94,7 +96,6 @@ public class MagicReader : AbstractDataReader {
 	
 	// Update is called once per frame
 	void Update () {
-        gc.useAccelerometer=useAccelerometer;
 		lastAng = mAngle;
 		gc.readData ();
 

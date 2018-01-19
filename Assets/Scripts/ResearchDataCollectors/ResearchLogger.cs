@@ -40,8 +40,15 @@ public class ResearchLogger : MonoBehaviour {
             DontDestroyOnLoad(transform.gameObject);
             sSingleton=this;
             #if UNITY_ANDROID && !UNITY_EDITOR
-            deviceID=File.ReadAllText("/sdcard/deviceid.txt");
-            deviceID=deviceID.Trim(new char[]{'\n'});
+            string path="/sdcard/deviceid.txt";
+            if (File.Exists(path))
+            {
+                deviceID=File.ReadAllText(path);                
+                deviceID=deviceID.Trim(new char[]{'\n'});
+            }else
+            {
+                deviceID="xxxxxxxx-diffusn";
+            }
             #endif
             mNet=GetComponent<SwingNetwork>();
             mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
@@ -100,7 +107,7 @@ public class ResearchLogger : MonoBehaviour {
             Input.location.Stop();
             hasLocation=true;
         }
-		if(gameEffects!=null && gameEffects.inSession)
+		if(gameEffects!=null && gameEffects.inSession )
         {
             if(!recording)
             {
@@ -177,6 +184,12 @@ public class ResearchLogger : MonoBehaviour {
         print("Open logs");
         startTime=Time.time;
         string saveFolder= "/sdcard/vrplayground-logs/";
+        
+        if(mr.useAccelerometer==true)
+        {
+            currentUser="diffusion";
+        }
+        
         
         string curTime=DateTime.UtcNow.ToString("yyyyMMddHHmmss");
         string saveTag=curTime+"-"+currentSwing+"-"+deviceID.Substring(deviceID.Length-8);

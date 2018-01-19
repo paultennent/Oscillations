@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class JellyfishTileCamMover : AbstractGameEffects
@@ -103,7 +104,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
         {
 
             float upforce = calculateUpforce();
-            print("!"+curHeight+":"+upforce+":"+swingAngVel);
+//            print("!"+curHeight+":"+upforce+":"+swingAngVel+":"+swingAngle);
 
             yVelocity += upforce * Time.deltaTime;
             curHeight = curHeight + yVelocity * Time.deltaTime;
@@ -135,11 +136,24 @@ public class JellyfishTileCamMover : AbstractGameEffects
         }
     }
 
+    
+    const int ANGULAR_VELOCITY_FRAMES=5;
+    float []angleHistory=new float[ANGULAR_VELOCITY_FRAMES];
+    float []timeHistory=new float[ANGULAR_VELOCITY_FRAMES];
+    
     float calculateUpforce()
     {
-        float totalForce = swingAngVel * swingAngVel * upforceConstant;
+        Array.Copy(angleHistory,0,angleHistory,1,angleHistory.Length-1);
+        Array.Copy(timeHistory,0,timeHistory,1,timeHistory.Length-1);
+        angleHistory[0]=swingAngle;
+        timeHistory[0]=Time.time;
+        
+        float smoothedAngVel=(angleHistory[0]-angleHistory[angleHistory.Length-1])/(timeHistory[0]-timeHistory[timeHistory.Length-1]);
+        print(smoothedAngVel+","+swingAngVel+":"+angleHistory[0]+":"+angleHistory[angleHistory.Length-1]);
+        float totalForce = smoothedAngVel * smoothedAngVel * upforceConstant;
+//        float totalForce = swingAngVel * swingAngVel * upforceConstant;
         // if there is an error in angular velocity it can cause silly large forces
-        totalForce=Mathf.Min(totalForce,150f); 
+        totalForce=Mathf.Min(totalForce,250f); 
         if (launch == true)
         {
             totalForce = 20f;

@@ -11,6 +11,9 @@ public class WaitBarcode : MonoBehaviour {
    
     bool hasSwingCode=false;
    
+    private MagicReader mr;
+
+   
     public GameObject mTextObject;
     Text mText;
 	// Use this for initialization
@@ -19,6 +22,8 @@ public class WaitBarcode : MonoBehaviour {
         originalParent=transform.parent;
         WaitForBarcode();
         mText=mTextObject.GetComponent<Text>();
+        mr = GameObject.FindGameObjectWithTag ("Controller").GetComponent<MagicReader> ();
+        
 	}
 	
 	// Update is called once per frame
@@ -27,6 +32,20 @@ public class WaitBarcode : MonoBehaviour {
         
         if(barcodeReader==null)
         {
+            if(mr!=null && mr.useAccelerometer)
+            {
+                // using accelerometer (ie. diffusion version), don't do any barcode stuff, show menu instead
+                FadeSphereScript.enableFader(false);
+                mTextObject.transform.parent.gameObject.active=false;
+                return;
+            }
+#if UNITY_EDITOR
+                // no barcodes in editor
+                FadeSphereScript.enableFader(false);
+                mTextObject.transform.parent.gameObject.active=false;
+                return;
+#endif
+
             // first call - get barcode
             barcodeReader=AndroidCameraHandler.GetInstance();
             if(barcodeReader!=null)

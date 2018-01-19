@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR 
 #define REMOTE_SERVER
 #endif
-//#define LOG_ACCEL
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -44,14 +43,11 @@ public class GyroConnector
     
     public Quaternion mForwardsDirection=Quaternion.identity;
     
-    public FastSwingTracker mTracker=new FastSwingTracker();
+    public TensorFlowSwingTracker mTFTracker=new TensorFlowSwingTracker();
     public AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
 
 	public void init () 
     {
-#if UNITY_ANDROID && !UNITY_EDITOR && LOG_ACCEL
-        mAccelerometer.startLog(Application.persistentDataPath+"/swing-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".csv");
-#endif
 
 		doConnection ();
 	}
@@ -70,7 +66,12 @@ public class GyroConnector
 			activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
 			intent = new AndroidJavaObject("android.content.Intent");
 			intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
-			activity.Call<AndroidJavaObject>("startService",intent);
+			AndroidJavaObject obj=activity.Call<AndroidJavaObject>("startService",intent);
+            if(obj==null )
+            {
+                Debug.Log("WOO!!!!!");
+                useAccelerometer=true;
+            }
 #else
 			timeLastPoll = Time.time;
 #endif
@@ -171,6 +172,13 @@ public class GyroConnector
 
 	public void readData() 
     {
+        
+        if(useAccelerometer)
+        {
+            mAngle=mTFTracker.GetAngle();
+            return;
+        }
+
     #if REMOTE_SERVER
     //   if we're running in editor, need to poll server to get messages
         if(Time.time-timeLastPoll>0.5)
@@ -287,27 +295,6 @@ public class GyroConnector
             //Debug.Log("Dropped frame");
         }
         
-        if(useAccelerometer)
-        {
-            float outAngle=mAngle;
-            
-            mAccelerometer.onFrame(Time.time);
-            if(mAccelerometer.isWritingLogFile())
-            {
-                mAccelerometer.setLogExtraData(mAngle,hasAngle);
-            }else if(mAccelerometer.fromLogFile())
-            {
-                mAccelerometer.getLogExtraData(out mAngle,out hasAngle);
-            }
-            float mag,fwdAccel,accelTime;
-            while(mAccelerometer.getAcceleration(out mag,out fwdAccel,out accelTime))
-            {
-                outAngle=mTracker.OnAccelerometerMagnitude(mag,accelTime,hasAngle,mAngle,fwdAccel);
-            }
-            dbgTxt=mTracker.dbgTxt;
-            mAngle=outAngle;
-            //Debug.Log("Angle:"+mAngle+":"+dbgTxt);
-        }
 	}
 
 
