@@ -23,3 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Rides/Orbit.unity
     guid: 62e390eceb125914c827154ffa9a0953
+  - enabled: 1
+    path: Assets/SwingBoat.unity
+    guid: 59a000f2806fb2d468a1e6651b416e74

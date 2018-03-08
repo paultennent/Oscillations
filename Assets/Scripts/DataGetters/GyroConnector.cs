@@ -17,9 +17,9 @@ public class GyroConnector
     const int MIN_PACKET_SIZE=24;
     float timeLastPoll = 0;
 #if REMOTE_SERVER
-    const int MAX_PACKET_SIZE=24;
+    const int MAX_PACKET_SIZE=32;
     
-    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("10.154.163.192"),2323);
+    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.86"),2323);
 #else
     const int MAX_PACKET_SIZE=32;
 #endif
@@ -46,6 +46,8 @@ public class GyroConnector
     public TensorFlowSwingTracker mTFTracker=new TensorFlowSwingTracker();
     public AccelerometerGetter mAccelerometer=new AccelerometerGetter(); 
 
+
+    
 	public void init () 
     {
 
@@ -170,6 +172,16 @@ public class GyroConnector
     
     float unityDelay=0.0f;
 
+    public void sendSensorMessage(int message)
+    {
+        byte[] msgPacket={72,105,(byte)(message&0xff),(byte)((message>>8)&0xff)};
+        #if REMOTE_SERVER
+            receiver.SendTo(msgPacket,serverEndPoint);
+        #else
+            receiver.SendTo(msgPacket,remoteIpEndPoint);
+        #endif
+    }    
+    
 	public void readData() 
     {
         
@@ -183,7 +195,7 @@ public class GyroConnector
     //   if we're running in editor, need to poll server to get messages
         if(Time.time-timeLastPoll>0.5)
         {
-            byte[] launchPacket={1,2,3,4};
+            byte[] launchPacket={72,105};
 			try
 			{
                 if(receiver!=null)
@@ -193,7 +205,7 @@ public class GyroConnector
 			}catch(SocketException e)
 			{
 			}
-            //Debug.Log("Polling gyro");
+//            Debug.Log("Polling gyro");
             timeLastPoll=Time.time;
         }
     #endif
@@ -210,13 +222,13 @@ public class GyroConnector
                 timeLastPacket=Time.time;
                 float angle=getBigEndianFloat(receiveBytes,0);
                 long timestamp=getBigEndianInt64(receiveBytes,16);
+                mTimestamp=timestamp;
                 if(firstTime)
                 {
                     firstTime=false;
                     firstTimestamp=getBigEndianInt64(receiveBytes,16);
                     firstUnityTime=Time.time;
                     mAngle=angle;
-                    mTimestamp=timestamp;
                     for(int c=0;c<mBuffer.Length;c++)
                     {
                         mBuffer[c]=new AngleTime();

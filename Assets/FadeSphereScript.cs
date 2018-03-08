@@ -17,6 +17,11 @@ public class FadeSphereScript : MonoBehaviour {
     private bool enableSphere=true;
     
     public string endScene="Menu";
+    
+    public float fadeAlpha=1f;
+    public float targetAlpha=1f;
+    public float alphaStep=0f;
+    public Color fadeColour;
 
 	// Use this for initialization
 	void Start () {
@@ -66,20 +71,56 @@ public class FadeSphereScript : MonoBehaviour {
                 r.enabled = (mat.color.a==1);
             }
         }
+        
+        if(alphaStep>0.01f)
+        {
+            fading=true;
+            if(targetAlpha>fadeAlpha)
+            {                
+                fadeAlpha+=alphaStep*Time.deltaTime;
+                if(fadeAlpha>targetAlpha)
+                {
+                    // stop fade
+                    alphaStep=0f;
+                    fadeAlpha=targetAlpha;
+                    fading=false;
+                }
+            }else if(targetAlpha<fadeAlpha)
+            {
+                fadeAlpha-=alphaStep*Time.deltaTime;
+                if(fadeAlpha<targetAlpha)
+                {
+                    // stop fade
+                    alphaStep=0f;
+                    fadeAlpha=targetAlpha;
+                    fading=false;
+                }
+            }
+            Material mat = GetComponent<Renderer>().material;
+            mat.color = new Color(fadeColour.r, fadeColour.g, fadeColour.b, fadeAlpha);
+        }
+        
                 
         if(SessionManager.getInstance()!=null && SessionManager.getInstance().isInSession())
         {
             seenGame=true;
         }else
         {
-            if(seenGame && !fadingOut && !fading)
+            if(seenGame && (targetAlpha!=1f || (fadeAlpha!=1 && alphaStep==0)) )
             {
-                doFadeOut(5,Color.black);
+                fadeTo(.2f,1f,Color.black);
             }
         }
 
 	}
 
+    public void fadeTo(float step,float target,Color fadeColour)
+    {
+        this.fadeColour=fadeColour;
+        this.alphaStep=step;
+        this.targetAlpha=target;
+    }
+    
     public static bool isFading() {
         if(globalAccess==null)return false;
         return globalAccess.fading;
@@ -97,65 +138,20 @@ public class FadeSphereScript : MonoBehaviour {
         return renderers;
     }
 
-    static IEnumerator fadeOut(float t, Color fadeColour)
-    {
-        if (globalAccess!=null && !globalAccess.fading)
-        {
-            Material mat = globalAccess.GetComponent<Renderer>().material;
-            globalAccess.fading = true;
-            globalAccess.fadingOut = true;
-            float fadeStartTime = Time.time;
-            while (Time.time < fadeStartTime + t)
-            {
-                mat.color = new Color(fadeColour.r, fadeColour.g, fadeColour.b, mat.color.a + (1f / t) * Time.deltaTime);
-                yield return null;
-            }
-            globalAccess.fading = false;
-            if(globalAccess.endScene!=null && globalAccess.endScene.Length>0)
-            {
-                SceneManager.LoadScene(globalAccess.endScene);
-            }
-        }
-        yield break;
-    }
-
-    static IEnumerator fadeIn(float t, Color fadeColour)
-    {
-        Material mat = globalAccess.GetComponent<Renderer>().material;
-        mat.color = fadeColour;
-        if (!globalAccess.fading)
-        {
-            globalAccess.fading = true;
-            float fadeStartTime = Time.time;
-            while (Time.time < fadeStartTime + t)
-            {
-                if(Time.time > fadeStartTime + (t / 5f))
-                {
-                    mat.color = new Color(fadeColour.r, fadeColour.g, fadeColour.b, mat.color.a - (1f / ((4f / 5f) * t)) * Time.deltaTime);
-                } 
-                yield return null;
-            }
-            globalAccess.fading = false;
-        }
-        yield break;
-    }
-
     public static void doFadeIn(float t, Color fadeColour)
     {
         if(globalAccess!=null)
         {
-            Renderer[] renderers = globalAccess.getChildRenderers();
-            foreach(Renderer r in renderers)
-            {
-                r.enabled=false;
-            }
-            globalAccess.StartCoroutine(fadeIn(t, fadeColour));
+            globalAccess.fadeTo(1.0f/t,0,fadeColour);
         }
     }
 
     public static void doFadeOut(float t, Color fadeColour)
     {
-        globalAccess.StartCoroutine(fadeOut(t, fadeColour));
+        if(globalAccess!=null)
+        {
+            globalAccess.fadeTo(1.0f/t,1,fadeColour);
+        }
     }
     
     public static void changePauseColour(Color c)

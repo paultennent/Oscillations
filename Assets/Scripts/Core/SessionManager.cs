@@ -63,6 +63,8 @@ public class SessionManager : MonoBehaviour {
 		//print ("session reset");
 		inGame=false;
 		gameTime=0;
+        unlocked=false;
+        FadeSphereScript.changePauseColour(new Color(1,1,1));
 	}
 
 	//public void onAngle(double time,float angle, GyroAccelFilter gf, float rawAngle)

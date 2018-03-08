@@ -55,6 +55,14 @@ public class MagicReader : AbstractDataReader {
 	public int getSameDataCount(){
 		return sameDataCount;
 	}
+    
+    public void sendSensorMessage(int message)
+    {
+        if(gc!=null)
+        {
+            gc.sendSensorMessage(message);
+        }
+    }
 
 	void OnApplicationPause(bool paused){
         if(gc!=null)
