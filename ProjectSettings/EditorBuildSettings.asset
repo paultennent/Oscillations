@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Rides/Shuttlecock-City-Static.unity
     guid: cb1a55da24bf4ef4f9bb441a081c41ad
-  - enabled: 0
+  - enabled: 1
     path: Assets/Rides/Walker-city.unity
     guid: 1189d8838aac896419e7de0b23270987
   - enabled: 1
@@ -23,6 +23,3 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Rides/Orbit.unity
     guid: 62e390eceb125914c827154ffa9a0953
-  - enabled: 1
-    path: Assets/SwingBoat.unity
-    guid: 59a000f2806fb2d468a1e6651b416e74

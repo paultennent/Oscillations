@@ -78,6 +78,43 @@ class BuildApk
         }
      }
 
+    [MenuItem("Oscillations/Cardboard Build")]
+    public static void BuildCardboard()
+    {
+        // Get filename.
+        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "","oscillations-cardboard.apk", "apk");
+        AssetDatabase.Refresh();
+        string targetAPK=GetArg("-targetPath");
 
+        string productName=PlayerSettings.productName;
+        PlayerSettings.productName="Oscillate-Diffusion";
+        string androidProductID=PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);        
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,"com.mrl.swingdiff");
+
+        Debug.Log("Building Oscillate to path: "+targetAPK+".\nScenes:");
+        List<string> scenes=new List<string>();
+        for(int c=0;c<20;c++)
+        {
+            string name = SceneUtility.GetScenePathByBuildIndex(c);                           
+            if(name==null || name.Length==0)break;
+            scenes.Add(name);
+            Debug.Log(name);
+        }
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes=scenes.ToArray();
+        options.locationPathName=path;
+        options.target=BuildTarget.Android;
+        options.options=BuildOptions.None;
+        options.targetGroup=BuildTargetGroup.Android;
+
+        string[] vrSDKs=PlayerSettings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
+        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,new string[]{"Cardboard"});
+        BuildPipeline.BuildPlayer(options);
+     
+        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,vrSDKs);
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,androidProductID);
+        PlayerSettings.productName=productName;
+
+    }
      
 }

@@ -9,11 +9,12 @@ public class MagicReader : AbstractDataReader {
 	private static GyroConnector gc;
 
 	private float mAngle = 0f;
-	private float mAngularVelocity=0f;
+	private int mGameState=0;
 	private float mMagDirection=0f;
 	private float mRemoteBatteryLevel=0f;
 	private float mLocalBatteryLevel=0f;
 	private long mTimestamp=0L;
+    private bool mInReset=false;
 
 	private int sameDataCount = 0;
     private int resetCount=0;
@@ -22,6 +23,11 @@ public class MagicReader : AbstractDataReader {
     private int restartCount=0;
 
     public bool useAccelerometer=false;
+    
+    public bool getInReset()
+    {
+        return mInReset;
+    }
     
     public int getConnectionState()
     {
@@ -32,8 +38,8 @@ public class MagicReader : AbstractDataReader {
 		return mAngle;
 	}
 
-	public float getAngularVelocity(){
-		return mAngularVelocity;
+	public int getGameState(){
+		return mGameState;
 	}
 
 	public float getMagDirection(){
@@ -110,11 +116,12 @@ public class MagicReader : AbstractDataReader {
 		headingNow = lowpass(new double[]{ 0, (double) gc.mAngle, 0 },headingNow);
 
 		mAngle = gc.mAngle;
-		mAngularVelocity = gc.mAngularVelocity;
+		mGameState = gc.mGameState;
 		mMagDirection = gc.mMagDirection;
 		mLocalBatteryLevel = gc.mLocalBatteryLevel;
 		mRemoteBatteryLevel = gc.mRemoteBatteryLevel;
 		mTimestamp = gc.mTimestamp;
+        mInReset=gc.inReset;
 
         switch(gc.mConnectionState&3)
         {

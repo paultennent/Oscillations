@@ -8899,10 +8899,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1670035076}
   - component: {fileID: 1670035078}
-  - component: {fileID: 1670035080}
-  - component: {fileID: 1670035081}
   - component: {fileID: 1670035077}
-  - component: {fileID: 1670035075}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -8910,17 +8907,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1670035075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32574c5509c6188498ea96fc6f13cedd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -8970,40 +8956,6 @@ MonoBehaviour:
   lowPassfilter: 0
   smoothFactor: 0.015
   useAccelerometer: 0
---- !u!114 &1670035080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d17bd963cb2f4b7183d9935cb88e4d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  applySwingTransform: 0
-  applyInverseSwingTransform: 0
-  debug: 1
-  sineWave: 0
-  forceSineOnMobile: 0
-  sineAmplitude: 45
-  zeroCrossingEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &1670035081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1670035074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c20ce978002146169bb3e503889d094, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerAngle: 10
 --- !u!1 &1680171380
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ public class GyroConnector
 #if REMOTE_SERVER
     const int MAX_PACKET_SIZE=32;
     
-    IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.86"),2323);
+    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.86"),2323);
 #else
     const int MAX_PACKET_SIZE=32;
 #endif
@@ -32,7 +32,7 @@ public class GyroConnector
     public bool useAccelerometer=false;
   
     public float mAngle=0;
-    public float mAngularVelocity=0;
+    public int mGameState=0;
     public float mMagDirection=0;
     public float mRemoteBatteryLevel=0;
     public float mLocalBatteryLevel=0;
@@ -166,11 +166,15 @@ public class GyroConnector
     AngleTime []mBuffer=new AngleTime[10];
     int mBufferCount=0;
     
+    public bool inReset=false;
+    
     bool firstTime=true;
     long firstTimestamp=0;
     float firstUnityTime=0;
     
     float unityDelay=0.0f;
+    
+  
 
     public void sendSensorMessage(int message)
     {
@@ -220,30 +224,11 @@ public class GyroConnector
             if(len>=MIN_PACKET_SIZE)
             {
                 timeLastPacket=Time.time;
-                float angle=getBigEndianFloat(receiveBytes,0);
+                float angle=getBigEndianFloat(receiveBytes,0);                               
                 long timestamp=getBigEndianInt64(receiveBytes,16);
                 mTimestamp=timestamp;
-                if(firstTime)
-                {
-                    firstTime=false;
-                    firstTimestamp=getBigEndianInt64(receiveBytes,16);
-                    firstUnityTime=Time.time;
-                    mAngle=angle;
-                    for(int c=0;c<mBuffer.Length;c++)
-                    {
-                        mBuffer[c]=new AngleTime();
-                    }
-                }
-                float timestampInUnity=firstUnityTime+0.000000001f*(float)(timestamp-firstTimestamp);
-    //            Debug.Log(timestampInUnity+"!!!");
-                if(mBufferCount<mBuffer.Length)
-                {
-                    mBuffer[mBufferCount].angle=angle;
-                    mBuffer[mBufferCount].time=timestampInUnity;
-                    mBufferCount++;
-                }
-                mAngularVelocity=getBigEndianFloat(receiveBytes,4);
-                mMagDirection=getBigEndianFloat(receiveBytes,8);
+                
+                mGameState=getBigEndianInt32(receiveBytes,4);
                 mRemoteBatteryLevel=getBigEndianFloat(receiveBytes,12);
                 if(len>=28)
                 {
@@ -253,6 +238,41 @@ public class GyroConnector
                 {
                     mConnectionState=getBigEndianInt32(receiveBytes,28);
                 }
+                
+
+                if(timestamp==0)
+                {
+                    // time is held, just send out angle straight away
+                    inReset=true;
+                    firstTime=true;
+                    mAngle=angle;
+                    mBufferCount=0;
+                }else
+                {
+                    // got a timestamp, i.e. we are not in reset now
+                    inReset=false;
+
+                    if(firstTime)
+                    {
+                        firstTime=false;
+                        firstTimestamp=getBigEndianInt64(receiveBytes,16);
+                        firstUnityTime=Time.time;
+                        mAngle=angle;
+                        for(int c=0;c<mBuffer.Length;c++)
+                        {
+                            mBuffer[c]=new AngleTime();
+                        }
+                    }
+                    float timestampInUnity=firstUnityTime+0.000000001f*(float)(timestamp-firstTimestamp);
+        //            Debug.Log(timestampInUnity+"!!!");
+                    if(mBufferCount<mBuffer.Length)
+                    {
+                        mBuffer[mBufferCount].angle=angle;
+                        mBuffer[mBufferCount].time=timestampInUnity;
+                        mBufferCount++;
+                    }
+                    mMagDirection=getBigEndianFloat(receiveBytes,8);
+                }
             }
         }
         if(Time.time-timeLastPacket>1f)
@@ -260,7 +280,11 @@ public class GyroConnector
             mConnectionState=0;
         }
 
-        
+        if(inReset)
+        {
+            // we're resetting, we don't do any clever buffering right now
+            return;
+        }
         bool hasAngle=true;
         
         if(mBufferCount>0)
