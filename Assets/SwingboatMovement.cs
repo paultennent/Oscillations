@@ -16,6 +16,10 @@ public class SwingboatMovement : MonoBehaviour {
     };
     GameState mState=GameState.LOCKED;
     
+    public bool simulateSine=false;
+    public float simulateSineFrequency=0.5f;
+    public float simulateSineAmplitude=30.0f;
+    int simulateSineState=0;
     
     float lastForwardSwing=0;
     float lastBackwardSwing=0;
@@ -24,14 +28,32 @@ public class SwingboatMovement : MonoBehaviour {
 	void Start () 
     {
         reader=GetComponent<MagicReader>();		
+        #if !UNITY_EDITOR
+            simulateSine=false;
+        #endif
 	}
 	
+    void sendServerMessage(int msg)
+    {
+        reader.sendSensorMessage(msg);
+        if(simulateSine)
+        {
+            simulateSineState=msg;
+        }
+    }
+    
     // update function - don't add anything in here, add game update stuff in DoGameUpdate
 	void Update () 
     {
         float gameTime=0.000000001f*(float)reader.getRemoteTimestamp();
+        float angle=reader.getAngle();
         int serverGameState=reader.getGameState();
-        bool resetting=reader.getInReset();
+        bool resetting=false;
+        if(simulateSine)
+        {
+            serverGameState=simulateSineState;
+            angle=simulateSineAmplitude*Mathf.Sin(simulateSineFrequency*Time.time*Mathf.PI*2.0f);
+        }
         if(serverGameState==0 || serverGameState==1)
         {
             resetting=true;
@@ -43,11 +65,10 @@ public class SwingboatMovement : MonoBehaviour {
         // and pause it
         if (Input.GetKeyDown(KeyCode.Escape)) 
         {
-            reader.sendSensorMessage(1);
+            sendServerMessage(1);
             print("Back pressed");
         }
 
-        float angle=reader.getAngle();
 		if(angle>triggerAngle)
 		{
 			lastForwardSwing=Time.time;
@@ -55,7 +76,7 @@ public class SwingboatMovement : MonoBehaviour {
 			{
                 // fwd / backward swings in last 3 seconds, send start message to sensor phone
                 // which starts the clock running
-                reader.sendSensorMessage(2);
+                sendServerMessage(2);
 			}
 		}
 		if(angle<-triggerAngle)
@@ -66,7 +87,7 @@ public class SwingboatMovement : MonoBehaviour {
         if(Time.time-lastBackwardSwing>6 && Time.time-lastForwardSwing>6 && mState==GameState.IN_GAME)
         {
             // haven't seen a swing for ages - fade out the game
-            reader.sendSensorMessage(3);
+            sendServerMessage(3);
             print("Send fade message");
         }
         

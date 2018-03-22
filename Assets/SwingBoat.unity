@@ -8931,17 +8931,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ed7feb6b091ee1419560a33ddf0faae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugTimeOffset: 0
-  sessionLength: 60
-  climaxTime: 30
-  dontcycle: 0
-  climaxRatio: 0
-  pauseEndTime: 10
-  countUp: 1
-  maxSessions: 1
-  pauseStartTime: 0
-  usePLLPhaseEstimation: 0
-  debugText: {fileID: 0}
+  triggerAngle: 10
+  simulateSine: 1
+  simulateSineFrequency: 0.3
+  simulateSineAmplitude: 30
 --- !u!114 &1670035078
 MonoBehaviour:
   m_ObjectHideFlags: 0
