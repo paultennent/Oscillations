@@ -101,6 +101,9 @@ public class SwingboatMovement : MonoBehaviour {
             if(mState==GameState.UNLOCKED_READY && serverGameState==2)
             {
                 StartGame();
+                // make sure it doesn't fade straight away
+                lastBackwardSwing=Time.time;
+                lastForwardSwing=Time.time;
             }
             if(mState==GameState.IN_GAME)
             {
