@@ -30,7 +30,7 @@ public class SwingboatStatusFlasher : MonoBehaviour {
             bool batteryLow=false;
             bool disconnected=false;
             // if battery is low on this phone or on the swing phone flash every 2 seconds
-            if(reader.getLocalBatteryLevel()>=-1 && reader.getLocalBatteryLevel()<0.3f && reader.getRemoteBatteryLevel()<0.3f && reader.getRemoteBatteryLevel()>-1)
+            if((reader.getLocalBatteryLevel()>=0.0f && reader.getLocalBatteryLevel()<0.3f) || (reader.getRemoteBatteryLevel()<0.3f && reader.getRemoteBatteryLevel()>0.0f))
             {
                 // low battery
                 newPattern="10000000000";
