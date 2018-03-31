@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class SwingboatMovement : MonoBehaviour {
 
     public float triggerAngle=10f;
     MagicReader reader;
+    
+    public bool isForward=true;
     
     enum GameState
     {
@@ -40,6 +43,30 @@ public class SwingboatMovement : MonoBehaviour {
         {
             simulateSineState=msg;
         }
+    }
+
+    void checkDirection()
+    {
+        Input.gyro.enabled=true;                
+        
+        Quaternion rot1=Input.gyro.attitude;
+        // standard compass angle is for flat phone, and in VR the phone is upright - swap angles so
+        // that it works without gimbal lock or flipping when phone tilts back or forward
+        
+        Quaternion rot2=new Quaternion(rot1.z,rot1.x,rot1.y,rot1.w);        
+        float thisRotation=360f-rot2.eulerAngles.z;
+        print(thisRotation+":"+reader.getMagDirection());
+
+        float angleDiff=Mathf.Abs(thisRotation-reader.getMagDirection());
+        if(angleDiff<90 || angleDiff>270)
+        {
+            isForward=true;
+        }else
+        {
+            isForward=false;
+        }
+
+        
     }
     
     // update function - don't add anything in here, add game update stuff in DoGameUpdate
@@ -93,6 +120,7 @@ public class SwingboatMovement : MonoBehaviour {
         
         
         // if we're not swinging yet, then tap recenters and unlocks
+        // and works out if we are the forward phone or not
         if(Input.GetButtonDown("Tap"))
         {
             if(mState==GameState.LOCKED || mState==GameState.UNLOCKED_READY)
@@ -100,10 +128,10 @@ public class SwingboatMovement : MonoBehaviour {
                 print("unlocked");
                 mState=GameState.UNLOCKED_READY;
                 FadeSphereScript.changePauseColour(new Color(0,1,0));
-                UnityEngine.XR.InputTracking.Recenter();
             }
+            UnityEngine.XR.InputTracking.Recenter();
+            checkDirection();
         }
-        
         // if the swing phone is reset, fade out
         if(resetting)
         {

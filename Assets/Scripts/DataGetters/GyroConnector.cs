@@ -228,6 +228,7 @@ public class GyroConnector
                 long timestamp=getBigEndianInt64(receiveBytes,16);
                 mTimestamp=timestamp;
                 
+                mMagDirection=getBigEndianFloat(receiveBytes,8);
                 mGameState=getBigEndianInt32(receiveBytes,4);
                 mRemoteBatteryLevel=getBigEndianFloat(receiveBytes,12);
                 if(len>=28)
@@ -271,7 +272,6 @@ public class GyroConnector
                         mBuffer[mBufferCount].time=timestampInUnity;
                         mBufferCount++;
                     }
-                    mMagDirection=getBigEndianFloat(receiveBytes,8);
                 }
             }
         }

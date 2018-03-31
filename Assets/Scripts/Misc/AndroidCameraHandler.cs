@@ -25,7 +25,7 @@ public class AndroidCameraHandler: MonoBehaviour
     string currentSwing=null;
     
     
-    const float FLASH_STEP_TIME=0.1f;
+    const float FLASH_STEP_TIME=0.2f;
     float currentTime=0;
     string flashPattern=null;
 

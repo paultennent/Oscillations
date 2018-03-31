@@ -8900,6 +8900,8 @@ GameObject:
   - component: {fileID: 1670035076}
   - component: {fileID: 1670035078}
   - component: {fileID: 1670035077}
+  - component: {fileID: 1670035075}
+  - component: {fileID: 1670035079}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Controller
@@ -8907,6 +8909,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1670035075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1670035074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3a107fa70966f944bf2506e3694c89d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FLASH_RUNNING: 0000
+  FLASH_DISCONNECT_ONE: 0000
+  FLASH_DISCONNECT_ALL: 1
+  FLASH_FINISHING: 0000
+  FLASH_FINISHED: 1010100000
+  acceptBarcodeTypes: 64
 --- !u!4 &1670035076
 Transform:
   m_ObjectHideFlags: 0
@@ -8932,6 +8951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerAngle: 10
+  isForward: 1
   simulateSine: 1
   simulateSineFrequency: 0.3
   simulateSineAmplitude: 30
@@ -8949,6 +8969,17 @@ MonoBehaviour:
   lowPassfilter: 0
   smoothFactor: 0.015
   useAccelerometer: 0
+--- !u!114 &1670035079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1670035074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00710977a2b05e543a18ada73cbc1f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1680171380
 GameObject:
   m_ObjectHideFlags: 0
