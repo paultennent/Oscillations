@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR;
 
 public class SwingboatMovement : MonoBehaviour {
+    public Text debugText;
 
     public float triggerAngle=10f;
     MagicReader reader;
@@ -27,10 +29,13 @@ public class SwingboatMovement : MonoBehaviour {
     float lastForwardSwing=0;
     float lastBackwardSwing=0;
     float gameStartTime;
+    
+    private SwingBoatEffects sbe;
 
 	void Start () 
     {
-        reader=GetComponent<MagicReader>();		
+        reader=GetComponent<MagicReader>();	
+        sbe = GetComponent<SwingBoatEffects>();        
         #if !UNITY_EDITOR
             simulateSine=false;
         #endif
@@ -55,7 +60,7 @@ public class SwingboatMovement : MonoBehaviour {
         
         Quaternion rot2=new Quaternion(rot1.z,rot1.x,rot1.y,rot1.w);        
         float thisRotation=360f-rot2.eulerAngles.z;
-        print(thisRotation+":"+reader.getMagDirection());
+        print("direction:"+thisRotation+":"+reader.getMagDirection());
 
         float angleDiff=Mathf.Abs(thisRotation-reader.getMagDirection());
         if(angleDiff<90 || angleDiff>270)
@@ -64,6 +69,11 @@ public class SwingboatMovement : MonoBehaviour {
         }else
         {
             isForward=false;
+        }
+        
+        if(debugText)
+        {
+            debugText.text="Fwd:"+isForward+","+(int)thisRotation+":"+(int)reader.getMagDirection();
         }
 
         
@@ -74,12 +84,14 @@ public class SwingboatMovement : MonoBehaviour {
     {
         float gameTime=0.000000001f*(float)reader.getRemoteTimestamp();
         float angle=reader.getAngle();
+        //print(angle+":"+gameTime);
         int serverGameState=reader.getGameState();
         bool resetting=false;
         if(simulateSine)
         {
             serverGameState=simulateSineState;
             angle=simulateSineAmplitude*Mathf.Sin(simulateSineFrequency*Time.time*Mathf.PI*2.0f);
+            gameTime=Time.time;
         }
         if(serverGameState==0 || serverGameState==1)
         {
@@ -131,6 +143,7 @@ public class SwingboatMovement : MonoBehaviour {
             }
             UnityEngine.XR.InputTracking.Recenter();
             checkDirection();
+            sbe.isFore=isForward;
         }
         // if the swing phone is reset, fade out
         if(resetting)
@@ -141,7 +154,7 @@ public class SwingboatMovement : MonoBehaviour {
             }
         }else
         {
-            if(serverGameState==3)
+            if(serverGameState==3 && mState!=GameState.FADED)
             {
                 FadeGame();
                 print("Game faded");
@@ -191,7 +204,7 @@ public class SwingboatMovement : MonoBehaviour {
     // put game update stuff in here
     void DoGameUpdate(float angle,float gameTime)
     {
-        
+        sbe.applyEffects(angle,gameTime);
     }
     
 }

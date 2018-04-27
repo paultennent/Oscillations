@@ -19,7 +19,7 @@ public class GyroConnector
 #if REMOTE_SERVER
     const int MAX_PACKET_SIZE=32;
     
-    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.86"),2323);
+    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.135"),2323);
 #else
     const int MAX_PACKET_SIZE=32;
 #endif
@@ -263,6 +263,8 @@ public class GyroConnector
                         {
                             mBuffer[c]=new AngleTime();
                         }
+                        unityDelay=1.0f;
+
                     }
                     float timestampInUnity=firstUnityTime+0.000000001f*(float)(timestamp-firstTimestamp);
         //            Debug.Log(timestampInUnity+"!!!");
@@ -289,7 +291,7 @@ public class GyroConnector
         
         if(mBufferCount>0)
         {
-            float unityTimeNow=Time.time-firstUnityTime - unityDelay;
+            float unityTimeNow=Time.time- unityDelay;
   //          Debug.Log(unityTimeNow+":"+mBuffer[0].time+"!"+mBufferCount+"["+mBuffer[0].angle);
             int bufPos=0;
             while(bufPos<mBuffer.Length && bufPos<mBufferCount && mBuffer[bufPos].time<unityTimeNow)
@@ -306,7 +308,7 @@ public class GyroConnector
                 d++;
             }
             mBufferCount-=bufPos;
-            if(mBufferCount>3)
+/*            if(mBufferCount>3)
             {
                 // big buffer, drop latency
                 unityDelay-=0.01f;
@@ -317,19 +319,20 @@ public class GyroConnector
             {
                 // risk of dropping frames, up latency slightly
                 unityDelay+=0.001f;
-            }
+            }*/
             if(mBufferCount==10)
             {
                 // set delay to middle of buffer
-                unityDelay=Time.time-firstUnityTime - mBuffer[4].time;
+                unityDelay=Time.time- mBuffer[4].time;
             }
         }else
         {
             hasAngle=false;
             // actual drop frame, up latency slightly
             unityDelay+=0.001f;
-            //Debug.Log("Dropped frame");
+            Debug.Log("Dropped frame");
         }
+//        Debug.Log(unityDelay+":"+mBufferCount);
         
 	}
 

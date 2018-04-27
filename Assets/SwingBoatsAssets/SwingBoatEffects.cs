@@ -14,6 +14,7 @@ public class SwingBoatEffects : MonoBehaviour {
 
     public Transform camera;
     public Transform forePositioner;
+    public Transform aftPositioner;
     public bool isFore = false;
 
     public float lightIntensityMultiplier = 0.1f;
@@ -23,11 +24,19 @@ public class SwingBoatEffects : MonoBehaviour {
     void Start()
     {
         bsr = GetComponent<BoatScriptReader>();
+        
+    }
+    
+    void Update(){
         if (isFore)
         {
             camera.position = forePositioner.position;
             camera.rotation = forePositioner.rotation;
             camera.parent = forePositioner;
+        }else{
+           camera.position = aftPositioner.position;
+            camera.rotation = aftPositioner.rotation;
+            camera.parent = aftPositioner; 
         }
     }
 
