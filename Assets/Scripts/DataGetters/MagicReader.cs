@@ -11,8 +11,8 @@ public class MagicReader : AbstractDataReader {
 	private float mAngle = 0f;
 	private int mGameState=0;
 	private float mMagDirection=0f;
-	private float mRemoteBatteryLevel=0f;
-	private float mLocalBatteryLevel=0f;
+	private float mRemoteBatteryLevel=-1f;
+	private float mLocalBatteryLevel=-1f;
 	private long mTimestamp=0L;
     private bool mInReset=false;
 

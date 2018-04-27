@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class SwingboatMovement : MonoBehaviour {
 
     public float triggerAngle=10f;
     MagicReader reader;
+    
+    public bool isForward=true;
     
     enum GameState
     {
@@ -17,7 +20,6 @@ public class SwingboatMovement : MonoBehaviour {
     GameState mState=GameState.LOCKED;
     
     public bool simulateSine=false;
-    public bool forceSineOnMobile = false; 
     public float simulateSineFrequency=0.5f;
     public float simulateSineAmplitude=30.0f;
     int simulateSineState=0;
@@ -26,27 +28,45 @@ public class SwingboatMovement : MonoBehaviour {
     float lastBackwardSwing=0;
     float gameStartTime;
 
-    private SwingBoatEffects sbe; 
-
 	void Start () 
     {
-        reader=GetComponent<MagicReader>();
-        sbe = GetComponent<SwingBoatEffects>();
-        
+        reader=GetComponent<MagicReader>();		
         #if !UNITY_EDITOR
             simulateSine=false;
         #endif
-        
 	}
 	
     void sendServerMessage(int msg)
     {
         reader.sendSensorMessage(msg);
-        
         if(simulateSine)
         {
             simulateSineState=msg;
         }
+    }
+
+    void checkDirection()
+    {
+        Input.gyro.enabled=true;                
+        
+        Quaternion rot1=Input.gyro.attitude;
+        // standard compass angle is for flat phone, and in VR the phone is upright - swap angles so
+        // that it works without gimbal lock or flipping when phone tilts back or forward
+        
+        Quaternion rot2=new Quaternion(rot1.z,rot1.x,rot1.y,rot1.w);        
+        float thisRotation=360f-rot2.eulerAngles.z;
+        print(thisRotation+":"+reader.getMagDirection());
+
+        float angleDiff=Mathf.Abs(thisRotation-reader.getMagDirection());
+        if(angleDiff<90 || angleDiff>270)
+        {
+            isForward=true;
+        }else
+        {
+            isForward=false;
+        }
+
+        
     }
     
     // update function - don't add anything in here, add game update stuff in DoGameUpdate
@@ -54,41 +74,29 @@ public class SwingboatMovement : MonoBehaviour {
     {
         float gameTime=0.000000001f*(float)reader.getRemoteTimestamp();
         float angle=reader.getAngle();
-
-        //temp hack for friday test
-        //float angle = 0;
-        //float gameTime = 0;
-        //int serverGameState = 0;
-
         int serverGameState=reader.getGameState();
         bool resetting=false;
-        if(simulateSine || forceSineOnMobile)
+        if(simulateSine)
         {
             serverGameState=simulateSineState;
             angle=simulateSineAmplitude*Mathf.Sin(simulateSineFrequency*Time.time*Mathf.PI*2.0f);
-            gameTime = Time.time - gameStartTime;
         }
-
-        if (!forceSineOnMobile)
+        if(serverGameState==0 || serverGameState==1)
         {
-            if (serverGameState == 0 || serverGameState == 1)
-            {
-                resetting = true;
-            }
-            else
-            {
-                resetting = false;
-            }
+            resetting=true;
+        }else
+        {
+            resetting=false;
         }
         // back button pressed, reset game on sensor phone
         // and pause it
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)) 
         {
             sendServerMessage(1);
             print("Back pressed");
         }
 
-        if (angle>triggerAngle)
+		if(angle>triggerAngle)
 		{
 			lastForwardSwing=Time.time;
 			if(mState==GameState.UNLOCKED_READY && lastBackwardSwing-Time.time<3)
@@ -112,6 +120,7 @@ public class SwingboatMovement : MonoBehaviour {
         
         
         // if we're not swinging yet, then tap recenters and unlocks
+        // and works out if we are the forward phone or not
         if(Input.GetButtonDown("Tap"))
         {
             if(mState==GameState.LOCKED || mState==GameState.UNLOCKED_READY)
@@ -121,8 +130,8 @@ public class SwingboatMovement : MonoBehaviour {
                 FadeSphereScript.changePauseColour(new Color(0,1,0));
             }
             UnityEngine.XR.InputTracking.Recenter();
+            checkDirection();
         }
-        
         // if the swing phone is reset, fade out
         if(resetting)
         {
@@ -138,7 +147,7 @@ public class SwingboatMovement : MonoBehaviour {
                 print("Game faded");
             }
             // the swing phone is showing time - start game if we are unlocked and ready
-            if(mState==GameState.UNLOCKED_READY && (serverGameState==2 || serverGameState==simulateSineState))
+            if(mState==GameState.UNLOCKED_READY && serverGameState==2)
             {
                 StartGame();
                 // make sure it doesn't fade straight away
@@ -182,7 +191,7 @@ public class SwingboatMovement : MonoBehaviour {
     // put game update stuff in here
     void DoGameUpdate(float angle,float gameTime)
     {
-        sbe.applyEffects(angle, gameTime);
+        
     }
     
 }
