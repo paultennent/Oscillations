@@ -61,18 +61,24 @@ public class GyroConnector
 			receiver.Bind (new IPEndPoint (IPAddress.Any, 2424));
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-			AndroidJavaClass activityClass;
-			AndroidJavaObject activity, intent;
-
-			activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-			activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-			intent = new AndroidJavaObject("android.content.Intent");
-			intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
-			AndroidJavaObject obj=activity.Call<AndroidJavaObject>("startService",intent);
-            if(obj==null )
+            if(Application.identifier=="com.mrl.swingdiffgear")
             {
-                Debug.Log("WOO!!!!!");
                 useAccelerometer=true;
+            }else
+            {
+                AndroidJavaClass activityClass;
+                AndroidJavaObject activity, intent;
+
+                activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
+                intent = new AndroidJavaObject("android.content.Intent");
+                intent.Call<AndroidJavaObject>("setClassName","com.mrl.simplegyroclient","com.mrl.simplegyroclient.GyroClientService");
+                AndroidJavaObject obj=activity.Call<AndroidJavaObject>("startService",intent);
+                if(obj==null )
+                {
+                    Debug.Log("WOO!!!!!");
+                    useAccelerometer=true;
+                }
             }
 #else
 			timeLastPoll = Time.time;

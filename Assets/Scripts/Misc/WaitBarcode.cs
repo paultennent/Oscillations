@@ -30,15 +30,15 @@ public class WaitBarcode : MonoBehaviour {
 	void Update ()
     {
         
+        if(mr!=null && mr.useAccelerometer)
+        {
+            // using accelerometer (ie. diffusion version), don't do any barcode stuff, show menu instead
+            FadeSphereScript.enableFader(false);
+            mTextObject.transform.parent.gameObject.active=false;
+            return;
+        }
         if(barcodeReader==null)
         {
-            if(mr!=null && mr.useAccelerometer)
-            {
-                // using accelerometer (ie. diffusion version), don't do any barcode stuff, show menu instead
-                FadeSphereScript.enableFader(false);
-                mTextObject.transform.parent.gameObject.active=false;
-                return;
-            }
 #if UNITY_EDITOR
                 // no barcodes in editor
                 FadeSphereScript.enableFader(false);
