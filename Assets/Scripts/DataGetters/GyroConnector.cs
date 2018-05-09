@@ -19,9 +19,9 @@ public class GyroConnector
 #if REMOTE_SERVER
     const int MAX_PACKET_SIZE=32;
     
-    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.137.110"),2323);
+    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.135"),2323);
 #else
-    const int MAX_PACKET_SIZE=32;
+    const int MAX_PACKET_SIZE=36;
 #endif
 
     float timeLastPacket=0;
@@ -38,6 +38,7 @@ public class GyroConnector
     public float mLocalBatteryLevel=0;
     public long mTimestamp=0L;
     public int mConnectionState=0;
+    public float mSwingTilt=0f;
     
     public string dbgTxt="";
     
@@ -237,14 +238,26 @@ public class GyroConnector
                 mMagDirection=getBigEndianFloat(receiveBytes,8);
                 mGameState=getBigEndianInt32(receiveBytes,4);
                 mRemoteBatteryLevel=getBigEndianFloat(receiveBytes,12);
+    #if REMOTE_SERVER
                 if(len>=28)
                 {
-                    mLocalBatteryLevel=getBigEndianFloat(receiveBytes,24);
+                    mSwingTilt=getBigEndianFloat(receiveBytes,len-4);
+                }
+    #else
+                if(len>=28)
+                {
+                    mLocalBatteryLevel=getBigEndianFloat(receiveBytes,len-8);
                 }
                 if(len>=32)
                 {
-                    mConnectionState=getBigEndianInt32(receiveBytes,28);
+                    mConnectionState=getBigEndianInt32(receiveBytes,len-4);
                 }
+                if(len>=36)
+                {
+                    // has swing tilt
+                    mSwingTilt=getBigEndianFloat(receiveBytes,len-12);
+                }
+    #endif
                 
 
                 if(timestamp==0)

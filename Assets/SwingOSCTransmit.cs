@@ -39,6 +39,11 @@ public class SwingOSCTransmit : MonoBehaviour {
         return difference;
     }
     
+    float wrapPlusMinus180(float angle)
+    {
+        return (angle+180)%360 - 180;
+    }
+    
 	// Update is called once per frame
 	void Update () {
         msg.values.Clear();
@@ -83,9 +88,11 @@ public class SwingOSCTransmit : MonoBehaviour {
         msg.values.Add(twistFilter);
         msg.address="/twistFiltered";
         osc.Send(msg);
-
         
-        
+        msg.values.Clear();
+        msg.values.Add(reader.getSwingTilt());
+        msg.address="/tilt";
+        osc.Send(msg);
         
         msg.values.Clear();
         msg.values.Add(reader.getMagDirection());
@@ -95,11 +102,11 @@ public class SwingOSCTransmit : MonoBehaviour {
 
         Quaternion headRotation=UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);
         Vector3 eRotation=headRotation.eulerAngles;
-        
+
         msg.values.Clear();
-        msg.values.Add(eRotation.x);
-        msg.values.Add(eRotation.y);
-        msg.values.Add(eRotation.z);
+        msg.values.Add(wrapPlusMinus180(eRotation.x));
+        msg.values.Add(wrapPlusMinus180(eRotation.y));
+        msg.values.Add(wrapPlusMinus180(eRotation.z));
         msg.address="/head";
         osc.Send(msg);
 	}

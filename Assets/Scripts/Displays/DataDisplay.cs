@@ -54,8 +54,8 @@ public class DataDisplay : MonoBehaviour {
 		viewz.text = "Z:" + viewVelocity.z;
 		viewmag.text = "M:" + viewVelocity.magnitude;
 
-		fpsText.text = "FPS:" + (1.0f / Time.deltaTime);
-		sameCount.text = "SC:" + mr.getSameDataCount ();
+		//fpsText.text = "FPS:" + (1.0f / Time.deltaTime);
+		//sameCount.text = "SC:" + mr.getSameDataCount ();
 
 		lastSwing = swing.position;
 		lastView = view.position;

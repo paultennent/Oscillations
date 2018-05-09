@@ -126,7 +126,8 @@ public class SwingBase : MonoBehaviour {
 		}
 
 		if (applySwingTransform) {
-			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 90);
+            // This previously rotated by 90 degrees for no reason
+			swingPivot.localEulerAngles = new Vector3 (swingAngle, 0, 0);
 			viewPoint.localEulerAngles = new Vector3 (-swingAngle, 0, 0);
 		}
 

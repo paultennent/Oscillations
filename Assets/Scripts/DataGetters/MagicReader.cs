@@ -14,6 +14,7 @@ public class MagicReader : AbstractDataReader {
 	private float mRemoteBatteryLevel=-1f;
 	private float mLocalBatteryLevel=-1f;
 	private long mTimestamp=0L;
+    private float mSwingTilt=0f;
     private bool mInReset=false;
 
 	private int sameDataCount = 0;
@@ -34,6 +35,10 @@ public class MagicReader : AbstractDataReader {
         return gc.mConnectionState;
     }
     
+    public float getSwingTilt()
+    {
+        return mSwingTilt;
+    }
 	public float getAngle(){
 		return mAngle;
 	}
@@ -122,7 +127,7 @@ public class MagicReader : AbstractDataReader {
 		mRemoteBatteryLevel = gc.mRemoteBatteryLevel;
 		mTimestamp = gc.mTimestamp;
         mInReset=gc.inReset;
-
+        mSwingTilt=gc.mSwingTilt;
         switch(gc.mConnectionState&3)
         {
             case 3:

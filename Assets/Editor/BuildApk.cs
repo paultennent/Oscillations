@@ -157,5 +157,60 @@ class BuildApk
 
     }
 
+    [MenuItem("Oscillations/OSC Build")]
+    public static void BuildOSC()
+    {
+        OSCBuild(false);
+    }
+
+    [MenuItem("Oscillations/OSC Build and Run")]
+    public static void BuildOSCAndRun()
+    {
+        OSCBuild(true);
+    }    
+    
+    static void OSCBuild(bool run)
+    {
+        // Get filename.
+        string[] levels = new string[] {"Assets/OSCSwing.unity"};
+
+        // List<string> scenes=new List<string>();
+        // for(int c=0;c<20;c++)
+        // {
+            // string name = SceneUtility.GetScenePathByBuildIndex(c);                           
+            // if(name==null || name.Length==0)break;
+            // scenes.Add(name);
+            // Debug.Log(name);
+        // }
+        // levels=scenes.ToArray();
+        
+        
+        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "","osc.apk", "apk");
+        
+        string productName=PlayerSettings.productName+"";
+        PlayerSettings.productName="Swing OSC";
+        string androidProductID=PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);        
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,"com.mrl.swingosc");
+        
+        // Build player.
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes=levels;
+        options.locationPathName=path;
+        options.target=BuildTarget.Android;
+        if(run)
+        {
+            options.options=BuildOptions.AutoRunPlayer;
+        }else
+        {
+            options.options=BuildOptions.None;
+        }
+        options.targetGroup=BuildTargetGroup.Android;
+        
+        BuildPipeline.BuildPlayer(options);
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,androidProductID);
+        PlayerSettings.productName=productName;
+    }
+    
+    
     
 }

@@ -37,7 +37,7 @@ public class ScriptBatch
         
         string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "","swingboat.apk", "apk");
         
-        string productName=PlayerSettings.productName;
+        string productName=PlayerSettings.productName+"";
         PlayerSettings.productName="Swingboat";
         string androidProductID=PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);        
         PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,"com.mrl.swingboat");
@@ -59,7 +59,6 @@ public class ScriptBatch
         BuildPipeline.BuildPlayer(options);
         PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,androidProductID);
         PlayerSettings.productName=productName;
-
     }
     
     [MenuItem("Oscillations/List scenes")]
