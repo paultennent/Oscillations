@@ -22,6 +22,8 @@ public class SwingOSCTransmit : MonoBehaviour {
 
 	}
 	
+    
+    
     float angleDiff(float a,float b)
     {
         // now they are both in range 0-360
@@ -46,6 +48,21 @@ public class SwingOSCTransmit : MonoBehaviour {
     
 	// Update is called once per frame
 	void Update () {
+        if(Input.GetButtonDown("Tap"))
+        {
+            UnityEngine.XR.InputTracking.Recenter();
+            
+        }
+        msg.values.Clear();
+        msg.values.Add(0.5);
+        msg.values.Add(1);
+        msg.values.Add(0.25);
+        msg.values.Add(0.5);
+        msg.values.Add(0.1);
+        msg.address="/trackLevels";
+        osc.Send(msg);
+
+
         msg.values.Clear();
         msg.values.Add(reader.getAngle());
         msg.address="/swingAngle";
