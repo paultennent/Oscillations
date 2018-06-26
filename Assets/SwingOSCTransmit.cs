@@ -53,26 +53,9 @@ public class SwingOSCTransmit : MonoBehaviour {
             UnityEngine.XR.InputTracking.Recenter();
             
         }
-        msg.values.Clear();
-        msg.values.Add(0.5);
-        msg.values.Add(1);
-        msg.values.Add(0.25);
-        msg.values.Add(0.5);
-        msg.values.Add(0.1);
-        msg.address="/trackLevels";
-        osc.Send(msg);
 
-
-        msg.values.Clear();
-        msg.values.Add(reader.getAngle());
-        msg.address="/swingAngle";
-        osc.Send(msg);
- 
         float twistAbsolute=reader.getMagDirection();
-        msg.values.Clear();
-        msg.values.Add(twistAbsolute);
-        msg.address="/seatDirection";
-        osc.Send(msg);
+
 
         // high pass filter on seat twist to get difference from normal
         if(lastTwist<=-1000f)
@@ -100,21 +83,19 @@ public class SwingOSCTransmit : MonoBehaviour {
             // make sure output is within -+180
             lastTwist=twistAbsolute;
         }
-        
+
         msg.values.Clear();
+        msg.values.Add(reader.getAngle());
+        msg.values.Add(twistAbsolute);
         msg.values.Add(twistFilter);
-        msg.address="/twistFiltered";
-        osc.Send(msg);
-        
-        msg.values.Clear();
         msg.values.Add(reader.getSwingTilt());
-        msg.address="/tilt";
+        msg.address="/seat";
         osc.Send(msg);
-        
-        msg.values.Clear();
+ 
+/*        msg.values.Clear();
         msg.values.Add(reader.getMagDirection());
         msg.address="/twist";
-        osc.Send(msg);
+        osc.Send(msg);*/
         
 
         Quaternion headRotation=UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head);

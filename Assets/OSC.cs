@@ -17,6 +17,7 @@ using System.IO;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Text;
 using UnityEngine;
@@ -160,6 +161,7 @@ public class UDPPacketIO
 		try
 		{
 			Sender = new UdpClient();
+            Sender.EnableBroadcast=true;
 			Debug.Log("Opening OSC listener on port " + localPort);
 			
 			IPEndPoint listenerIp = new IPEndPoint(IPAddress.Any, localPort);
@@ -409,6 +411,8 @@ public class UDPPacketIO
     public int inPort  = 6969;
     public string outIP = "127.0.0.1";
     public int outPort  = 6161;
+    
+    public bool sendBroadcast=false;
 
       private UDPPacketIO OscPacketIO;
       Thread ReadThread;
@@ -421,13 +425,65 @@ public class UDPPacketIO
 
 	byte[] buffer;
 
-	
+	string GetBroadcastIP()
+    {
+        byte[] ipAddressBytes=null;
+        byte[] subnetMaskBytes=null;
+        foreach(NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+        {
+// Only display information for interfaces that support IPv4.
+            if (ni.Supports(NetworkInterfaceComponent.IPv4) == false)
+            {
+                continue;
+            }
+            if(ni.NetworkInterfaceType!=NetworkInterfaceType.Wireless80211)
+            {
+                continue;
+            }
+            if(ni.OperationalStatus!=OperationalStatus.Up)
+            {
+                continue;
+            }
+            foreach(UnicastIPAddressInformation uni in ni.GetIPProperties().UnicastAddresses)
+            {
+                if(!IPAddress.IsLoopback(uni.Address))
+                {
+                    if(uni.Address.AddressFamily==AddressFamily.InterNetwork)
+                    {
+                        ipAddressBytes=uni.Address.GetAddressBytes( );
+                        subnetMaskBytes=uni.IPv4Mask.GetAddressBytes();
+                        print(uni.Address);
+                        print(uni.IPv4Mask);
+                    }
+                }
+            }
+            
+        }
+
+        if( ipAddressBytes==null )
+            throw new ArgumentException("Can't find ip address.");
+        
+        if (ipAddressBytes.Length != subnetMaskBytes.Length)
+            throw new ArgumentException("Lengths of IP address and subnet mask do not match.");
+
+        byte[] broadcastAddress = new byte[ipAddressBytes.Length];
+        for (int i = 0; i < broadcastAddress.Length; i++)
+        {
+            broadcastAddress[i] = (byte)(ipAddressBytes[i] | (subnetMaskBytes[i] ^ 255));
+        }
+        return new IPAddress(broadcastAddress).ToString();        
+    }
 
 
 
 
 	void Awake() {
 		//print("Opening OSC listener on port " + inPort);
+        if(sendBroadcast)
+        {
+            outIP=GetBroadcastIP();
+            print(outIP);
+        }
 
 		OscPacketIO = new UDPPacketIO(outIP, outPort, inPort);
 		AddressTable = new Hashtable();

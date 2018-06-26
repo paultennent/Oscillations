@@ -19,7 +19,7 @@ public class GyroConnector
 #if REMOTE_SERVER
     const int MAX_PACKET_SIZE=32;
     
-    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.1.135"),2323);
+    public IPEndPoint serverEndPoint=new IPEndPoint(IPAddress.Parse("192.168.137.147"),2323);
 #else
     const int MAX_PACKET_SIZE=36;
 #endif
@@ -242,6 +242,7 @@ public class GyroConnector
                 if(len>=28)
                 {
                     mSwingTilt=getBigEndianFloat(receiveBytes,len-4);
+                   // Debug.Log("Woo");
                 }
     #else
                 if(len>=28)
