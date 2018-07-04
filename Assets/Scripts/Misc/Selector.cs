@@ -61,7 +61,7 @@ public class Selector : MonoBehaviour {
                 sceneName="HighRoller-City-tiled";
                 break;
             case 3:
-                sceneName="Orbit";
+                sceneName="Walker-city";
                 break;
             case 4:
                 sceneName="Shuttlecock-City-Static";
