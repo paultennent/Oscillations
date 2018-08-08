@@ -85,7 +85,7 @@ public class MagicReader : AbstractDataReader {
 	// Use this for initialization
 	void Start () {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        if(File.Exists("/sdcard/forceaccel.txt"))
+        if(File.Exists("/sdcard/forceaccel.txt") || Application.identifier=="com.mrl.swingdiffgear")
         {
             useAccelerometer=true;
             Debug.Log("Forced using accelerometer tracking");
