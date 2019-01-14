@@ -20,29 +20,69 @@ class BuildApk
         return null;
     }
     
+    [MenuItem("Oscillations/Main Build For Shows")]
      static void PerformBuild ()
      {
-        AssetDatabase.Refresh();
         string targetAPK=GetArg("-targetPath");
+        if(targetAPK==null || targetAPK.Length==0)
+        {
+            targetAPK = EditorUtility.SaveFilePanel("Choose Location of Built Game", "Build","oscillations.apk", "apk");
+        }
+        AssetDatabase.Refresh();
+        
+        string[] fixedScenes={
+            "Assets/Rides/Menu.unity",
+            "Assets/Rides/Shuttlecock-City-Static.unity",
+            "Assets/Rides/Walker-city.unity",
+            "Assets/Rides/HighRoller-City-tiled.unity",
+            "Assets/Rides/Jellyfish-tiled.unity"
+        };
+        
+        string productName=PlayerSettings.productName;
+        PlayerSettings.productName="VR Playground 2";
+        string androidProductID=PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);        
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,"com.mrl.swing");
+
         
         Debug.Log("Building Oscillate to path: "+targetAPK+".\nScenes:");
-        List<string> scenes=new List<string>();
-        for(int c=0;c<20;c++)
+        List<string> scenes=new List<string>(fixedScenes);
+        foreach(string nam in scenes)
+        {
+            Debug.Log(nam);
+        }
+/*        for(int c=0;c<20;c++)
         {
             string name = SceneUtility.GetScenePathByBuildIndex(c);                           
             if(name==null || name.Length==0)break;
             scenes.Add(name);
             Debug.Log(name);
-        }
+        }*/
         BuildPlayerOptions options = new BuildPlayerOptions();
         options.scenes=scenes.ToArray();
         options.locationPathName=targetAPK;
         options.target=BuildTarget.Android;
         options.options=BuildOptions.None;
         options.targetGroup=BuildTargetGroup.Android;
-        BuildPipeline.BuildPlayer(options);
-     }
 
+        string[] vrSDKs=PlayerSettings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
+        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,new string[]{"Oculus"});
+        BuildPipeline.BuildPlayer(options);
+
+        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,vrSDKs);
+        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,androidProductID);
+        PlayerSettings.productName=productName;
+        Debug.Log("Finished build");
+
+    }
+
+/*    [MenuItem("Oscillations/ListSDKs")]
+     static void listSDKs()
+     {
+        string[] vrSDKs=PlayerSettings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
+        Debug.Log(vrSDKs[0]);
+         
+     }*/
+     
      static void PerformWebBuilds()
      {
         AssetDatabase.Refresh();

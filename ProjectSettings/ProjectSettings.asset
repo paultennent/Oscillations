@@ -12,7 +12,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: MRL
-  productName: VR Playground 2
+  productName: VRPlayground 2
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.93333334, g: 0.27450982, b: 0.14509805, a: 1}
