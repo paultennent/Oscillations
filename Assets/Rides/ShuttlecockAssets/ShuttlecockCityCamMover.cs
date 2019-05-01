@@ -173,47 +173,66 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
             {
                 outroNext=true;
             }
-            // first 10 seconds swinging, then 10 seconds, transitioning between swing and not swing and fading cube
-            if(offsetTime<20f && countUp)
+            
+            // in diffusion we just do nothing while the intro occurs, rather than transitioning to swinging
+            if(Application.identifier=="com.mrl.swingdiffgear")
             {
-                if(Input.GetKeyDown("s"))
+                if(offsetTime<10f && countUp)
                 {
-                    debugTimeOffset+=10f;
-                    inIntro=false;
-                    return;
-                }
-					
-                inOutro=false;
-                outroStartTime=0f;
-                inIntro=true;
-                outroNext=false;
-                // put in an up and down oscillation from the swing only
-                // which fades in after 10 seconds
-                float ratio=1;
-                if(offsetTime>10f)
+                    // in diffusion we just do nothing while the intro occurs
+                }if(inIntro)
                 {
-                    ratio=2f-.1f*offsetTime;
+                    // wait until we reach zero degrees before starting properly
+                    if(newQuadrant && (swingQuadrant==0 || swingQuadrant==2))
+                    {
+                        inIntro=false;
+                    }
                 }
-                // now manually fix seat transform position and rotation
-                float realSwingY=Mathf.Cos(-swingAngle*Mathf.Deg2Rad) * seatDistance;
-                float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
-                float realSwingZ=Mathf.Sin(-swingAngle*Mathf.Deg2Rad)*seatDistance;
-                
-                seat.transform.localPosition=new Vector3(0,realSwingY*ratio + (1.0f-ratio)*transformY,ratio*realSwingZ);
-//                seat.transform.rotation=Quaternion.Euler(0,180,swingAngle);
-                return;
-            }else if(inIntro)
+            }else
             {
-                // wait until we reach zero degrees before starting properly
-                if(newQuadrant && (swingQuadrant==0 || swingQuadrant==2))
+
+                // first 10 seconds swinging, then 10 seconds, transitioning between swing and not swing and fading cube
+                if(offsetTime<20f && countUp)
                 {
-                    inIntro=false;
-                }else
-                {
+                    if(Input.GetKeyDown("s"))
+                    {
+                        debugTimeOffset+=10f;
+                        inIntro=false;
+                        return;
+                    }
+                        
+                    inOutro=false;
+                    outroStartTime=0f;
+                    inIntro=true;
+                    outroNext=false;
+                    // put in an up and down oscillation from the swing only
+                    // which fades in after 10 seconds
+                    float ratio=1;
+                    if(offsetTime>10f)
+                    {
+                        ratio=2f-.1f*offsetTime;
+                    }
+                    // now manually fix seat transform position and rotation
+                    float realSwingY=Mathf.Cos(-swingAngle*Mathf.Deg2Rad) * seatDistance;
                     float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
-                    // bounce on spot
-                    seat.transform.localPosition=new Vector3(0,transformY);                    
+                    float realSwingZ=Mathf.Sin(-swingAngle*Mathf.Deg2Rad)*seatDistance;
+                    
+                    seat.transform.localPosition=new Vector3(0,realSwingY*ratio + (1.0f-ratio)*transformY,ratio*realSwingZ);
+    //                seat.transform.rotation=Quaternion.Euler(0,180,swingAngle);
                     return;
+                }else if(inIntro)
+                {
+                    // wait until we reach zero degrees before starting properly
+                    if(newQuadrant && (swingQuadrant==0 || swingQuadrant==2))
+                    {
+                        inIntro=false;
+                    }else
+                    {
+                        float transformY=(2*Mathf.Pow(Mathf.Cos(.5f*-swingAngle*Mathf.Deg2Rad),4) -1) * seatDistance;
+                        // bounce on spot
+                        seat.transform.localPosition=new Vector3(0,transformY);                    
+                        return;
+                    }
                 }
             }
             if(inOutro)

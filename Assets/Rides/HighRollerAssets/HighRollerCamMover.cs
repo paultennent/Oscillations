@@ -165,16 +165,32 @@ public class HighRollerCamMover : AbstractGameEffects {
                 //accelVal = Remap(climaxRatio, 0f, 1f, 100f, 0.001f);
                 accelVal = (climaxRatio * climaxRatio);
             }
-
-            totalAcc = -swingAngVel * angVelscaler * accelVal;
+            if(swingAngVel<0)
+            {
+                totalAcc = -swingAngVel * angVelscaler * accelVal;
+            }
         }
 
-        if (speed<0)
+        if(Application.identifier=="com.mrl.swingdiffgear")
         {
-            totalAcc += (speed * speed) * dragConstant;
+            // diffusion version tuned to have less drag
+            if (speed<0)
+            {
+                totalAcc += (speed * speed) * dragConstant*0.5f;
+            }else
+            {
+                totalAcc -= (speed * speed) * dragConstant*0.5f;
+            }
+            
         }else
         {
-            totalAcc -= (speed * speed) * dragConstant;
+            if (speed<0)
+            {
+                totalAcc += (speed * speed) * dragConstant;
+            }else
+            {
+                totalAcc -= (speed * speed) * dragConstant;
+            }
         }
 		return totalAcc;
 	}

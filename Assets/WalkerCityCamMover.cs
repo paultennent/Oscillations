@@ -272,7 +272,13 @@ public class WalkerCityCamMover : AbstractGameEffects
             Vector3 seatPoint = topPoint + rotationOffset;
             Vector3 onlyFwdBackPoint = new Vector3(seatPoint.x, topPoint.y, seatPoint.z);
 
-            vp.transform.position = Vector3.Lerp(seatPoint, onlyFwdBackPoint, offsetTime / 10f);
+            if(Application.identifier!="com.mrl.swingdiffgear")
+            {
+                vp.transform.position = Vector3.Lerp(seatPoint, onlyFwdBackPoint, offsetTime / 10f);
+            }else
+            {
+                introTime=4f;
+            }
 
             if (offsetTime > introTime && swingQuadrant == 3)
             {

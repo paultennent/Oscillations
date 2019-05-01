@@ -40,6 +40,8 @@ public class JellyfishTileCamMover : AbstractGameEffects
 
 	public JellyfishAudioController audioController;
 
+    private float smoothedAngle=0f;
+    
     // Use this for initialization
     void Start()
     {
@@ -51,6 +53,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
     // Update is called once per frame
     void Update()
     {
+        smoothedAngle=swingAngle*0.1f+smoothedAngle*0.9f;
         base.Update();
 		if (!inSession) {
 			return;
@@ -74,6 +77,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
 
         if (sessionTime < introTime || !launched)
         {
+            float upforce = calculateUpforce(); // calculate and ignore up force
             // intro period - slowly reduce the amount of up and down movement
             // and reduce it to just fwd/back movement
             //need to change this to up/down
@@ -118,7 +122,7 @@ public class JellyfishTileCamMover : AbstractGameEffects
             LayerLayout.LayoutPos curTilePos = LayerLayout.GetLayerLayout().GetBlockAt(pivot.transform.position.y);
             if (curTilePos > LayerLayout.LayoutPos.CAVE_TOP)
             {
-                zVal = (swingAngle / 2f) * (0.5f-climaxRatio);
+                zVal = (smoothedAngle / 2f) * (0.5f-climaxRatio);
             }
 				
             pivot.transform.position = initialPosition + new Vector3(0, curHeight, zVal);
@@ -143,20 +147,37 @@ public class JellyfishTileCamMover : AbstractGameEffects
     
     float calculateUpforce()
     {
-        Array.Copy(angleHistory,0,angleHistory,1,angleHistory.Length-1);
-        Array.Copy(timeHistory,0,timeHistory,1,timeHistory.Length-1);
-        angleHistory[0]=swingAngle;
-        timeHistory[0]=Time.time;
-        
-        float smoothedAngVel=(angleHistory[0]-angleHistory[angleHistory.Length-1])/(timeHistory[0]-timeHistory[timeHistory.Length-1]);
-        print(smoothedAngVel+","+swingAngVel+":"+angleHistory[0]+":"+angleHistory[angleHistory.Length-1]);
-        float totalForce = smoothedAngVel * smoothedAngVel * upforceConstant;
-//        float totalForce = swingAngVel * swingAngVel * upforceConstant;
-        // if there is an error in angular velocity it can cause silly large forces
-        totalForce=Mathf.Min(totalForce,250f); 
+        float totalForce=0f;
+/*        if(Application.identifier=="com.mrl.swingdiffgear")
+        {
+            // filter out glitches in diffusion version
+            Array.Copy(angleHistory,0,angleHistory,1,angleHistory.Length-1);
+            Array.Copy(timeHistory,0,timeHistory,1,timeHistory.Length-1);
+            angleHistory[0]=swingAngVel;
+            timeHistory[0]=Time.time;
+            // take a median 
+            List<float> sorted=new List<float>(angleHistory);
+            float smoothedAngVel=sorted[ANGULAR_VELOCITY_FRAMES/2];
+            totalForce = smoothedAngVel * smoothedAngVel * upforceConstant;
+            totalForce=Mathf.Min(totalForce,250f); 
+            
+        }else
+        {*/
+            Array.Copy(angleHistory,0,angleHistory,1,angleHistory.Length-1);
+            Array.Copy(timeHistory,0,timeHistory,1,timeHistory.Length-1);
+            angleHistory[0]=swingAngle;
+            timeHistory[0]=Time.time;
+            
+            float smoothedAngVel=(angleHistory[0]-angleHistory[angleHistory.Length-1])/(timeHistory[0]-timeHistory[timeHistory.Length-1]);
+            print(smoothedAngVel+","+swingAngVel+":"+angleHistory[0]+":"+angleHistory[angleHistory.Length-1]);
+            totalForce = smoothedAngVel * smoothedAngVel * upforceConstant;
+    //        float totalForce = swingAngVel * swingAngVel * upforceConstant;
+            // if there is an error in angular velocity it can cause silly large forces
+            totalForce=Mathf.Min(totalForce,250f); 
+        //}
         if (launch == true)
         {
-            totalForce = 20f;
+            totalForce += 20f;
         }
 
         totalForce -= gravityConstant;
