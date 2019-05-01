@@ -54,6 +54,7 @@ public class FadeSphereScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        globalAccess=this;
         GetComponent<Renderer>().enabled=enableSphere;
         if(!enableSphere)
         {            
@@ -151,6 +152,7 @@ public class FadeSphereScript : MonoBehaviour {
         if(globalAccess!=null)
         {
             globalAccess.fadeTo(1.0f/t,1,fadeColour);
+            globalAccess.fadingOut=true;
         }
     }
     
