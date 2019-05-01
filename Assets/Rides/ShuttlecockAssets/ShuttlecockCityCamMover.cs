@@ -180,7 +180,7 @@ public class ShuttlecockCityCamMover : AbstractGameEffects {
                 if(offsetTime<10f && countUp)
                 {
                     // in diffusion we just do nothing while the intro occurs
-                }if(inIntro)
+                }else if(inIntro)
                 {
                     // wait until we reach zero degrees before starting properly
                     if(newQuadrant && (swingQuadrant==0 || swingQuadrant==2))
