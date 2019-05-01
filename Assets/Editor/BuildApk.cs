@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 class BuildApk
 {
@@ -26,7 +27,7 @@ class BuildApk
         string targetAPK=GetArg("-targetPath");
         if(targetAPK==null || targetAPK.Length==0)
         {
-            targetAPK = EditorUtility.SaveFilePanel("Choose Location of Built Game", "Build","oscillations.apk", "apk");
+            targetAPK = EditorUtility.SaveFilePanel("Choose Location of Built Game", Environment.CurrentDirectory+"/build","oscillations.apk", "apk");
         }
         AssetDatabase.Refresh();
         
@@ -122,7 +123,7 @@ class BuildApk
     public static void BuildCardboard()
     {
         // Get filename.
-        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "","oscillations-cardboard.apk", "apk");
+        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", Environment.CurrentDirectory+"/build","oscillations-cardboard.apk", "apk");
         AssetDatabase.Refresh();
         string targetAPK=GetArg("-targetPath");
 
@@ -161,24 +162,31 @@ class BuildApk
     public static void BuildDiffusionGear()
     {
         // Get filename.
-        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "","oscillations-diffusiongear.apk", "apk");
+        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", Environment.CurrentDirectory+"/build","oscillations-diffusiongear.apk", "apk");
         AssetDatabase.Refresh();
         string targetAPK=GetArg("-targetPath");
 
+        
+        
         string productName=PlayerSettings.productName;
         PlayerSettings.productName="Oscillate-Diffusion-Gear";
         string androidProductID=PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);        
         PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,"com.mrl.swingdiffgear");
 
-        Debug.Log("Building Oscillate to path: "+targetAPK+".\nScenes:");
-        List<string> scenes=new List<string>();
-        for(int c=0;c<20;c++)
+        string[] fixedScenes={
+            "Assets/Rides/Menu.unity",
+            "Assets/Rides/Shuttlecock-City-Static.unity",
+            "Assets/Rides/Walker-city.unity",
+            "Assets/Rides/HighRoller-City-tiled.unity",
+            "Assets/Rides/Jellyfish-tiled.unity"
+        };
+        Debug.Log("Building Oscillate diffusion to path: "+targetAPK+".\nScenes:");
+        List<string> scenes=new List<string>(fixedScenes);
+        foreach(string nam in scenes)
         {
-            string name = SceneUtility.GetScenePathByBuildIndex(c);                           
-            if(name==null || name.Length==0)break;
-            scenes.Add(name);
-            Debug.Log(name);
-        }
+            Debug.Log(nam);
+        }        
+        
         BuildPlayerOptions options = new BuildPlayerOptions();
         options.scenes=scenes.ToArray();
         options.locationPathName=path;
@@ -187,11 +195,11 @@ class BuildApk
 
         options.targetGroup=BuildTargetGroup.Android;
 
-//        string[] vrSDKs=PlayerSettings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
-//        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,new string[]{"Cardboard"});
+        string[] vrSDKs=PlayerSettings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
+        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,new string[]{"Oculus"});
         BuildPipeline.BuildPlayer(options);
      
- //       PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,vrSDKs);
+        PlayerSettings.SetVirtualRealitySDKs(BuildTargetGroup.Android,vrSDKs);
         PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,androidProductID);
         PlayerSettings.productName=productName;
 
@@ -225,7 +233,7 @@ class BuildApk
         // levels=scenes.ToArray();
         
         
-        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "","osc.apk", "apk");
+        string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", Environment.CurrentDirectory+"/build","osc.apk", "apk");
         
         string productName=PlayerSettings.productName+"";
         PlayerSettings.productName="Swing OSC";
